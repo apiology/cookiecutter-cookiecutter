@@ -29,14 +29,14 @@ class QualityCommand(Command):
 
 
 setup(
-    name='cookiecutter-pypackage',
+    name='{{ cookiecutter.project_slug }}',
     packages=[],
     version='0.1.0',
-    description='Cookiecutter template for a Python package',
-    author='Audrey Roy Greenfeld',
+    description='{{ cookiecutter.project_super_short_description }}',
+    author='Vince Broz',
     license='BSD',
-    author_email='aroy@alum.mit.edu',
-    url='https://github.com/audreyr/cookiecutter-pypackage',
+    author_email='vince@broz.cc',
+    url='https://github.com/apiology/{{ cookiecutter.project_slug }}',
     keywords=['cookiecutter', 'template', 'package', ],
     python_requires='>=3.6',
     classifiers=[

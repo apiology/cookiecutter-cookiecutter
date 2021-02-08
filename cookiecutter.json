@@ -5,5 +5,6 @@
   "language_or_tool": "LanguageOrToolNameHere",
   "project_name": "Cookiecutter {{ cookiecutter.language_or_tool }}",
   "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '-') }}",
+  "project_super_short_description": "Cookiecutter template for a {{ cookiecutter.language_or_tool }} project.",
   "project_short_description": "{{ cookiecutter.language_or_tool }} Boilerplate contains all the boilerplate you need to create a {{ cookiecutter.language_or_tool }} project."
 }

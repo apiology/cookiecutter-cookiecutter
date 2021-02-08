@@ -193,7 +193,7 @@ ensure_shellcheck
 
 
 latest_python_version="$(cut -d' ' -f1 <<< "${python_versions}")"
-virtualenv_name="cookiecutter-pypackage-${latest_python_version}"
+virtualenv_name="{{ cookiecutter.project_slug }}-${latest_python_version}"
 pyenv virtualenv "${latest_python_version}" "${virtualenv_name}" || true
 # You can use this for your global stuff!
 pyenv virtualenv mylibs || true
