@@ -12,12 +12,12 @@ commands:
     steps:
       - checkout
       - restore_cache:
-          key: fix.sh-v2-{{ checksum "fix.sh" }}
+          key: fix.sh-v2-{% raw %}{{ checksum "fix.sh" }}{% endraw %}
       - run:
           name: Initialize packages
           command: './fix.sh'
       - save_cache:
-          key: fix.sh-v2-{{ checksum "fix.sh" }}
+          key: fix.sh-v2-{% raw %}{{ checksum "fix.sh" }}{% endraw %}
           paths:
             - "/home/circleci/.pyenv"
             - "/home/circleci/.rbenv"

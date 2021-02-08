@@ -12,15 +12,15 @@ def remove_file(filepath):
 
 if __name__ == '__main__':
 
-    if '{{ cookiecutter.create_author_file }}' != 'y':
+    if '{% raw %}{{ cookiecutter.create_author_file }}{% endraw %}' != 'y':
         remove_file('AUTHORS.rst')
         remove_file('docs/authors.rst')
 
-    if 'no' in '{{ cookiecutter.command_line_interface|lower }}':
-        cli_file = os.path.join('{{ cookiecutter.project_slug }}', 'cli.py')
+    if 'no' in '{% raw %}{{ cookiecutter.command_line_interface|lower }}{% endraw %}':
+        cli_file = os.path.join('{% raw %}{{ cookiecutter.project_slug }}{% endraw %}', 'cli.py')
         remove_file(cli_file)
 
-    if 'Not open source' == '{{ cookiecutter.open_source_license }}':
+    if 'Not open source' == '{% raw %}{{ cookiecutter.open_source_license }}{% endraw %}':
         remove_file('LICENSE')
 
     subprocess.check_call('./fix.sh')
@@ -28,19 +28,19 @@ if __name__ == '__main__':
     subprocess.check_call(['git', 'add', '-A'])
     subprocess.check_call(['git', 'commit', '-m',
                            'Initial commit from boilerplate'])
-    if 'none' != '{{ cookiecutter.type_of_github_repo }}':
-        if 'private' == '{{ cookiecutter.type_of_github_repo }}':
+    if 'none' != '{% raw %}{{ cookiecutter.type_of_github_repo }}{% endraw %}':
+        if 'private' == '{% raw %}{{ cookiecutter.type_of_github_repo }}{% endraw %}':
             visibility_flag = '--private'
-        elif 'public' == '{{ cookiecutter.type_of_github_repo }}':
+        elif 'public' == '{% raw %}{{ cookiecutter.type_of_github_repo }}{% endraw %}':
             visibility_flag = '--public'
         else:
             raise RuntimeError('Invalid argument to '
                                'cookiecutter.type_of_github_repo: '
-                               '{{ cookiecutter.type_of_github_repo }}')
+                               '{% raw %}{{ cookiecutter.type_of_github_repo }}{% endraw %}')
         subprocess.check_call(['gh', 'repo', 'create',
                                visibility_flag,
                                '-y',
                                '--description',
-                               '{{ cookiecutter.project_short_description }}',
-                               '{{ cookiecutter.github_username }}/'
-                               '{{ cookiecutter.project_slug }}'])
+                               '{% raw %}{{ cookiecutter.project_short_description }}{% endraw %}',
+                               '{% raw %}{{ cookiecutter.github_username }}/{% endraw %}'
+                               '{% raw %}{{ cookiecutter.project_slug }}{% endraw %}'])
