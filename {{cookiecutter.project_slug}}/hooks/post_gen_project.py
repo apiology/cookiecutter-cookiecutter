@@ -12,10 +12,6 @@ def remove_file(filepath):
 
 if __name__ == '__main__':
 
-    if '{% raw %}{{ cookiecutter.create_author_file }}{% endraw %}' != 'y':
-        remove_file('AUTHORS.rst')
-        remove_file('docs/authors.rst')
-
     if 'no' in '{% raw %}{{ cookiecutter.command_line_interface|lower }}{% endraw %}':
         cli_file = os.path.join('{% raw %}{{ cookiecutter.project_slug }}{% endraw %}', 'cli.py')
         remove_file(cli_file)
