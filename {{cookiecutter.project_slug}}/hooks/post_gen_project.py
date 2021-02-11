@@ -11,11 +11,6 @@ def remove_file(filepath):
 
 
 if __name__ == '__main__':
-
-    if 'no' in '{% raw %}{{ cookiecutter.command_line_interface|lower }}{% endraw %}':
-        cli_file = os.path.join('{% raw %}{{ cookiecutter.project_slug }}{% endraw %}', 'cli.py')
-        remove_file(cli_file)
-
     if 'Not open source' == '{% raw %}{{ cookiecutter.open_source_license }}{% endraw %}':
         remove_file('LICENSE')
 
