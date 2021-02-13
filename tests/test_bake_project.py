@@ -73,7 +73,7 @@ def test_bake_with_defaults(cookies):
         assert result.exception is None
 
         found_toplevel_files = [f.basename for f in result.project.listdir()]
-        assert 'README.md' in found_toplevel_files
+        assert 'README.rst' in found_toplevel_files
         assert 'LICENSE' in found_toplevel_files
         assert 'fix.sh' in found_toplevel_files
 
