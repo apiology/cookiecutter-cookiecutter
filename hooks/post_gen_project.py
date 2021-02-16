@@ -17,6 +17,7 @@ if __name__ == '__main__':
         # Don't run these non-idempotent things when in
         # cookiecutter_project_upgrader, which will run this hook
         # multiple times over its lifetime.
+        subprocess.check_call(['bundle', 'exec', 'overcommit', '--install'])
         subprocess.check_call(['git', 'init'])
         subprocess.check_call(['git', 'add', '-A'])
         subprocess.check_call(['git', 'commit', '-m',
