@@ -1,1 +1,1 @@
-{% raw %}{{ cookiecutter | jsonify }}{% endraw}
+{% raw %}{{ cookiecutter | jsonify }}{% endraw %}
