@@ -5,6 +5,8 @@
 .. image:: https://circleci.com/gh/apiology/{{cookiecutter.project_slug}}.svg?style=svg
     :target: https://circleci.com/gh/apiology/{{cookiecutter.project_slug}}
 
+{{cookiecutter.project_short_description}}
+
 This is a fork
 --------------
 
