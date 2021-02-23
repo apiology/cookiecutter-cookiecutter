@@ -41,3 +41,4 @@ if __name__ == '__main__':
                                    '{% raw %}{{ cookiecutter.project_short_description }}{% endraw %}',
                                    '{% raw %}{{ cookiecutter.github_username }}/{% endraw %}'
                                    '{% raw %}{{ cookiecutter.project_slug }}{% endraw %}'])
+            subprocess.check_call(['circleci', 'follow'])
