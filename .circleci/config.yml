@@ -66,6 +66,16 @@ jobs:
             - tox
 workflows:
   version: 2
+  weekly:
+    triggers:
+      - schedule:
+          cron: "0 0 * * 6"
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - test
   test:
     jobs:
       - test
