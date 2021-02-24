@@ -81,7 +81,12 @@ def test_bake_with_defaults(cookies):
 
 
 def test_bake_and_run_build(cookies):
-    with bake_in_temp_dir(cookies) as result:
+    with bake_in_temp_dir(cookies,
+                          extra_context={
+                              'full_name': 'name "quote" O\'connor',
+                              'project_short_description':
+                              'The greatest project ever created by name "quote" O\'connor.',
+                          }) as result:
         assert result.project.isdir()
         run_inside_dir('overcommit --sign', str(result.project)) == 0
         run_inside_dir('make test', str(result.project)) == 0
