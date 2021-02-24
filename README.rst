@@ -5,6 +5,8 @@ Cookiecutter Cookiecutter
 .. image:: https://circleci.com/gh/apiology/cookiecutter-cookiecutter.svg?style=svg
     :target: https://circleci.com/gh/apiology/cookiecutter-cookiecutter
 
+Cookiecutter Boilerplate contains all the boilerplate you need to create a Cookiecutter project.
+
 This is a fork
 --------------
 
