@@ -22,6 +22,11 @@ commands:
             - "/home/circleci/.pyenv"
             - "/home/circleci/.rbenv"
       - run:
+          name: Download new circleci tool
+          command: |
+            curl -fLSs \
+            https://raw.githubusercontent.com/CircleCI-Public/circleci-cli/master/install.sh | sudo bash
+      - run:
           name: Test
           command: |
             export PATH="${HOME}/.pyenv/bin:${HOME}/.rbenv/bin:${HOME}/.rbenv/shims:${PATH}"
