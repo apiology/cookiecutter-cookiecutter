@@ -34,6 +34,7 @@ commands:
             git config --global user.name "Test Test"
             # Coax overcommit into working
             bundle exec overcommit --sign
+            bundle exec overcommit --sign pre-commit
 
             tox <<parameters.tox_arguments>>
           environment:
@@ -48,13 +49,13 @@ jobs:
     steps:
       - unless:
           condition:
-            equal: [ << pipeline.git.branch >>, "main" ]
+            equal: [<< pipeline.git.branch >>, "main"]
           steps:
-             - tox:
-                 tox_arguments: '-e py39'
+            - tox:
+                tox_arguments: '-e py39'
       - when:
           condition:
-            equal: [ << pipeline.git.branch >>, "main" ]
+            equal: [<< pipeline.git.branch >>, "main"]
           steps:
             - tox
 workflows:
