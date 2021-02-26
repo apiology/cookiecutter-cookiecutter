@@ -118,12 +118,48 @@ ensure_pyenv() {
   fi
 }
 
+install_package() {
+  homebrew_package=${1:?homebrew package}
+  apt_package=${2:-${homebrew_package}}
+  if [ "$(uname)" == "Darwin" ]
+  then
+    HOMEBREW_NO_AUTO_UPDATE=1 brew install "${homebrew_package}"
+  elif type apt-get >/dev/null 2>&1
+  then
+    sudo apt-get update -y
+    sudo apt-get install -y "${apt_package}"
+  else
+    >&2 echo "Teach me how to install packages on this plaform"
+    exit 1
+  fi
+}
+
+ensure_dev_library() {
+  header_file_name=${1:?header file name}
+  homebrew_package=${2:?homebrew package}
+  apt_package=${3:-${homebrew_package}}
+  if ! [ -f /usr/include/"${header_file_name}" ] && \
+      ! [ -f /usr/local/include/"${header_file_name}" ] && \
+      ! [ -f  /usr/local/opt/"${homebrew_package}"/include/"${header_file_name}" ]
+  then
+    install_package "${homebrew_package}" "${apt_package}"
+  fi
+}
+
+ensure_python_build_requirements() {
+  ensure_dev_library zlib.h zlib zlib1g-dev
+  ensure_dev_library bzlib.h bzip2 libbz2-dev
+  ensure_dev_library openssl/ssl.h openssl libssl-dev
+}
+
 # You can find out which feature versions are still supported / have
 # been release here: https://www.python.org/downloads/
 ensure_python_versions() {
   # You can find out which feature versions are still supported / have
   # been release here: https://www.python.org/downloads/
   python_versions="$(latest_python_version 3.9)"
+
+  ensure_python_build_requirements
 
   echo "Latest Python versions: ${python_versions}"
 
@@ -179,21 +215,10 @@ ensure_python_requirements() {
   pip install -r requirements_dev.txt
 }
 
-install_shellcheck() {
-  if [ "$(uname)" == "Darwin" ]
-  then
-    HOMEBREW_NO_AUTO_UPDATE=1 brew install shellcheck || true
-  elif type apt-get >/dev/null 2>&1
-  then
-    sudo apt-get update -y
-    sudo apt-get install shellcheck
-  fi
-}
-
 ensure_shellcheck() {
   if ! type shellcheck >/dev/null 2>&1
   then
-    install_shellcheck
+    install_package shellcheck
   fi
 }
 
