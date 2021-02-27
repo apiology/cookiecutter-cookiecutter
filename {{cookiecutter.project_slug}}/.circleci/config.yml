@@ -15,6 +15,14 @@ commands:
           command: |
             export BUNDLE_PATH=vendor/bundle
             './fix.sh'
+      - run:
+          name: Verify Gemfile.lock
+          command: |
+            if ! git diff --exit-code Gemfile.lock
+            then
+              >&2 echo "Please resolve changes to Gemfile.lock after bundle install to avoid caching difficulties"
+              return 1
+            fi
       - save_cache:
           key: ruby-and-python-v2-{% raw %}{{ checksum "fix.sh" }}{% endraw %}
           paths:
