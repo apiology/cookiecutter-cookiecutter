@@ -7,21 +7,21 @@ commands:
     steps:
       - checkout
       - restore_cache:
-          key: gems-v2-{{ '{% raw %}{{ checksum "Gemfile.lock" }}{% endraw %}' }}
+          key: gems-v4-{{ '{% raw %}{{ checksum "Gemfile.lock" }}{% endraw %}' }}
       - restore_cache:
-          key: ruby-and-python-v3-{{ '{% raw %}{{ checksum "fix.sh" }}{% endraw %}' }}
+          key: ruby-and-python-v4-{{ '{% raw %}{{ checksum "fix.sh" }}{% endraw %}' }}
       - run:
           name: Initialize packages
           command: |
             export BUNDLE_PATH=vendor/bundle
             './fix.sh'
       - save_cache:
-          key: ruby-and-python-v3-{{ '{% raw %}{{ checksum "fix.sh" }}{% endraw %}' }}
+          key: ruby-and-python-v4-{{ '{% raw %}{{ checksum "fix.sh" }}{% endraw %}' }}
           paths:
             - "/home/circleci/.rbenv"
             - "/home/circleci/.pyenv"
       - save_cache:
-          key: gems-v2-{{ '{% raw %}{{ checksum "Gemfile.lock" }}{% endraw %}' }}
+          key: gems-v4-{{ '{% raw %}{{ checksum "Gemfile.lock" }}{% endraw %}' }}
           paths:
             - "vendor/bundle"
       - run:
