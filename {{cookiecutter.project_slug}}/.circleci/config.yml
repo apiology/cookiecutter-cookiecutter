@@ -93,7 +93,7 @@ commands:
 jobs:
   test:
     docker:
-      - image: apiology/circleci-ruby:latest
+      - image: apiology/circleci:latest
     steps:
       - unless:
           condition:
@@ -108,7 +108,7 @@ jobs:
             - tox
   overcommit:
     docker:
-      - image: apiology/circleci-ruby:latest
+      - image: apiology/circleci:latest
     steps:
       - when:
           condition:

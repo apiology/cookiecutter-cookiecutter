@@ -62,7 +62,7 @@ commands:
 jobs:
   overcommit:
     docker:
-      - image: apiology/circleci-ruby:latest
+      - image: apiology/circleci:latest
     steps:
       - when:
           condition:
@@ -77,7 +77,7 @@ jobs:
   build:
     working_directory: ~/{% raw %}{{cookiecutter.project_slug}}{% endraw %}
     docker:
-      - image: apiology/circleci-ruby:latest
+      - image: apiology/circleci:latest
     steps:
       - set_up_environment
       - run:
