@@ -7,9 +7,9 @@ commands:
     steps:
       - checkout
       - restore_cache:
-          key: gems-v1-{% raw %}{{ checksum "Gemfile.lock" }}{% endraw %}
+          key: gems-v4-{% raw %}{{ checksum "Gemfile.lock" }}{% endraw %}
       - restore_cache:
-          key: ruby-and-python-v2-{% raw %}{{ checksum "fix.sh" }}{% endraw %}
+          key: ruby-and-python-v4-{% raw %}{{ checksum "fix.sh" }}{% endraw %}
       - run:
           name: Initialize packages
           command: |
@@ -24,12 +24,12 @@ commands:
               return 1
             fi
       - save_cache:
-          key: ruby-and-python-v2-{% raw %}{{ checksum "fix.sh" }}{% endraw %}
+          key: ruby-and-python-v4-{% raw %}{{ checksum "fix.sh" }}{% endraw %}
           paths:
             - "/home/circleci/.pyenv"
             - "/home/circleci/.rbenv"
       - save_cache:
-          key: gems-v1-{% raw %}{{ checksum "Gemfile.lock" }}{% endraw %}
+          key: gems-v4-{% raw %}{{ checksum "Gemfile.lock" }}{% endraw %}
           paths:
             - "vendor/bundle"
       - run:
@@ -101,7 +101,7 @@ commands:
 jobs:
   test:
     docker:
-      - image: apiology/circleci-ruby:latest
+      - image: apiology/circleci:latest
     steps:
       - unless:
           condition:
@@ -116,7 +116,7 @@ jobs:
             - tox
   overcommit:
     docker:
-      - image: apiology/circleci-ruby:latest
+      - image: apiology/circleci:latest
     steps:
       - when:
           condition:
