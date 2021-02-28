@@ -57,8 +57,43 @@ ensure_rbenv() {
   ensure_ruby_build
 }
 
-ensure_ruby_version() {
-  rbenv install -s "$(cat .ruby-version)"
+latest_ruby_version() {
+  major_minor=${1}
+  rbenv install --list 2>/dev/null | grep "^${major_minor}."
+}
+
+ensure_dev_library() {
+  header_file_name=${1:?header file name}
+  homebrew_package=${2:?homebrew package}
+  apt_package=${3:-${homebrew_package}}
+  if ! [ -f /usr/include/"${header_file_name}" ] && \
+      ! [ -f /usr/include/x86_64-linux-gnu/"${header_file_name}" ] && \
+      ! [ -f /usr/local/include/"${header_file_name}" ] && \
+      ! [ -f  /usr/local/opt/"${homebrew_package}"/include/"${header_file_name}" ]
+  then
+    install_package "${homebrew_package}" "${apt_package}"
+  fi
+}
+
+ensure_ruby_build_requirements() {
+  ensure_dev_library readline/readline.h readline libreadline-dev
+}
+
+# You can find out which feature versions are still supported / have
+# been release here: https://www.ruby-lang.org/en/downloads/
+ensure_ruby_versions() {
+  # You can find out which feature versions are still supported / have
+  # been release here: https://www.python.org/downloads/
+  ruby_versions="$(latest_ruby_version 3.0) $(latest_ruby_version 2.7) $(latest_ruby_version 2.6) $(latest_ruby_version 2.5)"
+
+  echo "Latest Ruby versions: ${ruby_versions}"
+
+  ensure_ruby_build_requirements
+
+  for ver in $ruby_versions
+  do
+    rbenv install -s "${ver}"
+  done
 }
 
 ensure_bundle() {
@@ -73,6 +108,11 @@ ensure_bundle() {
   # without needing to have a machine that matches PLATFORM handy to
   # install those platform-specific gems on.'
   bundle lock --add-platform x86_64-darwin-20 x86_64-linux
+}
+
+set_ruby_local_version() {
+  latest_ruby_version="$(cut -d' ' -f1 <<< "${ruby_versions}")"
+  echo "${latest_ruby_version}" > .ruby-version
 }
 
 latest_python_version() {
@@ -143,18 +183,6 @@ install_package() {
   fi
 }
 
-ensure_dev_library() {
-  header_file_name=${1:?header file name}
-  homebrew_package=${2:?homebrew package}
-  apt_package=${3:-${homebrew_package}}
-  if ! [ -f /usr/include/"${header_file_name}" ] && \
-      ! [ -f /usr/local/include/"${header_file_name}" ] && \
-      ! [ -f  /usr/local/opt/"${homebrew_package}"/include/"${header_file_name}" ]
-  then
-    install_package "${homebrew_package}" "${apt_package}"
-  fi
-}
-
 ensure_python_build_requirements() {
   ensure_dev_library zlib.h zlib zlib1g-dev
   ensure_dev_library bzlib.h bzip2 libbz2-dev
@@ -169,25 +197,14 @@ ensure_python_versions() {
   # been release here: https://www.python.org/downloads/
   python_versions="$(latest_python_version 3.9)"
 
-  ensure_python_build_requirements
-
   echo "Latest Python versions: ${python_versions}"
+
+  ensure_python_build_requirements
 
   for ver in $python_versions
   do
     if [ "$(uname)" == Darwin ]
     then
-      if ! [ -f /usr/local/opt/zlib/lib/libz.dylib ]
-      then
-        # https://teratail.com/questions/309663
-        HOMEBREW_NO_AUTO_UPDATE=1 brew install zlib || true
-      fi
-      if ! [ -f /usr/local/opt/bzip2/bin/bzip2 ]
-      then
-        # https://teratail.com/questions/309663
-        HOMEBREW_NO_AUTO_UPDATE=1 brew install bzip2 || true
-      fi
-
       pyenv_install() {
         CFLAGS="-I/usr/local/opt/zlib/include -I/usr/local/opt/bzip2/include" LDFLAGS="-L/usr/local/opt/zlib/lib -L/usr/local/opt/bzip2/lib" pyenv install --skip-existing "$@"
       }
@@ -234,7 +251,9 @@ ensure_shellcheck() {
 
 ensure_rbenv
 
-ensure_ruby_version
+ensure_ruby_versions
+
+set_ruby_local_version
 
 ensure_bundle
 
