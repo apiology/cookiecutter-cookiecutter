@@ -109,6 +109,7 @@ def test_bake_and_run_build(cookies):
         assert run_inside_dir('bundle exec overcommit --sign', str(result.project)) == 0
         assert run_inside_dir('bundle exec overcommit --sign pre-commit', str(result.project)) == 0
         assert run_inside_dir('make test', str(result.project)) == 0
+        assert run_inside_dir('make quality', str(result.project)) == 0
         print("test_bake_and_run_build path", str(result.project))
 
 
