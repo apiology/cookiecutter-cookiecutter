@@ -106,6 +106,8 @@ def test_bake_and_run_build(cookies):
                               'The greatest project ever created by name "quote" O\'connor.',
                           }) as result:
         assert result.project.isdir()
+        assert run_inside_dir('git init', str(result.project)) == 0
+        assert run_inside_dir('git add .', str(result.project)) == 0
         assert run_inside_dir('bundle exec overcommit --sign', str(result.project)) == 0
         assert run_inside_dir('bundle exec overcommit --sign pre-commit', str(result.project)) == 0
         assert run_inside_dir('make test', str(result.project)) == 0
