@@ -130,17 +130,6 @@ jobs:
             equal: [<< pipeline.git.branch >>, "main"]
           steps:
             - run: echo "overcommit only runs on main branch"
-<<<<<<< HEAD
-=======
-  build:
-    working_directory: ~/{{cookiecutter.project_slug}}
-    docker:
-      - image: apiology/circleci:latest
-    steps:
-      - set_up_environment
-      - run_with_languages:
-          command: make test
->>>>>>> cookiecutter-template
 
 workflows:
   version: 2
