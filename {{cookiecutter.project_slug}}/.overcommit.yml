@@ -25,6 +25,7 @@ PreCommit:
       - '{% raw %}{{cookiecutter.project_slug}}{% endraw %}/**/*'
   PythonFlake8:
     enabled: true
+    on_warn: fail
   ShellCheck:
     enabled: true
     on_warn: fail
