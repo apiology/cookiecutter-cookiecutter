@@ -37,6 +37,7 @@ Temporary Items
 /eggs/
 /.eggs/
 /parts/
+/dist/
 /sdist/
 *.egg-info/
 /.installed.cfg
