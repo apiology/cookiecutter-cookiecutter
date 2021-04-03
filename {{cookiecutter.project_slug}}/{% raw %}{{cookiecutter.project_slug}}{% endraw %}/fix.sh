@@ -253,6 +253,10 @@ ensure_shellcheck() {
   fi
 }
 
+ensure_overcommit() {
+  bundle exec overcommit --install
+}
+
 ensure_rbenv
 
 ensure_ruby_versions
@@ -272,3 +276,5 @@ ensure_pip
 ensure_python_requirements
 
 ensure_shellcheck
+
+ensure_overcommit
