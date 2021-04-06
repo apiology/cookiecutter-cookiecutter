@@ -7,6 +7,7 @@ import sys
 
 from cookiecutter.utils import rmtree
 
+
 @contextmanager
 def inside_dir(dirpath):
     """
