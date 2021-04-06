@@ -23,6 +23,12 @@ To also get full realtime output from the child project, you can
 replace 'make test' with `time pytest tests/test_bake_project.py
 --capture=no` in `test_bake_project.py`
 
+You can debug overall test timings with:
+
+```sh
+time pytest tests/test_bake_project.py --durations=0
+```
+
 You can then wrap `time` commands around different things that shell
 out, or do [this type of
 technique](https://stackoverflow.com/a/1557584/2625807) for things
