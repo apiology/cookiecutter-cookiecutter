@@ -152,6 +152,8 @@ set_pyenv_env_variables() {
   set +u
   export PYENV_ROOT="${HOME}/.pyenv"
   export PATH="${PYENV_ROOT}/bin:$PATH"
+  # TODO: This can be removed once Homebrew updates pyenv past 1.2.27
+  eval "$(pyenv init -)"
   eval "$(pyenv init --path)"
   eval "$(pyenv virtualenv-init -)"
   set -u
