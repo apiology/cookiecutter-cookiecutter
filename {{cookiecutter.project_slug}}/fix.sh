@@ -134,8 +134,9 @@ WARNING: seems you still have not added 'pyenv' to the load path.
 # Load pyenv automatically by adding
 # the following to ~/.bashrc:
 
-export PATH="$HOME/.pyenv/bin:$PATH"
-eval "$(pyenv init -)"
+export PYENV_ROOT="{HOME}/.pyenv"
+export PATH="${PYENV_ROOT}/bin:$PATH"
+eval "$(pyenv init --path)"
 eval "$(pyenv virtualenv-init -)"
 EOF
     fi
@@ -149,8 +150,9 @@ set_pyenv_env_variables() {
   #
   # https://app.circleci.com/pipelines/github/apiology/cookiecutter-pypackage/15/workflows/10506069-7662-46bd-b915-2992db3f795b/jobs/15
   set +u
-  export PATH="${HOME}/.pyenv/bin:$PATH"
-  eval "$(pyenv init -)"
+  export PYENV_ROOT="{HOME}/.pyenv"
+  export PATH="${PYENV_ROOT}/bin:$PATH"
+  eval "$(pyenv init --path)"
   eval "$(pyenv virtualenv-init -)"
   set -u
 }
