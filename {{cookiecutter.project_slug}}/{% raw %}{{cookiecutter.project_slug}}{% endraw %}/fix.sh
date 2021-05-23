@@ -2,6 +2,16 @@
 
 set -o pipefail
 
+apt_upgraded=0
+
+update_apt() {
+  if [ "${apt_upgraded}" = 0 ]
+  then
+    sudo apt-get update -y
+    apt_upgraded=1
+  fi
+}
+
 install_rbenv() {
   if [ "$(uname)" == "Darwin" ]
   then
@@ -179,7 +189,7 @@ install_package() {
     HOMEBREW_NO_AUTO_UPDATE=1 brew install "${homebrew_package}"
   elif type apt-get >/dev/null 2>&1
   then
-    sudo apt-get update -y
+    update_apt
     sudo apt-get install -y "${apt_package}"
   else
     >&2 echo "Teach me how to install packages on this plaform"
