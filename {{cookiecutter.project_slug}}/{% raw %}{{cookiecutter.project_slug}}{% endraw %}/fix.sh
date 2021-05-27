@@ -102,7 +102,17 @@ ensure_ruby_versions() {
 
   for ver in $ruby_versions
   do
-    rbenv install -s "${ver}"
+    # These CFLAGS can be retired once 2.6.7 is no longer needed :
+    #
+    # https://github.com/rbenv/ruby-build/issues/1747
+    # https://github.com/rbenv/ruby-build/issues/1489
+    # https://bugs.ruby-lang.org/issues/17777
+    if [ "${ver}" == 2.6.7 ]
+    then
+      CFLAGS="-Wno-error=implicit-function-declaration" rbenv install -s "${ver}"
+    else
+      rbenv install -s "${ver}"
+    fi
   done
 }
 
