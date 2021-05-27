@@ -87,6 +87,8 @@ ensure_dev_library() {
 
 ensure_ruby_build_requirements() {
   ensure_dev_library readline/readline.h readline libreadline-dev
+  ensure_dev_library zlib.h zlib zlib1g-dev
+  ensure_dev_library openssl/ssl.h openssl libssl-dev
 }
 
 # You can find out which feature versions are still supported / have
@@ -102,7 +104,17 @@ ensure_ruby_versions() {
 
   for ver in $ruby_versions
   do
-    rbenv install -s "${ver}"
+    # These CFLAGS can be retired once 2.6.7 is no longer needed :
+    #
+    # https://github.com/rbenv/ruby-build/issues/1747
+    # https://github.com/rbenv/ruby-build/issues/1489
+    # https://bugs.ruby-lang.org/issues/17777
+    if [ "${ver}" == 2.6.7 ]
+    then
+      CFLAGS="-Wno-error=implicit-function-declaration" rbenv install -s "${ver}"
+    else
+      rbenv install -s "${ver}"
+    fi
   done
 }
 
@@ -214,6 +226,7 @@ ensure_python_build_requirements() {
   ensure_dev_library bzlib.h bzip2 libbz2-dev
   ensure_dev_library openssl/ssl.h openssl libssl-dev
   ensure_dev_library ffi.h libffi libffi-dev
+  ensure_dev_library sqlite3.h sqlite3
 }
 
 # You can find out which feature versions are still supported / have
