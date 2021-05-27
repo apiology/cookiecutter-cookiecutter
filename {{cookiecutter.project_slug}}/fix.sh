@@ -226,7 +226,7 @@ ensure_python_build_requirements() {
   ensure_dev_library bzlib.h bzip2 libbz2-dev
   ensure_dev_library openssl/ssl.h openssl libssl-dev
   ensure_dev_library ffi.h libffi libffi-dev
-  ensure_dev_library sqlite3.h sqlite3
+  ensure_dev_library sqlite3.h sqlite3 libsqlite3-dev
 }
 
 # You can find out which feature versions are still supported / have
