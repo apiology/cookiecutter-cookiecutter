@@ -55,7 +55,7 @@ commands:
           paths:
             - "vendor/bundle"
       - save_cache:
-          key: wheels-v1-{{ checksum "requirements_dev.txt" }}
+          key: wheels-v1-{{ '{% raw %}{{ checksum "requirements_dev.txt" }}{% endraw %}' }}
           paths:
             - "/home/circleci/.cache/pip/wheels"
       - run:
