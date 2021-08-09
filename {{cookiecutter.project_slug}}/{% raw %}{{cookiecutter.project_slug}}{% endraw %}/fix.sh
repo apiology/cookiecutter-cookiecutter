@@ -143,7 +143,13 @@ ensure_bundle() {
   # re-resolve and consider the new platform when picking gems, all
   # without needing to have a machine that matches PLATFORM handy to
   # install those platform-specific gems on.'
-  grep x86_64-darwin-20 Gemfile.lock >/dev/null 2>&1 || bundle lock --add-platform x86_64-darwin-20 x86_64-linux
+  #
+  # This affects nokogiri, which will try to reinstall itself in
+  # Docker builds where it's already installed if this is not run.
+  for platform in x86_64-darwin-20 x86_64-linux
+  do
+    grep "${platform:?}" Gemfile.lock >/dev/null 2>&1 || bundle lock --add-platform "${platform:?}"
+  done
 }
 
 set_ruby_local_version() {
