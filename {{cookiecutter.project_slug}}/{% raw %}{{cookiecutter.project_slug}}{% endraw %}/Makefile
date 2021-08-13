@@ -23,8 +23,10 @@ requirements_dev.txt.installed: requirements_dev.txt
 
 pip_install: requirements_dev.txt.installed ## Install Python dependencies
 
-Gemfile.lock.installed: Gemfile.lock
+Gemfile.lock: Gemfile
 	bundle install
+
+Gemfile.lock.installed: Gemfile.lock
 	touch Gemfile.lock.installed
 
 bundle_install: Gemfile.lock.installed ## Install Ruby dependencies
