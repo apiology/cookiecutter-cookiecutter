@@ -23,8 +23,10 @@ requirements_dev.txt.installed: requirements_dev.txt
 
 pip_install: requirements_dev.txt.installed ## Install Python dependencies
 
-Gemfile.lock.installed: Gemfile.lock
+Gemfile.lock: Gemfile
 	bundle install
+
+Gemfile.lock.installed: Gemfile.lock
 	touch Gemfile.lock.installed
 
 bundle_install: Gemfile.lock.installed ## Install Ruby dependencies
@@ -33,8 +35,10 @@ clean: ## remove all built artifacts
 
 test: ## run tests quickly
 
-quality: ## run precommit quality checks
+overcommit: ## run precommit quality checks
 	bundle exec overcommit --run
+
+quality: overcommit ## run precommit quality checks
 
 update_from_cookiecutter: ## Bring in changes from template project used to create this repo
 	bundle exec overcommit --uninstall
