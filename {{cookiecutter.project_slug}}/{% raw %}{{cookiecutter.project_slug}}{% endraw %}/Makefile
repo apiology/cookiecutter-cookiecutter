@@ -33,8 +33,10 @@ clean: ## remove all built artifacts
 
 test: ## run tests quickly
 
-quality: ## run precommit quality checks
+overcommit: ## run precommit quality checks
 	bundle exec overcommit --run
+
+quality: overcommit ## run precommit quality checks
 
 update_from_cookiecutter: ## Bring in changes from template project used to create this repo
 	bundle exec overcommit --uninstall
