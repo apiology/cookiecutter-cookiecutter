@@ -127,10 +127,33 @@ ensure_bundle() {
   bundler_version=$(bundle --version | cut -d ' ' -f3)
   bundler_version_major=$(cut -d. -f1 <<< "${bundler_version}")
   bundler_version_minor=$(cut -d. -f2 <<< "${bundler_version}")
+  bundler_version_patch=$(cut -d. -f3 <<< "${bundler_version}")
   # Version 2.1 of bundler seems to have some issues with nokogiri:
   #
   # https://app.asana.com/0/1107901397356088/1199504270687298
-  if [ "${bundler_version_major}" == 2 ] && [ "${bundler_version_minor}" -lt 2 ]
+
+  # Version 2.2.22 of bundler comes with a fix to ensure the 'bundle
+  # update --conservative' flag works as expected - important when
+  # doing a 'bundle update' on a about-to-be-published gem after
+  # bumping a gem version.
+  need_better_bundler=false
+  if [ "${bundler_version_major}" -lt 2 ]
+  then
+    need_better_bundler=true
+  elif [ "${bundler_version_major}" -eq 2 ]
+  then
+    if [ "${bundler_version_minor}" -lt 2 ]
+    then
+      need_better_bundler=true
+    elif [ "${bundler_version_minor}" -eq 2 ]
+    then
+      if [ "${bundler_version_patch}" -lt 22 ]
+      then
+        need_better_bundler=true
+      fi
+    fi
+  fi
+  if [ "${need_better_bundler}" = true ]
   then
     gem install --no-document bundler
   fi
