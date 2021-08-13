@@ -23,8 +23,10 @@ requirements_dev.txt.installed: requirements_dev.txt
 
 pip_install: requirements_dev.txt.installed ## Install Python dependencies
 
-Gemfile.lock.installed: Gemfile.lock
+Gemfile.lock: Gemfile
 	bundle install
+
+Gemfile.lock.installed: Gemfile.lock
 	touch Gemfile.lock.installed
 
 bundle_install: Gemfile.lock.installed ## Install Ruby dependencies
@@ -36,8 +38,10 @@ default: test ## run default typechecking and tests
 test: ## run tests quickly
 	pytest
 
-quality: ## run precommit quality checks
+overcommit: ## run precommit quality checks
 	bundle exec overcommit --run
+
+quality: overcommit ## run precommit quality checks
 
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
