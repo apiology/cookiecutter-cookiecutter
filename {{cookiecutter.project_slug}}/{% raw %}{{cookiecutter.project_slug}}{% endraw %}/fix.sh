@@ -276,7 +276,7 @@ ensure_python_versions() {
     if [ "$(uname)" == Darwin ]
     then
       pyenv_install() {
-        CFLAGS="-I/usr/local/opt/zlib/include -I/usr/local/opt/bzip2/include" LDFLAGS="-L/usr/local/opt/zlib/lib -L/usr/local/opt/bzip2/lib" pyenv install --skip-existing "$@"
+        CFLAGS="-I/usr/local/opt/zlib/include -I/usr/local/opt/bzip2/include -I$(brew --prefix openssl)/include" LDFLAGS="-L/usr/local/opt/zlib/lib -L/usr/local/opt/bzip2/lib -L$(brew --prefix openssl)/lib" pyenv install --skip-existing "$@"
       }
 
       major_minor="$(cut -d. -f1-2 <<<"${ver}")"
