@@ -7,7 +7,7 @@ apt_upgraded=0
 update_apt() {
   if [ "${apt_upgraded}" = 0 ]
   then
-    sudo apt-get update -y
+    sudo DEBIAN_FRONTEND=noninteractive apt-get update -y
     apt_upgraded=1
   fi
 }
@@ -243,7 +243,7 @@ install_package() {
   elif type apt-get >/dev/null 2>&1
   then
     update_apt
-    sudo apt-get install -y "${apt_package}"
+    sudo DEBIAN_FRONTEND=noninteractive apt-get install -y "${apt_package}"
   else
     >&2 echo "Teach me how to install packages on this plaform"
     exit 1
