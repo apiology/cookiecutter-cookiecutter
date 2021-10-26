@@ -3,7 +3,8 @@ version: 2.1
 
 commands:
   run_with_languages:
-    description: "Run the given command in an environment that includes relevant langauges in the PATH"
+    description: "Run the given command in an environment that includes relevant
+      langauges in the PATH"
     parameters:
       command:
         type: string
@@ -106,7 +107,7 @@ jobs:
     steps:
       - unless:
           condition:
-            equal: [<< pipeline.git.branch >>, "main"]
+            equal: [ << pipeline.git.branch >>, "main" ]
           steps:
             # skip tox to speed things by not installing another
             # virtualenv, and only run in default Python version.
@@ -125,21 +126,23 @@ jobs:
                   make test
       - when:
           condition:
-            equal: [<< pipeline.git.branch >>, "main"]
+            equal: [ << pipeline.git.branch >>, "main" ]
           steps:
             - tox
+    # The resource_class feature allows configuring CPU and RAM resources for each job. Different resource classes are available for different executors. https://circleci.com/docs/2.0/configuration-reference/#resourceclass
+    resource_class: large
   overcommit:
     docker:
       - image: apiology/circleci:latest
     steps:
       - when:
           condition:
-            equal: [<< pipeline.git.branch >>, "main"]
+            equal: [ << pipeline.git.branch >>, "main" ]
           steps:
             - overcommit
       - unless:
           condition:
-            equal: [<< pipeline.git.branch >>, "main"]
+            equal: [ << pipeline.git.branch >>, "main" ]
           steps:
             - run: echo "overcommit only runs on main branch"
 
