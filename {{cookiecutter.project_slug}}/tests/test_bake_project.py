@@ -76,13 +76,6 @@ def check_output_inside_dir(command, dirpath):
         return subprocess.check_output(shlex.split(command))
 
 
-def test_year_compute_in_license_file(cookies):
-    with bake_in_temp_dir(cookies) as result:
-        license_file_path = result.project.join('LICENSE')
-        now = datetime.datetime.now()
-        assert str(now.year) in license_file_path.read()
-
-
 def project_info(result):
     """Get toplevel dir, project_slug, and project dir from baked cookies"""
     project_path = str(result.project)
@@ -113,11 +106,6 @@ def test_bake_and_run_build(cookies):
         assert result.project.isdir()
         assert run_inside_dir('make test', str(result.project)) == 0
         assert run_inside_dir('make quality', str(result.project)) == 0
-        print("test_bake_and_run_build path", str(result.project))
-
-
-def test_make_help(cookies):
-    with bake_in_temp_dir(cookies) as result:
         # The supplied Makefile does not support win32
         if sys.platform != "win32":
             output = check_output_inside_dir(
@@ -126,3 +114,7 @@ def test_make_help(cookies):
             )
             assert b"run precommit quality checks" in \
                 output
+        license_file_path = result.project.join('LICENSE')
+        now = datetime.datetime.now()
+        assert str(now.year) in license_file_path.read()
+        print("test_bake_and_run_build path", str(result.project))
