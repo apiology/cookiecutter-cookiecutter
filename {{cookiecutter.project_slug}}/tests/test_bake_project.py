@@ -84,8 +84,13 @@ def project_info(result):
     return project_path, project_slug, project_dir
 
 
-def test_bake_with_defaults(cookies):
-    with bake_in_temp_dir(cookies) as result:
+def test_bake_and_run_build(cookies):
+    with bake_in_temp_dir(cookies,
+                          extra_context={
+                              'full_name': 'name "quote" O\'connor',
+                              'project_short_description':
+                              'The greatest project ever created by name "quote" O\'connor.',
+                          }) as result:
         assert result.project.isdir()
         assert result.exit_code == 0
         assert result.exception is None
@@ -95,15 +100,6 @@ def test_bake_with_defaults(cookies):
         assert 'LICENSE' in found_toplevel_files
         assert 'fix.sh' in found_toplevel_files
 
-
-def test_bake_and_run_build(cookies):
-    with bake_in_temp_dir(cookies,
-                          extra_context={
-                              'full_name': 'name "quote" O\'connor',
-                              'project_short_description':
-                              'The greatest project ever created by name "quote" O\'connor.',
-                          }) as result:
-        assert result.project.isdir()
         assert run_inside_dir('make test', str(result.project)) == 0
         assert run_inside_dir('make quality', str(result.project)) == 0
         # The supplied Makefile does not support win32
