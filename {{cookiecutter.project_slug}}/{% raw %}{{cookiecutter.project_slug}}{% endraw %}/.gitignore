@@ -1,4 +1,4 @@
-o# OSX useful to ignore
+# OSX useful to ignore
 *.DS_Store
 .AppleDouble
 .LSOverride
