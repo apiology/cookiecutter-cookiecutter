@@ -44,9 +44,10 @@ if __name__ == '__main__':
             description = "{% raw %}{{ cookiecutter.project_short_description.replace('\"', '\\\"') }}{% endraw %}"
             subprocess.check_call(['gh', 'repo', 'create',
                                    visibility_flag,
-                                   '-y',
                                    '--description',
                                    description,
+                                   '--source',
+                                   '.',
                                    '{% raw %}{{ cookiecutter.github_username }}/{% endraw %}'
                                    '{% raw %}{{ cookiecutter.project_slug }}{% endraw %}'])
             subprocess.check_call(['circleci', 'follow'])
