@@ -80,6 +80,7 @@ commands:
 
 jobs:
   overcommit:
+    working_directory: ~/{% raw %}{{cookiecutter.project_slug}}{% endraw %}
     docker:
       - image: apiology/circleci:latest
     steps:
