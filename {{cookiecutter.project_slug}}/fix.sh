@@ -69,7 +69,18 @@ ensure_rbenv() {
 
 latest_ruby_version() {
   major_minor=${1}
-  rbenv install --list 2>/dev/null | grep "^${major_minor}."
+
+  # Double check that this command doesn't error out under -e
+  rbenv install --list >/dev/null 2>&1
+
+  # not sure why, but 'rbenv install --list' below exits with error code
+  # 1...after providing the same output the previous line gave when it
+  # exited with error code 0.
+  #
+  # https://github.com/rbenv/rbenv/issues/1441
+  set +e
+  rbenv install --list 2>/dev/null | cat | grep "^${major_minor}."
+  set -e
 }
 
 ensure_dev_library() {
