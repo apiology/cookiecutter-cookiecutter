@@ -115,7 +115,7 @@ ensure_ruby_versions() {
 
   # You can find out which feature versions are still supported / have
   # been release here: https://www.ruby-lang.org/en/downloads/
-  ruby_versions="$(latest_ruby_version 2.7)"
+  ruby_versions="$(latest_ruby_version 3.0)"
 
   echo "Latest Ruby versions: ${ruby_versions}"
 
@@ -312,7 +312,7 @@ ensure_python_versions() {
 
 ensure_pyenv_virtualenvs() {
   latest_python_version="$(cut -d' ' -f1 <<< "${python_versions}")"
-  virtualenv_name="rails-vld-${latest_python_version}"
+  virtualenv_name="{% raw %}{{cookiecutter.project_slug}}{% endraw %}-${latest_python_version}"
   pyenv virtualenv "${latest_python_version}" "${virtualenv_name}" || true
   # You can use this for your global stuff!
   pyenv virtualenv "${latest_python_version}" mylibs || true
@@ -354,17 +354,9 @@ ensure_overcommit() {
   fi
 }
 
-ensure_rugged_packages_installed() {
-  install_package icu4c libicu-dev # needed by rugged, needed by undercover
-  install_package pkg-config # needed by rugged, needed by undercover
-  install_package cmake # needed by rugged, needed by undercover
-}
-
 ensure_ruby_versions
 
 set_ruby_local_version
-
-ensure_rugged_packages_installed
 
 ensure_bundle
 
