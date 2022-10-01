@@ -102,9 +102,17 @@ ensure_ruby_build_requirements() {
   ensure_dev_library openssl/ssl.h openssl libssl-dev
 }
 
+ensure_latest_ruby_build_definitions() {
+  ensure_rbenv
+
+  git -C "$(rbenv root)"/plugins/ruby-build pull
+}
+
 # You can find out which feature versions are still supported / have
 # been release here: https://www.ruby-lang.org/en/downloads/
 ensure_ruby_versions() {
+  ensure_latest_ruby_build_definitions
+
   # You can find out which feature versions are still supported / have
   # been release here: https://www.ruby-lang.org/en/downloads/
   ruby_versions="$(latest_ruby_version 3.0)"
@@ -345,8 +353,6 @@ ensure_overcommit() {
     >&2 echo 'Not in a git repo; not installing git hooks'
   fi
 }
-
-ensure_rbenv
 
 ensure_ruby_versions
 
