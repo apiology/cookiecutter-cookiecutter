@@ -101,6 +101,7 @@ commands:
 
 jobs:
   test:
+    working_directory: ~/{{cookiecutter.project_slug}}
     docker:
       - image: apiology/circleci-python:latest
     steps:
