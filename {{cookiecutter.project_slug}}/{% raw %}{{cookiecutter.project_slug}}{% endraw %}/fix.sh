@@ -100,6 +100,7 @@ ensure_ruby_build_requirements() {
   ensure_dev_library readline/readline.h readline libreadline-dev
   ensure_dev_library zlib.h zlib zlib1g-dev
   ensure_dev_library openssl/ssl.h openssl libssl-dev
+  ensure_dev_library yaml.h libyaml libyaml-dev
 }
 
 ensure_latest_ruby_build_definitions() {
