@@ -50,6 +50,8 @@ PreCommit:
 #  IndexTags:
 #    enabled: true # Generate a tags file with `ctags` each time HEAD changes
 
-PrePush:
-  Pytest:
-    enabled: true
+# Takes too long; might as well look for result in CircleCI
+#
+# PrePush:
+#  Pytest:
+#    enabled: true
