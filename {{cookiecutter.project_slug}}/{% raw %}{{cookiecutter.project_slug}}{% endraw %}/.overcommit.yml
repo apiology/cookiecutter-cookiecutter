@@ -17,7 +17,32 @@
 # Uncomment the following lines to make the configuration take effect.
 
 PreCommit:
-  # Extend default config at https://github.com/sds/overcommit/blob/master/config/default.yml
+  # Extend default config at
+  # https://github.com/sds/overcommit/blob/master/config/default.yml
+  BrokenSymlinks:
+    enabled: true
+    description: 'Check for broken symlinks'
+    quiet: true
+    exclude:
+      # This is a symlink to sibling checkout of plate-spinner, used
+      # only in local development
+      - config/env.1p
+  RuboCop:
+    enabled: true
+    on_warn: fail # Treat all warnings as failures
+    command: ['bundle', 'exec', 'rubocop']
+    include:
+      - '**/*.gemspec'
+      - '**/*.rake'
+      - '**/*.rb'
+      - '**/*.ru'
+      - '**/Gemfile'
+      - '**/Rakefile'
+      - 'bin/*'
+      - 'exe/*'
+    exclude:
+      - db/migrate/*.rb
+      - db/schema.rb
   PythonFlake8:
     enabled: true
     on_warn: fail
@@ -29,12 +54,31 @@ PreCommit:
       - '**/*.sh'
   YamlLint:
     enabled: true
+    flags: ['-c', '.yamllint.yml']
     on_warn: fail
   CircleCi:
     required_executable: 'circleci'
     flags: ['config', 'validate']
     include:
       - '.circleci/config.yml'
+    enabled: true
+  SolargraphTypecheck:
+    enabled: true
+    on_warn: fail
+    include:
+      - '**/*.rb'
+  Punchlist:
+    on_warn: fail
+    command: ['bundle', 'exec', 'punchlist']
+    enabled: true
+
+PrePush:
+  Minitest:
+    command: ['ruby', '-Ilib:test/unit:lib/plate-spinner', '-rbundler/setup', '-rminitest', "-e 'exit! Minitest.run'"]
+    include:
+      - 'test/unit/**/test*.rb'
+      - 'test/unit/checks/*.rb'
+      - 'test/unit/options/*.rb'
     enabled: true
 
 #PostCheckout:
