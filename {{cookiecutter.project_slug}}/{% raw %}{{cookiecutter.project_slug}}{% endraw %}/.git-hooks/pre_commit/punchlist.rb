@@ -20,8 +20,7 @@ module Overcommit
 
         def run
           # Pass in filenames as a glob
-          files = applicable_files.join(',')
-
+          files = "{#{applicable_files.join(',')}}"
           # @sg-ignore
           # @type [Overcommit::Subprocess::Result]
           result = execute([*command, '-g', files])
