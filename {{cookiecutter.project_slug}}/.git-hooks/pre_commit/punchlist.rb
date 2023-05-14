@@ -18,13 +18,16 @@ module Overcommit
           end
         end
 
-        def run
-          # Pass in filenames as a glob
-          files = applicable_files.join(',')
+        def files_glob
+          '{' \
+          "#{applicable_files.join(',')}" \
+          '}'
+        end
 
+        def run
           # @sg-ignore
           # @type [Overcommit::Subprocess::Result]
-          result = execute([*command, '-g', files])
+          result = execute([*command, '-g', files_glob])
 
           warn result.stderr
 
