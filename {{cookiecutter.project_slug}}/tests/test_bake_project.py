@@ -5,8 +5,9 @@ import subprocess
 import sys
 from contextlib import contextmanager
 
-from cookiecutter.utils import rmtree
 import jinja2
+
+from cookiecutter.utils import rmtree
 
 
 @contextmanager
