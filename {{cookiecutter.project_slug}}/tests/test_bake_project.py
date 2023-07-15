@@ -6,7 +6,6 @@ import sys
 from contextlib import contextmanager
 
 import jinja2
-
 from cookiecutter.utils import rmtree
 
 
