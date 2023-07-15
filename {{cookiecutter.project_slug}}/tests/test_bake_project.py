@@ -1,9 +1,10 @@
-from contextlib import contextmanager
 import datetime
 import os
 import shlex
 import subprocess
 import sys
+
+from contextlib import contextmanager
 
 from cookiecutter.utils import rmtree
 import jinja2
