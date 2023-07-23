@@ -3,7 +3,7 @@
   "email": "vince@broz.cc",
   "github_username": "apiology",
   "project_name": "{{ cookiecutter.language_or_tool }} Boilerplate",
-  "project_slug": "{% raw %}{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}{% endraw %}",
+  "project_slug": "{% raw %}{{ cookiecutter.project_name.lower().replace(' ', '-').replace('_', '-') }}{% endraw %}",
   "project_short_description": "{{ cookiecutter.language_or_tool }} Boilerplate contains all the boilerplate you need to create a {{ cookiecutter.language_or_tool }} project.",
   "version": "0.1.0",
   "open_source_license": ["MIT license", "BSD license", "ISC license", "Apache Software License 2.0", "GNU General Public License v3", "Not open source"],
