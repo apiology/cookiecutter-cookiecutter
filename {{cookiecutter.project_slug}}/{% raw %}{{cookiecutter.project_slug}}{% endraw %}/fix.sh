@@ -363,6 +363,7 @@ ensure_overcommit() {
   else
     >&2 echo 'Not in a git repo; not installing git hooks'
   fi
+  overcommit --sign pre-commit
 }
 
 ensure_ruby_versions
