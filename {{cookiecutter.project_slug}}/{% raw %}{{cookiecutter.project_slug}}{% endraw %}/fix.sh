@@ -332,12 +332,15 @@ ensure_pyenv_virtualenvs() {
 }
 
 ensure_pip_and_wheel() {
-  # pip 22 seems to be better at finding pandas pre-compiled wheels
-  # for macOS, so let's make sure we're using at least that version
+  # https://cve.mitre.org/cgi-bin/cvename.cgi?name=2023-5752
   major_pip_version=$(pip --version | cut -d' ' -f2 | cut -d '.' -f 1)
-  if [[ major_pip_version -lt 21 ]]
+  minor_pip_version=$(pip --version | cut -d' ' -f2 | cut -d '.' -f 2)
+  if [[ major_pip_version -lt 23 ]]
   then
-    pip install 'pip>=22'
+      pip install 'pip>=23.3'
+  elif [[ major_pip_version -eq 23 ]] && [[ minor_pip_version -lt 3 ]]
+  then
+      pip install 'pip>=23.3'
   fi
   # wheel is helpful for being able to cache long package builds
   pip show wheel >/dev/null 2>&1 || pip install wheel
