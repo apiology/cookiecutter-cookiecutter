@@ -1,5 +1,5 @@
 alabaster==0.7.12
-cookiecutter>=1.4.0
+cookiecutter>=2.5.0
 flake8==6.0.0
 flake8-isort==6.0.0
 pip==23.3.1
