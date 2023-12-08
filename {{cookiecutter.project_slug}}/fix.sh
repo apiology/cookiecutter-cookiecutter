@@ -295,7 +295,7 @@ ensure_python_build_requirements() {
 ensure_python_versions() {
   # You can find out which feature versions are still supported / have
   # been release here: https://www.python.org/downloads/
-  python_versions="$(latest_python_version 3.11)"
+  python_versions="$(latest_python_version 3.12)"
 
   echo "Latest Python versions: ${python_versions}"
 
@@ -363,6 +363,7 @@ ensure_overcommit() {
   if [ -d .git ]
   then
     bundle exec overcommit --install
+    bundle exec overcommit --sign pre-commit
   else
     >&2 echo 'Not in a git repo; not installing git hooks'
   fi
