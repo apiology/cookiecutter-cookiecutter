@@ -160,11 +160,11 @@ workflows:
               only:
                 - main
     jobs:
-      - test
+      - build
       - overcommit
   overcommit:
     jobs:
       - overcommit
   build:
     jobs:
-      - test
+      - build
