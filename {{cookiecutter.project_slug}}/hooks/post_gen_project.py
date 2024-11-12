@@ -67,9 +67,9 @@ if __name__ == '__main__':
                      '{% raw %}{{ cookiecutter.github_username }}{% endraw %}/'
                      '{% raw %}{{ cookiecutter.project_slug }}{% endraw %}'])
                 run(['gh', 'repo', 'edit',
-                                       '--allow-update-branch',
-                                       '--enable-auto-merge',
-                                       '--delete-branch-on-merge'])
+                     '--allow-update-branch',
+                     '--enable-auto-merge',
+                     '--delete-branch-on-merge'])
             run(['git', 'push'])
             run(['circleci', 'follow'])
             run(['git', 'branch', '--set-upstream-to=origin/main', 'main'])
