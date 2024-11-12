@@ -109,3 +109,5 @@ requirements_dev.txt.installed
 # Installed by fix.sh based on what latest versions are
 /.python-version
 /.ruby-version
+
+/typecover
