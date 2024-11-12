@@ -41,7 +41,7 @@ if __name__ == '__main__':
         run(['bundle', 'exec', 'overcommit', '--sign'])
         run(['bundle', 'exec', 'overcommit', '--sign', 'pre-commit'])
         run(['bundle', 'exec', 'git', 'commit', '-m',
-                               'Initial commit from boilerplate'])
+             'Initial commit from boilerplate'])
 
     if os.environ.get('SKIP_GITHUB_AND_CIRCLECI_CREATION', '0') != '1':
         if 'none' != '{% raw %}{{ cookiecutter.type_of_github_repo }}{% endraw %}':
@@ -54,18 +54,22 @@ if __name__ == '__main__':
                                    'cookiecutter.type_of_github_repo: '
                                    '{% raw %}{{ cookiecutter.type_of_github_repo }}{% endraw %}')
             description = "{% raw %}{{ cookiecutter.project_short_description.replace('\"', '\\\"') }}{% endraw %}"
-            run(['gh', 'repo', 'create',
-                 visibility_flag,
-                 '--description',
-                 description,
-                 '--source',
-                 '.',
-                 '{% raw %}{{ cookiecutter.github_username }}/{% endraw %}'
-                 '{% raw %}{{ cookiecutter.project_slug }}{% endraw %}'])
-            run(['gh', 'repo', 'edit',
-                 '--allow-update-branch',
-                 '--enable-auto-merge',
-                 '--delete-branch-on-merge'])
+            # if repo doesn't already exist
+            if subprocess.call(['gh', 'repo', 'view',
+                                '{% raw %}{{ cookiecutter.github_username }}{% endraw %}/'
+                                '{% raw %}{{ cookiecutter.project_slug }}{% endraw %}']) != 0:
+                run(['gh', 'repo', 'create',
+                     visibility_flag,
+                     '--description',
+                     description,
+                     '--source',
+                     '.',
+                     '{% raw %}{{ cookiecutter.github_username }}{% endraw %}/'
+                     '{% raw %}{{ cookiecutter.project_slug }}{% endraw %}'])
+                run(['gh', 'repo', 'edit',
+                     '--allow-update-branch',
+                     '--enable-auto-merge',
+                     '--delete-branch-on-merge'])
             run(['git', 'push'])
             run(['circleci', 'follow'])
             run(['git', 'branch', '--set-upstream-to=origin/main', 'main'])
