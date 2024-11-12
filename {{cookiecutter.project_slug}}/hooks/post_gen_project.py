@@ -41,7 +41,7 @@ if __name__ == '__main__':
         run(['bundle', 'exec', 'overcommit', '--sign'])
         run(['bundle', 'exec', 'overcommit', '--sign', 'pre-commit'])
         run(['bundle', 'exec', 'git', 'commit', '-m',
-                               'Initial commit from boilerplate'])
+             'Initial commit from boilerplate'])
 
     if os.environ.get('SKIP_GITHUB_AND_CIRCLECI_CREATION', '0') != '1':
         if 'none' != '{% raw %}{{ cookiecutter.type_of_github_repo }}{% endraw %}':
@@ -59,13 +59,13 @@ if __name__ == '__main__':
                                 '{% raw %}{{ cookiecutter.github_username }}{% endraw %}/'
                                 '{% raw %}{{ cookiecutter.project_slug }}{% endraw %}']) != 0:
                 run(['gh', 'repo', 'create',
-                                       visibility_flag,
-                                       '--description',
-                                       description,
-                                       '--source',
-                                       '.',
-                                       '{% raw %}{{ cookiecutter.github_username }}{% endraw %}/'
-                                       '{% raw %}{{ cookiecutter.project_slug }}{% endraw %}'])
+                     visibility_flag,
+                     '--description',
+                     description,
+                     '--source',
+                     '.',
+                     '{% raw %}{{ cookiecutter.github_username }}{% endraw %}/'
+                     '{% raw %}{{ cookiecutter.project_slug }}{% endraw %}'])
                 run(['gh', 'repo', 'edit',
                                        '--allow-update-branch',
                                        '--enable-auto-merge',
