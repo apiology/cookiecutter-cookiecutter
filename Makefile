@@ -1,4 +1,4 @@
-.PHONY: clean clean-test clean-pyc clean-build test help typecheck quality
+.PHONY: build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-build clean-coverage clean-pyc clean-typecheck clean-typecoverage coverage default help overcommit report-coverage report-coverage-to-codecov test typecheck typecoverage update_from_cookiecutter quality
 .DEFAULT_GOAL := default
 
 define PRINT_HELP_PYSCRIPT
@@ -17,6 +17,10 @@ default: clean-coverage test coverage clean-typecoverage typecheck typecoverage 
 # https://app.circleci.com/pipelines/github/apiology/cookiecutter-pypackage/281/workflows/b85985a9-16d0-42c4-93d4-f965a111e090/jobs/366
 typecheck: ## run mypy against project
 	mypy --cobertura-xml-report typecover --html-report typecover hooks tests
+
+build-typecheck: ## Fetch information that type checking depends on
+
+clean-typecheck: ## Refresh information that type checking depends on
 
 citypecheck: typecheck ## Run type check from CircleCI
 
