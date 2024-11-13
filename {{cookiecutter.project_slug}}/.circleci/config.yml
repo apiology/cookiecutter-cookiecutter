@@ -121,11 +121,11 @@ jobs:
             # virtualenv, and only run in default Python version.
             - set_up_environment
             - run_with_languages:
-                label: make citypecoverage test
+                label: Typecheck
                 command: |
                   make citypecheck citypecoverage
             - run_with_languages:
-                label: make citypecoverage test
+                label: Test
                 command: |
                   # These will be used in post_gen_project.py while testing
                   # the cookies, as well as by overcommit
