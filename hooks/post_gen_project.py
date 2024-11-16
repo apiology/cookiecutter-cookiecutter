@@ -22,7 +22,9 @@ def remove_file(filepath):
 
 
 if __name__ == '__main__':
-    subprocess.check_call('./fix.sh')
+    run('./fix.sh')
+    # update frequently security-flagged gems
+    run(['bundle', 'update', '--conservative', 'rexml'])
     if os.environ.get('IN_COOKIECUTTER_PROJECT_UPGRADER', '0') == '1':
         os.environ['SKIP_GIT_CREATION'] = '1'
         os.environ['SKIP_GITHUB_AND_CIRCLECI_CREATION'] = '1'
