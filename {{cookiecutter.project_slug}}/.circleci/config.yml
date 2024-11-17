@@ -35,12 +35,12 @@ commands:
       - checkout
       - restore_cache:
           keys:
-            - gems-v2-{% raw %}checksum "Gemfile.lock"{% endraw %}
+            - gems-v2-{% raw %}{{ checksum "Gemfile.lock" }}{% endraw %}
             - gems-v2-
             - gems-
       - restore_cache:
           keys:
-            - wheels-v1-3.12.1-{% raw %}checksum "requirements_dev.txt"{% endraw %}
+            - wheels-v1-3.12.1-{% raw %}{{ checksum "requirements_dev.txt" }}{% endraw %}
             - wheels-v1-3.12.1-
             - wheels-v1-
             - wheels-
