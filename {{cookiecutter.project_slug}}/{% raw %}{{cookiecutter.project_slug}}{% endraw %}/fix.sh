@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-if [ -n "$FIX_SH_TIMING_LOG" ]; then
+if [ -n "${FIX_SH_TIMING_LOG+x}" ]; then
     rm -f "${FIX_SH_TIMING_LOG}"
 fi
 
