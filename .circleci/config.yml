@@ -36,7 +36,6 @@ commands:
       - checkout
       - restore_cache:
           keys:
-            - gems-v3-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}
             - gems-v3-{{ checksum "Gemfile.lock" }}-
             - gems-v3-
             - gems-
