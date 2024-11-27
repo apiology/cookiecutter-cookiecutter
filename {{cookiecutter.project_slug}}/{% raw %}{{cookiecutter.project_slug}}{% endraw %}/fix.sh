@@ -5,7 +5,7 @@ if [ -n "${FIX_SH_TIMING_LOG+x}" ]; then
 fi
 
 debug_timing() {
-  if [ -n "$FIX_SH_TIMING_LOG" ]; then
+  if [ -n "${FIX_SH_TIMING_LOG+x}" ]; then
     # shellcheck disable=SC2034
     _lastcmd=$(ruby -e "puts (Time.now.to_f * 1000).to_i")
     last_command='start'
