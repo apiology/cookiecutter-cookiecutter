@@ -22,7 +22,8 @@ commands:
             eval "$(pyenv init --path)"
             eval "$(pyenv virtualenv-init -)"
             eval "$(rbenv init -)"
-            export BUNDLE_PATH=vendor/bundle
+            # keep this in a single place for both main and child builds for cachability
+            export BUNDLE_PATH="$(pwd)/vendor/bundle"
 
             <<parameters.command>>
           environment:
@@ -35,8 +36,8 @@ commands:
       - checkout
       - restore_cache:
           keys:
-            - gems-v2-{{ checksum "Gemfile.lock" }}
-            - gems-v2-
+            - gems-v3-{{ checksum "Gemfile.lock" }}-
+            - gems-v3-
             - gems-
       - restore_cache:
           keys:
@@ -47,7 +48,7 @@ commands:
       - run:
           name: Initialize packages
           command: |
-            export BUNDLE_PATH=vendor/bundle
+            export BUNDLE_PATH="$(pwd)/vendor/bundle"
             './fix.sh'
       - run:
           name: Verify Gemfile.lock
@@ -58,9 +59,10 @@ commands:
               exit 1
             fi
       - save_cache:
-          key: gems-v2-{{ checksum "Gemfile.lock" }}
+          key: gems-v3-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}
           paths:
             - "vendor/bundle"
+            - ".yardoc"
       - save_cache:
           key: wheels-v1-3.12.1-{{ checksum "requirements_dev.txt" }}
           paths:
