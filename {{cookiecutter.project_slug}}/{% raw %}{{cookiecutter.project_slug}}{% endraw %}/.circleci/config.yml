@@ -36,7 +36,7 @@ commands:
       - checkout
       - restore_cache:
           keys:
-            - gems-v3-{{ '{% raw %}{{ checksum "Gemfile.lock" }}{% endraw %}' }}-{{ checksum ".ruby-version" }}
+            - gems-v3-{{ '{% raw %}{{ checksum "Gemfile.lock" }}{% endraw %}' }}-{% raw %}{{ checksum ".ruby-version" }}{% endraw %}
             - gems-v3-{{ '{% raw %}{{ checksum "Gemfile.lock" }}{% endraw %}' }}-
             - gems-v3-
             - gems-
@@ -60,7 +60,7 @@ commands:
               exit 1
             fi
       - save_cache:
-          key: gems-v3-{{ '{% raw %}{{ checksum "Gemfile.lock" }}{% endraw %}' }}-{{ checksum ".ruby-version" }}
+          key: gems-v3-{{ '{% raw %}{{ checksum "Gemfile.lock" }}{% endraw %}' }}-{% raw %}{{ checksum ".ruby-version" }}{% endraw %}
           paths:
             - "vendor/bundle"
             - ".yardoc"
