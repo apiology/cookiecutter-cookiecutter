@@ -49,7 +49,7 @@ if __name__ == '__main__':
     run(['git', 'add', '-A'])
     run(['make', 'build-typecheck'])  # update from bundle updates
     run(['bundle', 'exec', 'git', 'commit', '--allow-empty', '-m',
-         'security updates'])
+         'reformat, security updates'])
 
     if os.environ.get('SKIP_EXTERNAL', '0') != '1':
         if 'none' != '{% raw %}{{ cookiecutter.type_of_github_repo }}{% endraw %}':
