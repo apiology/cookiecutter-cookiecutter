@@ -39,9 +39,6 @@ if __name__ == '__main__':
     # (any file addition/modification from the outside world goes here)
     #
     run('./fix.sh')
-    run(['bundle', 'exec', 'overcommit', '--install'])
-    run(['bundle', 'exec', 'overcommit', '--sign'])
-    run(['bundle', 'exec', 'overcommit', '--sign', 'pre-commit'])
     run(['bundle', 'exec', 'rubocop', '-A'])
     #
     # (commit here if you brought in any files above)
