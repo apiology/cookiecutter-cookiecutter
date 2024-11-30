@@ -26,7 +26,6 @@ if __name__ == '__main__':
         remove_file('LICENSE')
         remove_file('CONTRIBUTING.md')
 
-
     if os.environ.get('SKIP_GIT_CREATION', '0') != '1':
         # Don't run these non-idempotent things when in
         # cookiecutter_project_upgrader, which will run this hook
