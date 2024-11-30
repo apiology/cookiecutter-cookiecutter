@@ -81,7 +81,6 @@ module Overcommit
     end
   end
 end
-# Returns the configuration for this repository.
 
 # Used for ease of stubbing in tests
 # @param status [Integer] The exit status to return
