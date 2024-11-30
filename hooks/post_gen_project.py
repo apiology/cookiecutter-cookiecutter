@@ -27,7 +27,7 @@ if __name__ == '__main__':
     run(['bundle', 'update', '--conservative', 'rexml'])
     if os.environ.get('IN_COOKIECUTTER_PROJECT_UPGRADER', '0') == '1':
         os.environ['SKIP_GIT_CREATION'] = '1'
-        os.environ['SKIP_GITHUB_AND_CIRCLECI_CREATION'] = '1'
+        os.environ['SKIP_EXTERNAL'] = '1'
 
     if os.environ.get('SKIP_GIT_CREATION', '0') != '1':
         # Don't run these non-idempotent things when in
@@ -41,7 +41,7 @@ if __name__ == '__main__':
         run(['bundle', 'exec', 'git', 'commit', '-m',
              'Initial commit from boilerplate'])
 
-    if os.environ.get('SKIP_GITHUB_AND_CIRCLECI_CREATION', '0') != '1':
+    if os.environ.get('SKIP_EXTERNAL', '0') != '1':
         if 'none' != '{{ cookiecutter.type_of_github_repo }}':
             if 'private' == '{{ cookiecutter.type_of_github_repo }}':
                 visibility_flag = '--private'
