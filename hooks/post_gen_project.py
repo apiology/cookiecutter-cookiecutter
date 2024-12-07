@@ -35,7 +35,7 @@ if __name__ == '__main__':
         # multiple times over its lifetime.
         run(['git', 'init'])
         run(['git', 'add', '-A'])
-        run(['bundle', 'exec', 'git', 'commit', '--allow-empty',
+        run(['git', 'commit', '--allow-empty',
              '--no-verify',
              '-m', 'Initial commit from boilerplate'])
     #
