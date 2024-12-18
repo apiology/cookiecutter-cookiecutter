@@ -48,8 +48,8 @@ commands:
             done
       - restore_cache:
           keys:
-            - rbenv-v4-{% raw %}{{ checksum "Gemfile.lock" }}{% endraw %}-
-            - rbenv-v4-
+            - rbenv-v5-{% raw %}{{ checksum "Gemfile.lock" }}{% endraw %}-
+            - rbenv-v5-
             - rbenv-
       - restore_cache:
           keys:
@@ -72,22 +72,6 @@ commands:
             './fix.sh'
       - store_artifacts:
           path: /tmp/fix_sh_timing.log
-      - run:
-          name: Verify Gemfile.lock
-          command: |
-            if ! git diff --exit-code Gemfile.lock
-            then
-              >&2 echo "Please resolve changes to Gemfile.lock after bundle install to avoid caching difficulties"
-              exit 1
-            fi
-      - save_cache:
-          key: rbenv-v4-{% raw %}{{ checksum "Gemfile.lock" }}{% endraw %}-{% raw %}{{ checksum ".ruby-version" }}{% endraw %}
-          paths:
-            - "Gemfile.lock.installed"
-            - "vendor/bundle"
-            - "/home/circleci/.rbenv"
-            - ".yardoc"
-            - "/home/circleci/.cache/solargraph"
       - save_cache:
           key: pyenv-v2-{% raw %}{{ checksum "requirements_dev.txt" }}{% endraw %}-{% raw %}{{ checksum ".python-version" }}{% endraw %}
           paths:
@@ -180,6 +164,23 @@ jobs:
             equal: [<< pipeline.git.branch >>, "main"]
           steps:
             - tox
+      - save_cache:
+          key: rbenv-v5-{% raw %}{{ checksum "Gemfile.lock" }}{% endraw %}-{% raw %}{{ checksum ".ruby-version" }}{% endraw %}
+          paths:
+            - "Gemfile.lock.installed"
+            - "types.installed"
+            - "vendor/bundle"
+            - "/home/circleci/.rbenv"
+            - ".yardoc"
+            - "/home/circleci/.cache/solargraph"
+      - run:
+          name: Verify deltas
+          command: |
+            if ! git diff --exit-code .
+            then
+              >&2 echo "Please resolve changes to avoid caching difficulties"
+              exit 1
+            fi
     # This seemed to shave 5ish% of the build time off when added
     resource_class: large
 
