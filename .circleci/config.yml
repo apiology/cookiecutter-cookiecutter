@@ -48,7 +48,8 @@ commands:
             done
       - restore_cache:
           keys:
-            - rbenv-v5-{{ checksum "Gemfile.lock" }}-
+            - rbenv-v5-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-
+            - rbenv-v5-{{ checksum "Gemfile" }}-
             - rbenv-v5-
             - rbenv-
       - restore_cache:
@@ -165,7 +166,7 @@ jobs:
           steps:
             - tox
       - save_cache:
-          key: rbenv-v5-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}
+          key: rbenv-v5-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}
           paths:
             - "Gemfile.lock.installed"
             - "types.installed"
