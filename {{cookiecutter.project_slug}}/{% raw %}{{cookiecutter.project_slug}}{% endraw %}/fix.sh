@@ -257,7 +257,7 @@ ensure_bundle() {
   # This affects nokogiri, which will try to reinstall itself in
   # Docker builds where it's already installed if this is not run.
   make Gemfile.lock
-  PLATFORMS="ruby arm64-darwin-23 x86_64-darwin-23 x86_64-linux x86_64-linux-musl aarch64-linux arm64-linux"
+  PLATFORMS="arm64-darwin-24 x86_64-linux x86_64-linux-musl aarch64-linux aarch64-linux-musl"
   for platform in ${PLATFORMS}
   do
     if ! grep -q "^  ${platform}$" Gemfile.lock
