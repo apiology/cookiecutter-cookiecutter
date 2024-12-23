@@ -1,4 +1,4 @@
-.PHONY: build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-coverage clean-typecheck clean-typecoverage coverage default help overcommit report-coverage report-coverage-to-codecov test typecheck typecoverage update_from_cookiecutter quality
+.PHONY: build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-coverage clean-typecheck clean-typecoverage coverage default gem_dependencies help overcommit quality report-coverage report-coverage-to-codecov test typecheck typecoverage update_from_cookiecutter
 .DEFAULT_GOAL := default
 
 define PRINT_HELP_PYSCRIPT
@@ -39,6 +39,8 @@ pip_install: requirements_dev.txt.installed ## Install Python dependencies
 
 Gemfile.lock: Gemfile
 	bundle lock
+
+gem_dependencies:
 
 # Ensure any Gemfile.lock changes, even pulled form git, ensure a
 # bundle is installed.
