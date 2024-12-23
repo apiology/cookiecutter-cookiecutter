@@ -85,7 +85,7 @@ commands:
             - "/home/circleci/.pyenv"
       - save_cache:
           name: 'Save rbenv cache'
-          key: rbenv-v5-{{ {% raw %}{{ checksum "Gemfile" }}{% endraw %} }}-{% raw %}{{ checksum "Gemfile.lock" }}{% endraw %} }}-{% raw %}{{ checksum ".ruby-version" }}{% endraw %} }}-{% raw %}{{ checksum "Makefile" }}{% endraw %} }}-{{ {% raw %}{{ checksum ".circleci/config.yml" }}{% endraw %} }} # yamllint disable-line rule:line-length
+          key: rbenv-v5-{{ '{% raw %}{{ checksum "Gemfile" }}{% endraw %}' }}-{{ '{% raw %}{{ checksum "Gemfile.lock" }}{% endraw %}' }}-{{ '{% raw %}{{ checksum ".ruby-version" }}{% endraw %}' }}-{{ '{% raw %}{{ checksum "Makefile" }}{% endraw %}' }}-{{ '{% raw %}{{ checksum ".circleci/config.yml" }}{% endraw %}' }} # yamllint disable-line rule:line-length
           paths:
             - "Gemfile.lock.installed"
             - 'vendor/.keep'
