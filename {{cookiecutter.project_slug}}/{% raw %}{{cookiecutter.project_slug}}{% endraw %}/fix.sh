@@ -237,7 +237,9 @@ ensure_bundle() {
   do
     if ! grep -q "^  ${platform}$" Gemfile.lock
     then
-      bundle lock --add-platform "${platform}"
+      echo "Missing platform $platform in Gemfile.lock - adding all of ${PLATFORMS}"
+      bundle lock --add-platform "${PLATFORMS// /,}"
+      break
     fi
   done
   make bundle_install
