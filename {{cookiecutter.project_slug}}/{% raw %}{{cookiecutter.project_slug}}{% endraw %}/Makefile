@@ -71,6 +71,11 @@ report-coverage-to-codecov: report-coverage ## use codecov.io for PR-scoped code
 	@curl -Os https://uploader.codecov.io/latest/linux/codecov
 	@chmod +x codecov
 	@./codecov --file coverage.xml --nonZero
+update_apt: .make/apt_updated
+
+.make/apt_updated:
+	sudo DEBIAN_FRONTEND=noninteractive apt-get update -y
+	touch .make/apt_updated
 
 cicoverage: report-coverage-to-codecov ## check code coverage, then report to codecov
 
