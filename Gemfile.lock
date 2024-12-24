@@ -35,11 +35,9 @@ GEM
 
 PLATFORMS
   aarch64-linux
-  arm64-darwin-23
+  aarch64-linux-musl
   arm64-darwin-24
-  arm64-linux
   ruby
-  x86_64-darwin-23
   x86_64-linux
   x86_64-linux-musl
 
