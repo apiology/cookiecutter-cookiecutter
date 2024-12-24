@@ -121,12 +121,9 @@ clean-coverage: ## Clean out previous output of test coverage to avoid flaky res
 
 coverage: test report-coverage ## check code coverage
 
-report-coverage: citest ## Report summary of coverage to stdout, and generate HTML, XML coverage report
+report-coverage:  ## Report summary of coverage to stdout, and generate HTML, XML coverage report
 
 report-coverage-to-codecov: report-coverage ## use codecov.io for PR-scoped code coverage reports
-	@curl -Os https://uploader.codecov.io/latest/linux/codecov
-	@chmod +x codecov
-	@./codecov --file coverage.xml --nonZero
 
 update_apt: .make/apt_updated
 
