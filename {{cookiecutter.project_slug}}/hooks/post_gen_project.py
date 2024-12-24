@@ -23,6 +23,8 @@ def remove_file(filepath):
 
 if __name__ == '__main__':
     if 'Not open source' == '{% raw %}{{ cookiecutter.open_source_license }}{% endraw %}':
+    # Add bin directory at start of PATH
+    os.environ['PATH'] = os.path.join(PROJECT_DIRECTORY, 'bin') + os.pathsep + os.environ['PATH']
         remove_file('LICENSE')
         remove_file('CONTRIBUTING.md')
 
