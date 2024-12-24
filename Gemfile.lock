@@ -34,12 +34,9 @@ GEM
     tomlrb (2.0.3)
 
 PLATFORMS
-  aarch64-linux
-  aarch64-linux-musl
+  arm64-darwin
   arm64-darwin-24
   ruby
-  x86_64-linux
-  x86_64-linux-musl
 
 DEPENDENCIES
   mdl
