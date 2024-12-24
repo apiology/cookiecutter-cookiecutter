@@ -22,6 +22,9 @@ def remove_file(filepath):
 
 
 if __name__ == '__main__':
+    # Add bin directory at start of PATH
+    os.environ['PATH'] = os.path.join(PROJECT_DIRECTORY, 'bin') + os.pathsep + os.environ['PATH']
+
     run('./fix.sh')
     # update frequently security-flagged gems
     run(['bundle', 'update', '--conservative', 'rexml'])
