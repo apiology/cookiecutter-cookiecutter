@@ -17,11 +17,21 @@ help:
 
 default: clean-typecoverage typecheck typecoverage clean-coverage test coverage quality ## run default typechecking, tests and quality
 
-build-typecheck: ## Fetch information that type checking depends on
+build-typecheck: types.installed  ## Fetch information that type checking depends on
 
-clean-typecheck: ## Refresh information that type checking depends on
+clean-typecheck: ## Refresh the easily-regenerated information that type checking depends on
 
-typecheck: ## validate types in code and configuration
+realclean-typecheck: clean-typecheck ## Remove all type checking artifacts
+
+realclean: clean realclean-typecheck
+	rm -fr vendor .bundle
+	rm .make/*
+	rm *.installed
+
+typecheck: build-typecheck ## validate types in code and configuration
+
+types.installed: Gemfile.lock Gemfile.lock.installed ## Install Ruby dependencies
+	touch types.installed
 
 citypecheck: typecheck ## Run type check from CircleCI
 
