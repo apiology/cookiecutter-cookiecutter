@@ -99,7 +99,7 @@ update_apt: .make/apt_updated
 	sudo DEBIAN_FRONTEND=noninteractive apt-get update -y
 	touch .make/apt_updated
 
-cicoverage: coverage report-coverage-to-codecov ## check code coverage
+cicoverage: citest report-coverage-to-codecov ## check code coverage
 
 update_from_cookiecutter: ## Bring in changes from template project used to create this repo
 	bundle exec overcommit --uninstall
