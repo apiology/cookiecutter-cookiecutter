@@ -53,9 +53,13 @@ requirements_dev.txt.installed: requirements_dev.txt
 pip_install: requirements_dev.txt.installed ## Install Python dependencies
 
 Gemfile.lock: Gemfile
+	make .bundle/config
 	bundle lock
 
-gem_dependencies:
+.bundle/config:
+	touch .bundle/config
+
+gem_dependencies: .bundle/config
 
 # Ensure any Gemfile.lock changes, even pulled from git, ensure a
 # bundle is installed.
@@ -63,6 +67,7 @@ Gemfile.lock.installed: Gemfile vendor/.keep
 	touch Gemfile.lock.installed
 
 vendor/.keep: Gemfile.lock
+	make gem_dependencies
 	bundle install
 	touch vendor/.keep
 
