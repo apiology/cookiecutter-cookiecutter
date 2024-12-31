@@ -15,7 +15,8 @@ export PRINT_HELP_PYSCRIPT
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
-default: clean-typecoverage typecheck typecoverage clean-coverage test coverage quality ## run default typechecking, tests and quality
+default: clean-typecoverage typecheck typecoverage clean-coverage test coverage overcommit_branch quality ## run default typechecking, tests and quality
+
 
 build-typecheck: types.installed  ## Fetch information that type checking depends on
 
@@ -68,6 +69,9 @@ citest: test ## Run unit tests from CircleCI
 
 overcommit: ## run precommit quality checks
 	bundle exec overcommit --run
+
+overcommit_branch: ## run precommit quality checks only on changed files
+	@bundle exec overcommit_branch
 
 quality: overcommit ## run precommit quality checks
 
