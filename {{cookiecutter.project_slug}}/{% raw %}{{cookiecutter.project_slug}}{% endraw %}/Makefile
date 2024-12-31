@@ -43,6 +43,9 @@ clean-typecoverage: ## Clean out type-related coverage previous results to avoid
 
 citypecoverage: typecoverage ## Run type checking, ratchet coverage, and then complain if ratchet needs to be committed
 
+config/env: config/env.1p  ## Create file suitable for docker-compose usage
+	cat config/env.1p | cut -d= -f1 > config/env
+
 requirements_dev.txt.installed: requirements_dev.txt
 	pip install -q --disable-pip-version-check -r requirements_dev.txt
 	touch requirements_dev.txt.installed
@@ -56,9 +59,12 @@ gem_dependencies:
 
 # Ensure any Gemfile.lock changes, even pulled from git, ensure a
 # bundle is installed.
-Gemfile.lock.installed: Gemfile.lock Gemfile
-	bundle install
+Gemfile.lock.installed: Gemfile vendor/.keep
 	touch Gemfile.lock.installed
+
+vendor/.keep: Gemfile.lock
+	bundle install
+	touch vendor/.keep
 
 bundle_install: Gemfile.lock.installed ## Install Ruby dependencies
 
@@ -93,7 +99,7 @@ update_apt: .make/apt_updated
 	sudo DEBIAN_FRONTEND=noninteractive apt-get update -y
 	touch .make/apt_updated
 
-cicoverage: report-coverage-to-codecov ## check code coverage, then report to codecov
+cicoverage: coverage report-coverage-to-codecov ## check code coverage
 
 update_from_cookiecutter: ## Bring in changes from template project used to create this repo
 	bundle exec overcommit --uninstall
