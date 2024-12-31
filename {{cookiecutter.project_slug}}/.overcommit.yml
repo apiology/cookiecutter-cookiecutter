@@ -27,10 +27,6 @@ PreCommit:
       - '{% raw %}{{cookiecutter.project_slug}}{% endraw %}/**/*'
   BrokenSymlinks:
     enabled: true
-    exclude:
-      # This is a symlink to sibling checkout of plate-spinner, used
-      # only in local development
-      - config/env.1p
   FixMe:
     enabled: true
   PythonFlake8:
