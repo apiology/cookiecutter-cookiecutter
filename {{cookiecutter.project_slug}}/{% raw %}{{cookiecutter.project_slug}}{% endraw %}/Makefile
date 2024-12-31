@@ -87,6 +87,10 @@ overcommit_branch: ## run precommit quality checks only on changed files
 
 quality: overcommit ## run precommit quality checks
 
+repl: ## Launch an interactive development shell
+	@echo "Teach me how to make repl"
+	@exit 1
+
 clean-coverage: ## Clean out previous output of test coverage to avoid flaky results from previous runs
 
 coverage: test report-coverage ## check code coverage
