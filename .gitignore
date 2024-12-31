@@ -115,7 +115,9 @@ types.installed
 /typecover
 
 # Ruby-related
-/.bundle/
+
+# Ignore bundler config.
+/.bundle/config
 
 # Ignore make target files
 /.make/*
