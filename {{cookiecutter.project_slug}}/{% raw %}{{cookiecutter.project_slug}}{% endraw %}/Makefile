@@ -54,7 +54,7 @@ Gemfile.lock: Gemfile
 
 gem_dependencies:
 
-# Ensure any Gemfile.lock changes, even pulled form git, ensure a
+# Ensure any Gemfile.lock changes, even pulled from git, ensure a
 # bundle is installed.
 Gemfile.lock.installed: Gemfile.lock Gemfile
 	bundle install
@@ -86,6 +86,7 @@ report-coverage-to-codecov: report-coverage ## use codecov.io for PR-scoped code
 	@curl -Os https://uploader.codecov.io/latest/linux/codecov
 	@chmod +x codecov
 	@./codecov --file coverage.xml --nonZero
+
 update_apt: .make/apt_updated
 
 .make/apt_updated:
@@ -105,8 +106,8 @@ update_from_cookiecutter: ## Bring in changes from template project used to crea
 	# update frequently security-flagged gems while we're here
 	bundle update --conservative rexml || true
 	make build-typecheck
-	git add Gemfile.lock || true
 	bundle install || true
+	git add Gemfile.lock || true
 	bundle exec overcommit --install || true
 	@echo
 	@echo "Please resolve any merge conflicts below and push up a PR with:"
