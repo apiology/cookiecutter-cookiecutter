@@ -17,6 +17,10 @@ help:
 
 default: clean-typecoverage typecheck typecoverage clean-coverage test coverage overcommit_branch quality ## run default typechecking, tests and quality
 
+SOURCE_FILE_GLOBS = ['{config,lib,app,script}/**/*.rb', 'ext/**/*.{c,rb}']
+
+SOURCE_FILES := $(shell ruby -e "puts Dir.glob($(SOURCE_FILE_GLOBS))")
+
 types.installed: Gemfile.lock Gemfile.lock.installed ## Ensure typechecking dependencies are in place
 	touch types.installed
 
