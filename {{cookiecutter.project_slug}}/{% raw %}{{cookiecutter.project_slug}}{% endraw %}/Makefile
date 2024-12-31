@@ -68,7 +68,7 @@ vendor/.keep: Gemfile.lock
 
 bundle_install: Gemfile.lock.installed ## Install Ruby dependencies
 
-clean: ## remove all built artifacts
+clean: clean-typecheck clean-coverage ## remove all built artifacts
 
 test: ## run tests quickly
 
