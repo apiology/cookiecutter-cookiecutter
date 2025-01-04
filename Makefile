@@ -113,9 +113,6 @@ test-all: ## run tests on every Python version with tox
 
 clean: clean-build clean-pyc clean-test clean-typecoverage clean-typecheck clean-coverage ## remove all build, test, coverage and Python artifacts
 
-clean:  clean-coverage ## remove all built artifacts
-
-
 test: ## run tests quickly
 	pytest --maxfail=1 tests/test_bake_project.py --capture=no -v
 
