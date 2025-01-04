@@ -21,12 +21,15 @@ PreCommit:
   # https://github.com/sds/overcommit/blob/master/config/default.yml
   BrokenSymlinks:
     enabled: true
-    exclude:
-      # This is a symlink to sibling checkout of plate-spinner, used
-      # only in local development
-      - config/env.1p
   FixMe:
     enabled: true
+    on_warn: fail
+    exclude:
+      # sorbet sure likes to crash
+      - 'core.*'
+      # don't freak out over line below
+      - '.overcommit.yml'
+    keywords: ['BROKEN', 'BUG', 'ERROR', 'FIXME', 'HACK', 'OPTIMIZE', 'REVIEW', 'TODO', 'WTF', 'XXX']
   PythonFlake8:
     enabled: true
     on_warn: fail
@@ -50,6 +53,11 @@ PreCommit:
     command: ['bundle', 'exec', 'punchlist']
     enabled: true
     problem_on_unmodified_line: warn
+    exclude:
+      # sorbet sure likes to crash
+      - 'core.*'
+      # don't freak out over line below
+      - '.overcommit.yml'
   CustomScript:
     enabled: true
     required_executable: 'git-commit-validate'
