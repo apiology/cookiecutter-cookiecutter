@@ -25,6 +25,7 @@ PreCommit:
       # syntax as a result; these will be tested in pytest after being
       # templated.
       - '{% raw %}{{cookiecutter.project_slug}}{% endraw %}/**/*'
+      - '{% raw %}{{cookiecutter.project_slug}}{% endraw %}/**/.*'
   BrokenSymlinks:
     enabled: true
   FixMe:
