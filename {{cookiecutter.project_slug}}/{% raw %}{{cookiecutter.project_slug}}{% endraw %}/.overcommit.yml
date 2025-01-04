@@ -60,7 +60,7 @@ PreCommit:
       - '.overcommit.yml'
   CustomScript:
     enabled: true
-    required_executable: 'git-commit-validate'
+    required_executable: 'bin/git-commit-validate'
 
 #PostCheckout:
 #  ALL: # Special hook name that customizes all hooks of this type
