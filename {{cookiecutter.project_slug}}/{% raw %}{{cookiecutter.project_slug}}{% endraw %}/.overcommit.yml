@@ -23,6 +23,7 @@ PreCommit:
     enabled: true
   FixMe:
     enabled: true
+    on_warn: fail
     exclude:
       # sorbet sure likes to crash
       - 'core.*'
