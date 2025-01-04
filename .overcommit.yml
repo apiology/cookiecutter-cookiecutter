@@ -25,6 +25,7 @@ PreCommit:
       # syntax as a result; these will be tested in pytest after being
       # templated.
       - '{{cookiecutter.project_slug}}/**/*'
+      - '{{cookiecutter.project_slug}}/**/.*'
   BrokenSymlinks:
     enabled: true
   FixMe:
