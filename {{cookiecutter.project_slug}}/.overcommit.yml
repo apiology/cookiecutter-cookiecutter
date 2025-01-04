@@ -58,6 +58,11 @@ PreCommit:
     command: ['bundle', 'exec', 'punchlist']
     enabled: true
     problem_on_unmodified_line: warn
+    exclude:
+      # sorbet sure likes to crash
+      - 'core.*'
+      # don't freak out over line below
+      - '.overcommit.yml'
 
 #PostCheckout:
 #  ALL: # Special hook name that customizes all hooks of this type
