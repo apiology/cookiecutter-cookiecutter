@@ -24,7 +24,7 @@ PreCommit:
       # Files are templated and the raw version is not always valid
       # syntax as a result; these will be tested in pytest after being
       # templated.
-      - '{{cookiecutter.project_slug}}/{*,**}/{.*,*}'
+      - '{{cookiecutter.project_slug}}/**/*'
   BrokenSymlinks:
     enabled: true
   FixMe:
