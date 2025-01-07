@@ -21,6 +21,10 @@ SOURCE_FILE_GLOBS = ['{config,lib,app,script}/**/*.rb', 'ext/**/*.{c,rb}']
 
 SOURCE_FILES := $(shell ruby -e "puts Dir.glob($(SOURCE_FILE_GLOBS))")
 
+start: ## run code continously and watch files for changes
+	echo "Teach me how to 'make start'"
+	exit 1
+
 types.installed: Gemfile.lock Gemfile.lock.installed ## Ensure typechecking dependencies are in place
 	touch types.installed
 
