@@ -72,7 +72,6 @@ PreCommit:
       - 'core.*'
       # don't freak out over line below
       - '.overcommit.yml'
-      - '{{cookiecutter.project_slug}}/.overcommit.yml'
 
 #PostCheckout:
 #  ALL: # Special hook name that customizes all hooks of this type
