@@ -1,4 +1,4 @@
-.PHONY: build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-build clean-coverage clean-pyc clean-typecheck clean-typecoverage coverage default gem_dependencies help overcommit quality report-coverage report-coverage-to-codecov test typecheck typecoverage update_from_cookiecutter
+.PHONY: build build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-build clean-coverage clean-pyc clean-typecheck clean-typecoverage coverage default gem_dependencies help overcommit quality report-coverage report-coverage-to-codecov test typecheck typecoverage update_from_cookiecutter
 .DEFAULT_GOAL := default
 
 define PRINT_HELP_PYSCRIPT
@@ -15,7 +15,7 @@ export PRINT_HELP_PYSCRIPT
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
-default: clean-typecoverage typecheck typecoverage clean-coverage test coverage overcommit_branch quality ## run default typechecking, tests and quality
+default: clean-typecoverage build typecheck typecoverage clean-coverage test coverage overcommit_branch quality ## run default typechecking, tests and quality
 
 SOURCE_FILE_GLOBS = ['{tests,hooks}/**/*.py']
 
@@ -24,6 +24,8 @@ SOURCE_FILES := $(shell ruby -e "puts Dir.glob($(SOURCE_FILE_GLOBS))")
 start: ## run code continously and watch files for changes
 	echo "Teach me how to 'make start'"
 	exit 1
+
+build: bundle_install pip_install build-typecheck ## Update 3rd party packages as well and produce any artifacts needed from code
 
 types.installed: Gemfile.lock Gemfile.lock.installed ## Ensure typechecking dependencies are in place
 	touch types.installed
@@ -169,9 +171,7 @@ update_from_cookiecutter: ## Bring in changes from template project used to crea
 	git checkout --ours Gemfile.lock || true
 	# update frequently security-flagged gems while we're here
 	bundle update --conservative rexml || true
-	make build-typecheck
-	bundle install || true
-	git add Gemfile.lock || true
+	( make build && git add Gemfile.lock ) || true
 	bundle exec overcommit --install || true
 	@echo
 	@echo "Please resolve any merge conflicts below and push up a PR with:"
