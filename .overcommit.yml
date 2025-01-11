@@ -74,6 +74,7 @@ PreCommit:
       - '.overcommit.yml'
   CustomScript:
     enabled: true
+    requires_files: false
     required_executable: 'bin/git-commit-validate'
 
 #PostCheckout:
