@@ -1,5 +1,5 @@
 GIT
-  remote: https://github.com/apiology/overcommit
+  remote: https://github.com/apiology/overcommit.git
   revision: ab4beba508171b9b5cbc2bb39808b3f2477aa1b8
   branch: add_solargraph
   specs:
