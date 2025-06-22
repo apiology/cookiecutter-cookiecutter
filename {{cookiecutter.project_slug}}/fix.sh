@@ -196,6 +196,10 @@ ensure_bundle() {
   # Version <2.2.22 of bundler isn't compatible with Ruby 3.3:
   #
   # https://stackoverflow.com/questions/70800753/rails-calling-didyoumeanspell-checkers-mergeerror-name-spell-checker-h
+
+  # Version <2.2.9 doesn't seem to handle git branches during 'bundle lock' in some situations
+  #
+  # https://stackoverflow.com/questions/70800753/rails-calling-didyoumeanspell-checkers-mergeerror-name-spell-checker-h
   need_better_bundler=false
   if [ "${bundler_version_major}" -lt 2 ]
   then
@@ -205,9 +209,9 @@ ensure_bundle() {
     if [ "${bundler_version_minor}" -lt 2 ]
     then
       need_better_bundler=true
-    elif [ "${bundler_version_minor}" -eq 2 ]
+    elif [ "${bundler_version_minor}" -eq 6 ]
     then
-      if [ "${bundler_version_patch}" -lt 23 ]
+      if [ "${bundler_version_patch}" -lt 9 ]
       then
         need_better_bundler=true
       fi
