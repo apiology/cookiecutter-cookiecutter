@@ -206,7 +206,7 @@ ensure_bundle() {
     need_better_bundler=true
   elif [ "${bundler_version_major}" -eq 2 ]
   then
-    if [ "${bundler_version_minor}" -lt 2 ]
+    if [ "${bundler_version_minor}" -lt 6 ]
     then
       need_better_bundler=true
     elif [ "${bundler_version_minor}" -eq 6 ]
@@ -223,7 +223,7 @@ ensure_bundle() {
     # need to do this first before 'bundle update --bundler' will work
     make bundle_install
     bundle update --bundler
-    gem install bundler:2.2.23
+    gem install bundler:2.6.9
     >&2 echo "Updated bundler version: $(bundle --version)"
     # ensure next step installs fresh bundle
     rm -f Gemfile.lock.installed
