@@ -94,7 +94,7 @@ overcommit: ## run precommit quality checks
 	bin/overcommit --run
 
 overcommit_branch: ## run precommit quality checks only on changed files
-	@bin/overcommit_branch
+	bin/overcommit --run --diff origin/main
 
 quality: overcommit ## run precommit quality checks
 
