@@ -106,6 +106,8 @@ PrePush:
     enabled: true
     requires_files: false
     required_executable: 'bin/git-push-validate'
+  Pytest:
+    enabled: true
 
 #PostCheckout:
 #  ALL: # Special hook name that customizes all hooks of this type
@@ -113,7 +115,3 @@ PrePush:
 #
 #  IndexTags:
 #    enabled: true # Generate a tags file with `ctags` each time HEAD changes
-
-PrePush:
-  Pytest:
-    enabled: true
