@@ -104,6 +104,8 @@ commands:
             git config --global user.name "Test Test"
             bin/overcommit --sign
             bin/overcommit --sign pre-commit
+            bin/overcommit --sign pre-push
+
 
             bin/overcommit --run
 jobs:
