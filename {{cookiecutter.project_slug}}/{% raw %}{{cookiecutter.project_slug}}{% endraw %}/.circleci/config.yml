@@ -125,16 +125,26 @@ jobs:
           label: Typecheck
           command: make citypecheck citypecoverage
       - run:
-          name: Verify deltas
+          label: Verify deltas
           command: |
-            if ! git diff --exit-code .
+            if [ -n "$(git status --porcelain)" ]
             then
-              >&2 echo "Please resolve changes to avoid caching difficulties"
+              git status --porcelain
+              git diff -u .
+              >&2 echo "Please check in all files"
               exit 1
             fi
       - run_with_languages:
           label: Test
           command: |
+            # Set timezone as same on dev box for test consistency
+
+            # https://stackoverflow.com/questions/44331836/apt-get-install-tzdata-noninteractive
+            sudo ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
+            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
+            export TZ=America/New_York
+            date
+
             make citest cicoverage
     # This seemed to shave 5ish% of the build time off when added
     resource_class: large
