@@ -19,12 +19,6 @@
 PreCommit:
   # Extend default config at
   # https://github.com/sds/overcommit/blob/master/config/default.yml
-  ALL:
-    exclude:
-      # Files are templated and the raw version is not always valid
-      # syntax as a result; these will be tested in pytest after being
-      # templated.
-      - '{% raw %}{{cookiecutter.project_slug}}{% endraw %}/**/*'
   BrokenSymlinks:
     enabled: true
     exclude:
@@ -79,6 +73,11 @@ PreCommit:
   BundleInstall:
     enabled: true
   ALL:
+    exclude:
+      # Files are templated and the raw version is not always valid
+      # syntax as a result; these will be tested in pytest after being
+      # templated.
+      - '{% raw %}{{cookiecutter.project_slug}}{% endraw %}/**/*'
     on_warn: fail
     problem_on_unmodified_line: warn
     quiet: false
