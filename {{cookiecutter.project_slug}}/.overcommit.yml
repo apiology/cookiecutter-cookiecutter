@@ -26,27 +26,22 @@ PreCommit:
       - 'config/env.1p'
   FixMe:
     enabled: true
-    on_warn: fail
     exclude:
       # sorbet sure likes to crash
       - 'core.*'
       # don't freak out over line below
       - '.overcommit.yml'
     keywords: ['BROKEN', 'BUG', 'FIXME', 'HACK', 'OPTIMIZE', 'REVIEW', 'TODO', 'WTF', 'XXX']
-    problem_on_unmodified_line: warn
   PythonFlake8:
     enabled: true
-    on_warn: fail
   ShellCheck:
     enabled: true
-    on_warn: fail
     include:
       - '.envrc'
       - '**/*.sh'
   YamlLint:
     enabled: true
     flags: ['-c', '.yamllint.yml', '--format=parsable', '--strict']
-    on_warn: fail
   CircleCi:
     required_executable: 'circleci'
     flags: ['config', 'validate']
@@ -56,7 +51,6 @@ PreCommit:
   Punchlist:
     command: ['bundle', 'exec', 'punchlist']
     enabled: true
-    problem_on_unmodified_line: warn
     exclude:
       # used for development
       - 'config/env.1p'
@@ -70,6 +64,10 @@ PreCommit:
     required_executable: 'bin/git-commit-validate'
   BundleInstall:
     enabled: true
+  ALL:
+    on_warn: fail
+    problem_on_unmodified_line: warn
+    quiet: false
 
 PostCheckout:
   BundleInstall:
