@@ -72,7 +72,7 @@ commands:
           path: /tmp/fix_sh_timing.log
       - save_cache:
           name: 'Save pyenv cache'
-          key: pyenv-v2-{% raw %}{{ checksum "requirements_dev.txt" }}{% endraw %}-{% raw %}{{ checksum ".python-version" }}{% endraw %}
+          key: pyenv-v2-{% raw %}{{ checksum "requirements_dev.txt" }}{% endraw %}-{% raw %}{{ checksum ".python-version" }}{% endraw %} # yamllint disable-line rule:line-length
           paths:
             - "requirements_dev.txt.installed"
             - "/home/circleci/.cache/pip/wheels"
