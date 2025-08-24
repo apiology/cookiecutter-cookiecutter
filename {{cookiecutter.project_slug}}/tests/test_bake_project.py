@@ -61,6 +61,7 @@ def bake_in_temp_dir(cookies, *args, **kwargs):
         if not ("--keep-baked-projects" in sys.argv):
             rmtree(str(result.project_path))
 
+
 def run_inside_dir(command, dirpath):
     """
     Run a command from inside a given directory, returning the exit status
