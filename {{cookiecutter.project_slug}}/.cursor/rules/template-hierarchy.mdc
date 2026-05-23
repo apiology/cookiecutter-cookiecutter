@@ -16,11 +16,16 @@ Cookiecutter templates in this family stack **general → specific** (meta → l
 |----------------|---------------|---------------|----------------------------------------------------------------|
 | `overcommit-signing.mdc` | Yes | Yes | Yes |
 | `template-hierarchy.mdc` | Yes | Yes (this file) | Yes (project tier) |
+| `fix.sh`, `bin/git-*` hooks, shared `.overcommit.yml` bootstrap | Yes | Yes | Yes |
 | Boilerplate sync skill + `SYNCING_BOILERPLATE.md` | Baked path only | **Yes** | No |
 | Language hooks (RuboCop, etc.) | No | **Yes** | Framework-only → nested |
 | Pytest bake tips in `DEVELOPMENT.md` | Meta repo | **Yes** if this template uses pytest | No — not every baked project uses Python |
 
 Place each artifact at the **narrowest** tier that still applies to every repo that tier generates.
+
+## Propagate across tiers (agent checklist)
+
+The meta repo and this tree each maintain parallel copies of cross-language boilerplate (`fix.sh`, `.overcommit.yml`, `bin/git-*`, etc.). When you change one copy, **search for the same basename** under the meta repo and update **every tier** where it exists (meta root, this directory, nested `{% raw %}{{cookiecutter.project_slug}}/{% endraw %}`), unless the edit is tier-specific. If unsure, **ask the user** before submitting a PR. See the meta rule `template-hierarchy.mdc` for the full three-tier map.
 
 Interpret every sync or edit against three directions:
 
