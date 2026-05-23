@@ -26,6 +26,7 @@ PreCommit:
     exclude:
       # used for development
       - 'config/env.1p'
+      - 'config/env.local'
   FixMe:
     enabled: true
     exclude:
@@ -64,6 +65,7 @@ PreCommit:
       - '{% raw %}{{cookiecutter.project_slug}}{% endraw %}/**/*'
       # used for development
       - 'config/env.1p'
+      - 'config/env.local'
       # sorbet sure likes to crash
       - 'core.*'
       # don't freak out over line below

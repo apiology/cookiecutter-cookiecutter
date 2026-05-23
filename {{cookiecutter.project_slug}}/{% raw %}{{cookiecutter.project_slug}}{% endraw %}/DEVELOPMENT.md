@@ -52,3 +52,34 @@ bin/overcommit --sign pre-commit
 
 This project uses direnv to manage environment variables used during
 development.  See the `.envrc` file for detail.
+
+### Secrets: `config/env.1p` and 1Password
+
+`config/env.1p` in git is the **template**: each variable points at a vault
+item with an `op://` [secret
+reference](https://developer.1password.com/docs/cli/secret-reference), not a
+plaintext value.  `.envrc` and `make config/env` prefer **`config/env.local`**
+when that file is readable (1Password Environment mount with resolved
+literals); otherwise they use `op run --env-file=config/env.1p` (always in
+git) to resolve references at load time.
+
+For local development, you can also store **resolved** values in a
+[1Password Environment](https://developer.1password.com/docs/environments/) and mount
+them as a [local `.env`
+file](https://developer.1password.com/docs/environments/local-env-file/) at
+**`config/env.local`** (macOS beta; fifo mount, gitignored).  Do **not**
+mount at `config/env.1p` — that path is the tracked `op://` template and
+conflicts with git.
+
+#### Update the Environment from `config/env.1p` (`op inject`)
+
+```sh
+op inject -i config/env.1p -o /tmp/repo-env.import -f
+grep 'op://' /tmp/repo-env.import && echo 'ERROR: unresolved references' || echo 'OK'
+# Import /tmp/repo-env.import in 1Password → Environments, then:
+rm /tmp/repo-env.import
+```
+
+If you use a local mount at `config/env.local`, confirm
+`grep -c op:// config/env.local` is **0**, then `direnv allow`.  Do not
+commit `config/env.local`.

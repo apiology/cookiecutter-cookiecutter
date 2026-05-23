@@ -66,13 +66,25 @@ Before porting: `git ls-tree origin/main -- <path>`.
 
 ## Meta tier: Ruby reference exclusions
 
-If the reference is a **Ruby app or gem** (e.g. `checkoff`) and you are at the **meta** cookiecutter, do **not** port Ruby-only bootstrap or Sorbet artifacts into shared files:
+If the reference is a **Ruby app or gem** (e.g. `checkoff` or a private baked gem) and you are at the **meta** cookiecutter, do **not** port Ruby-only bootstrap or Sorbet artifacts into shared files:
 
-- `fix.sh`: rbenv `--list-all`, `set_ruby_local_version` / rugged / extra `ensure_rbenv`
+- `fix.sh`: rbenv `--list-all`, `set_ruby_local_version` churn, `ensure_rugged_packages_installed` (**Ruby repos only** — not generic language templates), extra `ensure_rbenv`; project-only `handlebars` / `mini_racer` / `chromedriver` helpers
 - `.gitignore`: `tapioca.installed`, `yardoc.installed`, `sorbet/machine_specific_config`
 - `.git-hooks/**/*.rb`: `# @sg-ignore` and Sorbet-only annotations
+- `.overcommit.yml` / `.yamllint.yml`: RuboCop, Sorbet, Solargraph, Brakeman, Fasterer, BundleAudit, Rake prepush, `sorbet/**` or `rbs_collection.lock.yaml` ignores
+- `.circleci/config.yml`: `checkout: method: full`, debug `pwd`, app-specific cache checksums
 
-Use a Ruby language cookiecutter for those. Details: [template-hierarchy.mdc](../../.cursor/rules/template-hierarchy.mdc), [SYNCING_BOILERPLATE.md](../../docs/SYNCING_BOILERPLATE.md).
+**Rugged** (`ensure_rugged_packages_installed`) is **Ruby-repo-specific** — add it in `cookiecutter-gem` (or the baked app), not in this meta repo’s generic language template. Details: [template-hierarchy.mdc](../../.cursor/rules/template-hierarchy.mdc), [SYNCING_BOILERPLATE.md](../../docs/SYNCING_BOILERPLATE.md).
+
+## Baked app references (private repos)
+
+Before copying from a **production** or **private baked** repo into a cookiecutter template:
+
+1. Identify which cookiecutter tier you are editing (meta / language / nested project).
+2. Run a path-by-path diff; reject anything under `lib/`, app `config/`, or project-only `Makefile` / `Gemfile` unless this tier is meant to generate that layout.
+3. **Good ports:** `env.local` + `.envrc`, 1Password docs, `.dockerignore`, `no_output_timeout`, `config/env.local` gitignore.
+4. **Bad ports:** full reference `.overcommit.yml`, reference `.yamllint.yml` Ruby/Sorbet blocks, CircleCI debugging checkout, project native deps in `fix.sh` (see SYNCING doc).
+5. **Naming:** do not put private reference repo names in public commits, PRs, or docs.
 
 ## Quick baseline
 
