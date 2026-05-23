@@ -7,8 +7,6 @@ alwaysApply: false
 
 # Overcommit signing
 
-Git hooks load Overcommit via **Bundler** (`gemfile: Gemfile` in `.overcommit.yml`), same as `bin/overcommit`. Run `bundle install` if hooks cannot find the gem.
-
 If `git commit` fails with overcommit **plugin signature** or **security** output (plugins added/changed; message asks you to run `overcommit --sign`):
 
 1. `bin/overcommit --sign`
