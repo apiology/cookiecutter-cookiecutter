@@ -182,20 +182,17 @@ ensure_bundle() {
   # if bundler_version is still empty
   if [ -z "${bundler_version}" ]
   then
-      gem install bundler
+      gem install bundler:2.5.5
       bundler_version=$(bundle --version | cut -d ' ' -f 3)
   fi
   echo "Bundler version: ${bundler_version}"
   bundler_version_major=$(cut -d. -f1 <<< "${bundler_version}")
   bundler_version_minor=$(cut -d. -f2 <<< "${bundler_version}")
   bundler_version_patch=$(cut -d. -f3 <<< "${bundler_version}")
-  # Version 2.1 of bundler seems to have some issues with nokogiri:
   #
-  # https://app.asana.com/0/1107901397356088/1199504270687298
-
-  # Version <2.2.22 of bundler isn't compatible with Ruby 3.3:
+  # Version 2.5.5 fixed an issue in 2.2.22 with the 'bump' gem:
   #
-  # https://stackoverflow.com/questions/70800753/rails-calling-didyoumeanspell-checkers-mergeerror-name-spell-checker-h
+  # https://app.circleci.com/pipelines/github/apiology/checkoff/1281/workflows/f667f909-c3fc-4ae2-8593-dde2b588a7a7/jobs/2491
 
   # Version <2.2.9 doesn't seem to handle git branches during 'bundle lock' in some situations
   #

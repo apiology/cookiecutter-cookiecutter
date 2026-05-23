@@ -1,0 +1,58 @@
+---
+description: >-
+  Editing {{ cookiecutter.project_slug }} cookiecutter boilerplate — what to port at
+  this hierarchy level ({{ cookiecutter.language_or_tool }}); never push specificity
+  to ancestor templates or pull child-only config from reference repos
+alwaysApply: false
+---
+
+# Template hierarchy (language/tool)
+
+Cookiecutter templates in this family stack **general → specific** (meta → language/tool → project). **This repo** is `{{ cookiecutter.project_slug }}` ({{ cookiecutter.language_or_tool }} scope). See also the meta rule `template-hierarchy.mdc` at the ancestor repo root.
+
+## Where to put changes (this family)
+
+| Kind of change | Meta ancestor | **This repo** | Nested `{% raw %}{{cookiecutter.project_slug}}/{% endraw %}` |
+|----------------|---------------|---------------|----------------------------------------------------------------|
+| `overcommit-signing.mdc` | Yes | Yes | Yes |
+| `template-hierarchy.mdc` | Yes | Yes (this file) | Yes (project tier) |
+| Boilerplate sync skill + `SYNCING_BOILERPLATE.md` | Baked path only | **Yes** | No |
+| Language hooks (RuboCop, etc.) | No | **Yes** | Framework-only → nested |
+| Pytest bake tips in `DEVELOPMENT.md` | Meta repo | **Yes** if this template uses pytest | No — not every baked project uses Python |
+
+Place each artifact at the **narrowest** tier that still applies to every repo that tier generates.
+
+Interpret every sync or edit against three directions:
+
+| Direction | Rule |
+|-----------|------|
+| **Reference → this template** | Port only what matches **this** level’s scope ({{ cookiecutter.language_or_tool }}). |
+| **Reference → descendant templates** | Do **not** add here — belongs in a **more specific** child cookiecutter. |
+| **Ancestor → this template** | Pull **agnostic** improvements down from upstream templates; never push language/framework specifics **up**. |
+| **This template → descendants** | Push {{ cookiecutter.language_or_tool }}-appropriate config **down**; reserve narrower framework/app bits for child templates. |
+
+## At this level
+
+- Shared boilerplate files (`.circleci`, `.envrc`, `.yamllint.yml`, hooks maintenance, etc.) should reflect **this** template’s tier — not everything a reference repo contains.
+- If a reference repo is more specific than this template (e.g. Rails app vs Ruby repo), treat extra config as **descendant** material.
+- If this template is more specific than an ancestor, you **may** add {{ cookiecutter.language_or_tool }}-specific rules here that ancestors must not carry.
+
+## Referenced paths must exist here
+
+When porting config that names directories or tools (`.envrc` `PATH_add`, Makefile paths, Overcommit `include`, etc.):
+
+- **If the path does not exist in this repo**, that is a strong signal it belongs in a **descendant** template, not here.
+- Example: reference `.envrc` has `PATH_add script` but this template has no `script/` — add `PATH_add script` only in the child cookiecutter that provides `script/`, not upstream.
+- Only add `PATH_add`, ignores, hooks, or docs for paths that are present (or will be created) at **this** tier.
+
+## Examples by tier (adjust for where you are in the chain)
+
+| Config | Ancestor (most general) | This / language tier | Descendant (more specific) |
+|--------|-------------------------|----------------------|----------------------------|
+| `.yamllint.yml` | `.circleci` line-length ignore only | May add language-appropriate ignores | Framework/app YAML paths |
+| `.overcommit.yml` | Generic hooks only | RuboCop, Sorbet, etc. | Rails-only hooks |
+| `Makefile` / `fix.sh` | Cross-language bootstrap | Language toolchain targets | App/deploy targets |
+| Paths | None of `lib/`, `app/` | Language test/layout conventions | Framework `config/` |
+| `.envrc` `PATH_add` | `bin` only (if `bin/` exists) | Add paths that exist here (e.g. `script/` when present) | App-only paths |
+
+When unsure: **too specific for this repo → descendant**; **too general to live only here → ancestor**.

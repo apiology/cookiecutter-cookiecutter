@@ -35,6 +35,15 @@ bin/overcommit --sign pre-commit
 This project uses direnv to manage environment variables used during
 development.  See the `.envrc` file for detail.
 
+## Syncing boilerplate
+
+See [docs/SYNCING_BOILERPLATE.md](docs/SYNCING_BOILERPLATE.md). Skill: `.cursor/skills/apiology-boilerplate-sync/`. Rules: `boilerplate-sync.mdc`, `template-hierarchy.mdc`, `overcommit-signing.mdc` — interpret hierarchy at **this** tier (`{{ cookiecutter.project_slug }}`, {{ cookiecutter.language_or_tool }}).
+
+## Conventions
+
+* Cursor authoring policy: `~/.cursor/rules/cursor-rule-authoring.mdc` only (global).
+* Repo rules: clear task `description`, `alwaysApply: false`, optional `globs` only when they cover every auto-attach case.
+
 ## Tests
 
 To get full realtime output from tests to debug e.g. slowness issues:

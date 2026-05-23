@@ -1,0 +1,18 @@
+---
+description: >-
+  Syncing boilerplate into this {{ cookiecutter.language_or_tool }} cookiecutter
+  ({{ cookiecutter.project_slug }}) from reference repos — origin/main only; respect
+  template hierarchy (ancestors vs descendants); see docs/SYNCING_BOILERPLATE.md
+alwaysApply: false
+---
+
+# Boilerplate sync
+
+**This template:** `{{ cookiecutter.project_slug }}` ({{ cookiecutter.language_or_tool }} cookiecutter).
+
+When syncing from **reference repos** (production projects on `origin/main`):
+
+1. Project skill [apiology-boilerplate-sync](../skills/apiology-boilerplate-sync/SKILL.md) (`origin/main` discipline and this tier’s scope).
+2. Read [docs/SYNCING_BOILERPLATE.md](../docs/SYNCING_BOILERPLATE.md).
+3. **Only** `git show origin/main:<path>` — never unpushed local trees.
+4. Follow [template-hierarchy.mdc](template-hierarchy.mdc) for what belongs at **this** level vs ancestors vs descendants.
