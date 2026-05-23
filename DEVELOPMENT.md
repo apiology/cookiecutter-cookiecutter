@@ -1,5 +1,11 @@
 # Development
 
+## Syncing boilerplate from reference repos
+
+This **meta** repo (`cookiecutter-cookiecutter`) bakes tool/language cookiecutters under `{{cookiecutter.project_slug}}/`. Sync workflow, Cursor rules, and skills live **there** (not at this repo root) so each child template (`cookiecutter-ruby`, `cookiecutter-rails`, etc.) carries hierarchy-aware guidance after bake.
+
+When editing the inner template, see `{{cookiecutter.project_slug}}/docs/SYNCING_BOILERPLATE.md`.
+
 ## fix.sh
 
 If you want to use rbenv/pyenv/etc to manage versions of tools,
@@ -9,7 +15,18 @@ dependencies.
 ## Overcommit
 
 This project uses [overcommit](https://github.com/sds/overcommit) for
-quality checks.  `bundle exec overcommit --install` will install it.
+quality checks.  `.overcommit.yml` sets `gemfile: Gemfile` so git hooks use the
+same Bundler-managed gem as `bin/overcommit`.  `bundle exec overcommit --install`
+will install hooks.
+
+If a commit fails with overcommit **plugin signature** or **security**
+messages, run both sign commands before retrying (see
+`.cursor/rules/overcommit-signing.mdc`):
+
+```sh
+bin/overcommit --sign
+bin/overcommit --sign pre-commit
+```
 
 ## direnv
 
