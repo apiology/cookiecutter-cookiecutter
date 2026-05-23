@@ -87,6 +87,10 @@ PreCommit:
 PostCheckout:
   BundleInstall:
     enabled: true
+  CustomScript:
+    enabled: true
+    requires_files: false
+    required_executable: 'bin/git-post-checkout-fix'
 
 PostCommit:
   BundleInstall:
