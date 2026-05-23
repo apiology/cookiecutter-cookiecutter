@@ -1,13 +1,22 @@
 ---
 description: >-
   When git commit fails with overcommit plugin signature or security messages,
-  run bin/overcommit --sign and bin/overcommit --sign pre-commit, then retry
+  run bin/overcommit --sign and bin/overcommit --sign pre-commit, then retry.
+  In a fresh worktree, also run ./fix.sh first so .ruby-version pins the same
+  Ruby the git hook will use — overcommit plugin signatures are not stable
+  across Ruby versions.
 alwaysApply: false
+globs:
+  - .overcommit.yml
+  - .git-hooks/**
+  - bin/overcommit
+  - Gemfile
+  - .ruby-version
 ---
 
 # Overcommit signing
 
-Git hooks load Overcommit via **Bundler** (`gemfile: Gemfile` in `.overcommit.yml`), same as `bin/overcommit`. Run `bundle install` if hooks cannot find the gem.
+Git hooks load Overcommit via **Bundler** (`gemfile: Gemfile` in `.overcommit.yml`), same as `bin/overcommit`. Run `bundle install` (or `./fix.sh`) if hooks cannot find the gem.
 
 If `git commit` fails with overcommit **plugin signature** or **security** output (plugins added/changed; message asks you to run `overcommit --sign`):
 
@@ -16,3 +25,9 @@ If `git commit` fails with overcommit **plugin signature** or **security** outpu
 3. Retry the commit.
 
 Run **both** sign commands every time — not only one. Do not use `--no-verify` unless the user explicitly asks to skip hooks.
+
+## Worktrees: pin Ruby first
+
+After `git worktree add`, run `./fix.sh` in the new worktree before signing. `fix.sh` writes `.ruby-version` (gitignored) so rbenv pins the same Ruby in the worktree as in the main checkout.
+
+Without this, `bin/overcommit --sign` may run under your global Ruby (e.g. 3.4) while the git pre-commit hook resolves `.ruby-version` from `<main-repo>/.git/hooks/` and runs under the project Ruby (e.g. 3.3). **Overcommit plugin signatures are not stable across Ruby versions** (`hook_config.to_s` formatting changed in Ruby 3.4), so a mismatch makes the hook reject every commit no matter how many times you re-sign. If sign-then-retry keeps failing, instrument the hook to print `RUBY_VERSION` and confirm it matches `ruby -v` from your CLI.
