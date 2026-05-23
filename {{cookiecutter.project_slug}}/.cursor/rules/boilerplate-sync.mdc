@@ -16,3 +16,4 @@ When syncing from **reference repos** (production projects on `origin/main`):
 2. Read [docs/SYNCING_BOILERPLATE.md](../docs/SYNCING_BOILERPLATE.md).
 3. **Only** `git show origin/main:<path>` — never unpushed local trees.
 4. Follow [template-hierarchy.mdc](template-hierarchy.mdc) for what belongs at **this** level vs ancestors vs descendants.
+5. At the **meta** tier, never port Ruby-only `fix.sh`, Sorbet/Tapioca/YARD `.gitignore` entries, or `# @sg-ignore` hook churn from Ruby app references (e.g. checkoff) — see [SYNCING_BOILERPLATE.md](../docs/SYNCING_BOILERPLATE.md).

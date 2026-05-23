@@ -31,6 +31,18 @@ This repo is the **meta** cookiecutter (`cookiecutter-cookiecutter`). It bakes *
 
 **Rule of thumb:** place each file at the **narrowest** tier that still applies to every repo that tier generates. Too specific for this tree → nested or a child cookiecutter; too general to live only here → ancestor.
 
+## Syncing from Ruby app references (e.g. checkoff)
+
+The **meta** tier is cross-language. Do not let a Ruby gem or app reference drive Ruby-only bootstrap into meta-root (or parallel nested) copies of shared files.
+
+| Do not port to meta | Belongs in |
+|---------------------|------------|
+| `fix.sh`: `rbenv install --list-all`, `set_ruby_local_version` (`tail -1`, extra `set_rbenv_env_variables`), `ensure_rugged_packages_installed`, standalone `ensure_rbenv` before the main flow | Ruby language cookiecutter |
+| `.gitignore`: `tapioca.installed`, `yardoc.installed`, `sorbet/machine_specific_config` | Ruby / Sorbet templates |
+| `.git-hooks/**/*.rb`: `# @sg-ignore` and other Sorbet-only annotation churn | Ruby cookiecutters |
+
+Language-agnostic ports (e.g. `.yamllint.yml` comments, `bin/overcommit` binstub maintenance) are still fine when they apply at every tier.
+
 ## Propagate across tiers (agent checklist)
 
 This repo nests **three** template trees (meta root → `{{cookiecutter.project_slug}}/` → nested `{{cookiecutter.project_slug}}/{{cookiecutter.project_slug}}/`). Many boilerplate files exist at **more than one** path (`fix.sh`, `.overcommit.yml`, `.githooks/post-checkout`, `bin/git-commit-validate`, `bin/git-post-checkout-fix`, etc.).

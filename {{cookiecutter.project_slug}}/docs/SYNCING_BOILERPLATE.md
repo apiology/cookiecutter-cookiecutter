@@ -44,6 +44,16 @@ Adjust for **this** tier — a reference repo may include more than you should p
 
 Defer to **descendant** templates: app `lib/`, framework-only hooks, language stacks narrower than this repo’s scope.
 
+### Meta tier: do not port from Ruby app references
+
+When the reference is a **Ruby application or gem** (e.g. `apiology/checkoff`) and you are editing the **meta** cookiecutter (`cookiecutter-cookiecutter` root or its parallel nested copies of cross-language files), **do not** port:
+
+- **`fix.sh`:** `rbenv install --list-all`, changes to `set_ruby_local_version` (`tail -1`, extra `set_rbenv_env_variables`), `ensure_rugged_packages_installed`, or a standalone `ensure_rbenv` call before the main install flow
+- **`.gitignore`:** `tapioca.installed`, `yardoc.installed`, `sorbet/machine_specific_config`
+- **`.git-hooks/**/*.rb`:** `# @sg-ignore` and other Sorbet-only typing churn from the reference
+
+Those belong in a **Ruby language** cookiecutter (e.g. `cookiecutter-ruby`), not the meta template. See `.cursor/rules/template-hierarchy.mdc` (meta and language tiers).
+
 ### `.envrc` and `PATH_add`
 
 - Only `PATH_add` directories that **exist in this template** (typically `bin/` when `bin/` is present).
