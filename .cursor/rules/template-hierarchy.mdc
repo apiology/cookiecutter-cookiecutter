@@ -23,7 +23,7 @@ This repo is the **meta** cookiecutter (`cookiecutter-cookiecutter`). It bakes *
 |----------------|-----------|-----------------------------------|--------------------|
 | `overcommit-signing.mdc` | Yes | Yes | Yes |
 | `template-hierarchy.mdc` | Yes (this file) | Yes (tier-specific) | Yes (tier-specific) |
-| `fix.sh`, `bin/git-*` hooks, shared `.overcommit.yml` bootstrap | Yes | Yes | Yes |
+| `fix.sh`, `bin/git-*` hooks, `.githooks/post-checkout`, shared `.overcommit.yml` bootstrap | Yes | Yes | Yes |
 | Boilerplate sync skills/docs | No — in baked child path | Yes | No |
 | Language-specific hooks (RuboCop, etc.) | No | Yes | Maybe (framework-only → nested) |
 | Pytest bake-project tips in `DEVELOPMENT.md` | Yes (meta tests) | Yes | No — not every baked project uses Python |
@@ -33,13 +33,13 @@ This repo is the **meta** cookiecutter (`cookiecutter-cookiecutter`). It bakes *
 
 ## Propagate across tiers (agent checklist)
 
-This repo nests **three** template trees (meta root → `{{cookiecutter.project_slug}}/` → nested `{{cookiecutter.project_slug}}/{{cookiecutter.project_slug}}/`). Many boilerplate files exist at **more than one** path (`fix.sh`, `.overcommit.yml`, `bin/git-commit-validate`, `bin/git-post-checkout-fix`, etc.).
+This repo nests **three** template trees (meta root → `{{cookiecutter.project_slug}}/` → nested `{{cookiecutter.project_slug}}/{{cookiecutter.project_slug}}/`). Many boilerplate files exist at **more than one** path (`fix.sh`, `.overcommit.yml`, `.githooks/post-checkout`, `bin/git-commit-validate`, `bin/git-post-checkout-fix`, etc.).
 
 When adding or changing such a file:
 
 1. **List tiers** — run `find` or search for the basename under the repo (ignore `.git/`).
 2. **Apply at every tier** where the file already exists, unless the change is intentionally tier-specific.
-3. **Keep paths parallel** — same relative path and hook wiring at each tier (e.g. `PostCheckout` + `bin/git-post-checkout-fix` next to existing `bin/git-push-validate`).
+3. **Keep paths parallel** — same relative path and hook wiring at each tier (e.g. `.githooks/post-checkout` → `bin/git-post-checkout-fix` next to existing `bin/git-push-validate`).
 4. **If unsure** whether a change belongs at one tier or all three, **ask the user** before opening a PR.
 
 When editing the inner template, read `{{cookiecutter.project_slug}}/.cursor/rules/template-hierarchy.mdc` and `docs/SYNCING_BOILERPLATE.md`.
