@@ -6,5 +6,3 @@ rules:
   comments: disable
   line-length:
     max: 120
-    ignore: |
-      **/.circleci/config.yml

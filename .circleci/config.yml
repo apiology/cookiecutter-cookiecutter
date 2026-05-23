@@ -107,7 +107,7 @@ commands:
             bin/overcommit --sign pre-push
 
 
-            bundle exec overcommit --diff
+            bin/overcommit --run
   tox:
     description: "Run tox"
     parameters:
