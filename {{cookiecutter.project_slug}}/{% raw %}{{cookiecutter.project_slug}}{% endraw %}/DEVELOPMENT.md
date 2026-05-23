@@ -18,7 +18,7 @@ development.  See the `.envrc` file for detail.
 
 ## Conventions
 
-* Cursor agent rules for this repo live in `.cursor/rules/` (file-scoped via `globs`, never `alwaysApply: true`)
+* Cursor agent rules: authoring policy in `~/.cursor/rules/cursor-rule-authoring.mdc`; project rules in `.cursor/rules/` with clear `description`, `alwaysApply: false`, optional `globs` only when they cover every auto-attach case
 
 ## Tests
 

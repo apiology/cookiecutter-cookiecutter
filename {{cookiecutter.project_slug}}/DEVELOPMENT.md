@@ -16,9 +16,14 @@ quality checks.  `bundle exec overcommit --install` will install it.
 This project uses direnv to manage environment variables used during
 development.  See the `.envrc` file for detail.
 
+## Syncing boilerplate
+
+See [docs/SYNCING_BOILERPLATE.md](docs/SYNCING_BOILERPLATE.md). Skills: `apiology-boilerplate-sync` (user), `sync-cookiecutter-boilerplate` (`.cursor/skills/`). Rules: `boilerplate-sync.mdc`, `template-hierarchy.mdc` — interpret hierarchy at **this** tier (`{{ cookiecutter.project_slug }}`, {{ cookiecutter.language_or_tool }}).
+
 ## Conventions
 
-* Cursor agent rules for this repo live in `.cursor/rules/` (file-scoped via `globs`, never `alwaysApply: true`)
+* Cursor authoring policy: `~/.cursor/rules/cursor-rule-authoring.mdc` only (global).
+* Repo rules: clear task `description`, `alwaysApply: false`, optional `globs` only when they cover every auto-attach case.
 
 ## Tests
 

@@ -2,9 +2,9 @@
 
 ## Syncing boilerplate from reference repos
 
-Language-agnostic infrastructure is synced from **reference repos** using **only** `origin/main` (never unpushed local trees). See [docs/SYNCING_BOILERPLATE.md](docs/SYNCING_BOILERPLATE.md).
+This **meta** repo (`cookiecutter-cookiecutter`) bakes tool/language cookiecutters under `{{cookiecutter.project_slug}}/`. Sync workflow, Cursor rules, and skills live **there** (not at this repo root) so each child template (`cookiecutter-ruby`, `cookiecutter-rails`, etc.) carries hierarchy-aware guidance after bake.
 
-Cursor skills: `apiology-boilerplate-sync` (user) and `sync-cookiecutter-template-layers` (this repo).
+When editing the inner template, see `{{cookiecutter.project_slug}}/docs/SYNCING_BOILERPLATE.md`.
 
 ## fix.sh
 

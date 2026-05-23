@@ -8,6 +8,3 @@ rules:
     max: 120
     ignore: |
       **/.circleci/config.yml
-  indentation:
-    ignore: |
-      rbs_collection.lock.yaml
