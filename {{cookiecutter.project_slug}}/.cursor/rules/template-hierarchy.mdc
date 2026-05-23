@@ -6,9 +6,21 @@ description: >-
 alwaysApply: false
 ---
 
-# Template hierarchy
+# Template hierarchy (language/tool)
 
-Cookiecutter templates in this family stack **general → specific** (for example: meta → language → framework → app). **This repo** is `{{ cookiecutter.project_slug }}` ({{ cookiecutter.language_or_tool }} scope).
+Cookiecutter templates in this family stack **general → specific** (meta → language/tool → project). **This repo** is `{{ cookiecutter.project_slug }}` ({{ cookiecutter.language_or_tool }} scope). See also the meta rule `template-hierarchy.mdc` at the ancestor repo root.
+
+## Where to put changes (this family)
+
+| Kind of change | Meta ancestor | **This repo** | Nested `{% raw %}{{cookiecutter.project_slug}}/{% endraw %}` |
+|----------------|---------------|---------------|----------------------------------------------------------------|
+| `overcommit-signing.mdc` | Yes | Yes | Yes |
+| `template-hierarchy.mdc` | Yes | Yes (this file) | Yes (project tier) |
+| Boilerplate sync skill + `SYNCING_BOILERPLATE.md` | Baked path only | **Yes** | No |
+| Language hooks (RuboCop, etc.) | No | **Yes** | Framework-only → nested |
+| Pytest bake tips in `DEVELOPMENT.md` | Meta repo | **Yes** if this template uses pytest | No — not every baked project uses Python |
+
+Place each artifact at the **narrowest** tier that still applies to every repo that tier generates.
 
 Interpret every sync or edit against three directions:
 
@@ -22,7 +34,7 @@ Interpret every sync or edit against three directions:
 ## At this level
 
 - Shared boilerplate files (`.circleci`, `.envrc`, `.yamllint.yml`, hooks maintenance, etc.) should reflect **this** template’s tier — not everything a reference repo contains.
-- If a reference repo is more specific than this template (e.g. Rails app vs Ruby gem cookiecutter), treat extra config as **descendant** material.
+- If a reference repo is more specific than this template (e.g. Rails app vs Ruby repo), treat extra config as **descendant** material.
 - If this template is more specific than an ancestor, you **may** add {{ cookiecutter.language_or_tool }}-specific rules here that ancestors must not carry.
 
 ## Referenced paths must exist here

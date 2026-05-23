@@ -12,8 +12,7 @@ alwaysApply: false
 
 When syncing from **reference repos** (production projects on `origin/main`):
 
-1. Project skill [apiology-boilerplate-sync](../skills/apiology-boilerplate-sync/SKILL.md) (`origin/main` discipline).
-2. Project skill [sync-cookiecutter-boilerplate](../skills/sync-cookiecutter-boilerplate/SKILL.md) (this tier’s scope).
-3. Read [docs/SYNCING_BOILERPLATE.md](../docs/SYNCING_BOILERPLATE.md).
-4. **Only** `git show origin/main:<path>` — never unpushed local trees.
-5. Follow [template-hierarchy.mdc](template-hierarchy.mdc) for what belongs at **this** level vs ancestors vs descendants.
+1. Project skill [apiology-boilerplate-sync](../skills/apiology-boilerplate-sync/SKILL.md) (`origin/main` discipline and this tier’s scope).
+2. Read [docs/SYNCING_BOILERPLATE.md](../docs/SYNCING_BOILERPLATE.md).
+3. **Only** `git show origin/main:<path>` — never unpushed local trees.
+4. Follow [template-hierarchy.mdc](template-hierarchy.mdc) for what belongs at **this** level vs ancestors vs descendants.

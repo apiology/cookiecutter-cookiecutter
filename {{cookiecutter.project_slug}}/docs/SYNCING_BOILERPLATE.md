@@ -58,7 +58,7 @@ If this template still contains a nested `{% raw %}{{cookiecutter.project_slug}}
 
 - **Authoring policy:** `~/.cursor/rules/cursor-rule-authoring.mdc` (global only).
 - **This repo:** `.cursor/rules/boilerplate-sync.mdc`, `template-hierarchy.mdc`, `overcommit-signing.mdc`.
-- **Skills (in repo):** `.cursor/skills/apiology-boilerplate-sync/`, `.cursor/skills/sync-cookiecutter-boilerplate/`.
+- **Skill (in repo):** `.cursor/skills/apiology-boilerplate-sync/`.
 
 Propagate skill and rule changes to sibling cookiecutter templates with `make update_from_cookiecutter` (or merge from the ancestor template’s `cookiecutter-template` branch).
 

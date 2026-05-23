@@ -1,13 +1,16 @@
 ---
 name: apiology-boilerplate-sync
 description: >-
-  Sync boilerplate between apiology cookiecutter templates and reference repos using
-  only origin/main; respect hierarchical tiers (meta, language, framework). Use when
-  updating cookiecutter templates or comparing reference-repo drift.
+  Sync boilerplate for this cookiecutter template ({{ cookiecutter.project_slug }},
+  {{ cookiecutter.language_or_tool }}) from reference repos using only origin/main;
+  respect hierarchical tiers (meta, language, project). Use when updating cookiecutter
+  templates or comparing reference-repo drift.
 disable-model-invocation: false
 ---
 
 # Apiology boilerplate sync
+
+**This template:** `{{ cookiecutter.project_slug }}` — {{ cookiecutter.language_or_tool }} cookiecutter.
 
 ## Hard rule
 
@@ -15,29 +18,42 @@ disable-model-invocation: false
 2. Read with `git show origin/main:<path>` — never treat the working tree as shipped truth.
 3. Record SHAs: `git log -1 --oneline origin/main`.
 
+Read [docs/SYNCING_BOILERPLATE.md](../../docs/SYNCING_BOILERPLATE.md) and [template-hierarchy.mdc](../../.cursor/rules/template-hierarchy.mdc) in the repo you are editing.
+
 ## Cookiecutter family (hierarchical)
 
-Templates stack **general → specific** (e.g. meta → language → framework). Each cookiecutter repo carries:
+Templates stack **general → specific** (meta → language/tool → project). At **this** checkout:
 
-- `.cursor/rules/boilerplate-sync.mdc`, `template-hierarchy.mdc`, `overcommit-signing.mdc`
-- `.cursor/skills/apiology-boilerplate-sync/`, `sync-cookiecutter-boilerplate/`
+- Port from reference repos only what fits **this** tier ({{ cookiecutter.language_or_tool }}).
+- Do not push language/framework specifics to **ancestor** templates.
+- Do not park **descendant-only** config here (narrower child cookiecutters own it).
+
+Each language/tool cookiecutter repo typically carries:
+
+- `.cursor/rules/boilerplate-sync.mdc`, `template-hierarchy.mdc`, `overcommit-signing.mdc` (at meta, language, and nested project tiers as applicable)
+- `.cursor/skills/apiology-boilerplate-sync/`
 - `docs/SYNCING_BOILERPLATE.md`
-
-**Always read the project skill and hierarchy rule in the repo you are editing** — scope differs by tier.
 
 | Tier | Typical repo | Scope |
 |------|--------------|--------|
 | Meta | `cookiecutter-cookiecutter` | Bakes child templates; sync docs live under baked `{{cookiecutter.project_slug}}/` |
-| Language | `cookiecutter-ruby` | {{ language_or_tool }} boilerplate |
-| Framework | `cookiecutter-rails` | Narrower than language |
-
-Do not push specificity **up** to ancestors; do not park descendant-only config at the wrong tier.
+| Language/tool | `cookiecutter-ruby` | {{ cookiecutter.language_or_tool }} boilerplate |
+| Project | Nested `{% raw %}{{cookiecutter.project_slug}}/{% endraw %}` inside a language template | End-user project layout — no sync skill |
 
 **Path check:** when porting `.envrc`, Makefile paths, or hook `include`s — if the referenced directory or file **does not exist** in the template you are editing, it likely belongs in a **descendant** cookiecutter, not the current repo.
 
+## Nested template directory (if present)
+
+Some templates include a nested `{% raw %}{{cookiecutter.project_slug}}/{% endraw %}` cookiecutter inside this repo. When editing **this** repo’s own files, propagate shared boilerplate to that nested path only when both are still the appropriate tier — otherwise treat nested paths per [template-hierarchy.mdc](../../.cursor/rules/template-hierarchy.mdc).
+
+## Jinja / CircleCI
+
+- Cookiecutter vars: `{{ cookiecutter.project_slug }}`, `{{ cookiecutter.language_or_tool }}`
+- Circle `{% raw %}{{ checksum }}{% endraw %}` in YAML: wrap in `{% raw %}...{% endraw %}` in template sources
+
 ## Reference repos
 
-Choose reference implementation(s) per task; record `origin/main` SHAs. Examples often used: production apps/gems you treat as source of truth.
+Choose reference implementation(s) per task; record `origin/main` SHAs.
 
 ## Baseline paths (adjust per tier)
 
@@ -58,6 +74,11 @@ From the repo root (this cookiecutter checkout):
 ```
 
 After syncing boilerplate here, propagate `.cursor/skills/apiology-boilerplate-sync/` (and related rules/docs) to sibling cookiecutter repos via `make update_from_cookiecutter` or your usual template merge workflow.
+
+## After edits
+
+- Confirm changes match this template’s tier (not ancestor-only or descendant-only).
+- Run this repo’s tests (`pytest`, `make`, etc. as documented in `DEVELOPMENT.md`).
 
 ## Commits in this repo
 

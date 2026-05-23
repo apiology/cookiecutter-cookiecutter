@@ -29,7 +29,7 @@ development.  See the `.envrc` file for detail.
 
 ## Syncing boilerplate
 
-See [docs/SYNCING_BOILERPLATE.md](docs/SYNCING_BOILERPLATE.md). Skills: `.cursor/skills/apiology-boilerplate-sync/`, `.cursor/skills/sync-cookiecutter-boilerplate/`. Rules: `boilerplate-sync.mdc`, `template-hierarchy.mdc`, `overcommit-signing.mdc` — interpret hierarchy at **this** tier (`{{ cookiecutter.project_slug }}`, {{ cookiecutter.language_or_tool }}).
+See [docs/SYNCING_BOILERPLATE.md](docs/SYNCING_BOILERPLATE.md). Skill: `.cursor/skills/apiology-boilerplate-sync/`. Rules: `boilerplate-sync.mdc`, `template-hierarchy.mdc`, `overcommit-signing.mdc` — interpret hierarchy at **this** tier (`{{ cookiecutter.project_slug }}`, {{ cookiecutter.language_or_tool }}).
 
 ## Conventions
 

@@ -107,7 +107,8 @@ commands:
             bin/overcommit --sign pre-push
 
 
-            bundle exec overcommit --diff
+            # bundle exec overcommit --diff # if full run takes too long in this repo
+            bin/overcommit --run
   tox:
     description: "Run tox"
     parameters:

@@ -9,46 +9,9 @@ dependencies.
 ## Overcommit
 
 This project uses [overcommit](https://github.com/sds/overcommit) for
-quality checks.  `.overcommit.yml` sets `gemfile: Gemfile` so git hooks use the
-same Bundler-managed gem as `bin/overcommit`.  `bundle exec overcommit --install`
-will install hooks.
-
-If a commit fails with overcommit **plugin signature** or **security**
-messages, run both sign commands before retrying (see
-`.cursor/rules/overcommit-signing.mdc`):
-
-```sh
-bin/overcommit --sign
-bin/overcommit --sign pre-commit
-```
+quality checks.  `bundle exec overcommit --install` will install it.
 
 ## direnv
 
 This project uses direnv to manage environment variables used during
 development.  See the `.envrc` file for detail.
-
-## Conventions
-
-* Cursor agent rules: authoring policy in `~/.cursor/rules/cursor-rule-authoring.mdc`; project rules in `.cursor/rules/` with clear `description`, `alwaysApply: false`, optional `globs` only when they cover every auto-attach case
-
-## Tests
-
-To get full realtime output from tests to debug e.g. slowness issues:
-
-```sh
-pytest tests/test_bake_project.py --capture=no -k test_bake_and_run_build
-```
-
-You can debug overall test timings with:
-
-```sh
-time pytest tests/test_bake_project.py --durations=0
-```
-
-It's also useful to replace 'make test' with something that will give
-you real-time stdout/stderr in `test_bake_project.py`.
-
-You can then wrap `time` commands around different things that shell
-out, or do [this type of
-technique](https://stackoverflow.com/a/1557584/2625807) for things
-which aren't a simple shell-out.

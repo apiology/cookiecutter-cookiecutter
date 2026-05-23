@@ -1,0 +1,33 @@
+---
+description: >-
+  Which files and config belong at meta vs language vs project cookiecutter tiers
+  in this family; never push specificity up or park descendant-only config too high
+alwaysApply: false
+---
+
+# Template hierarchy (meta)
+
+This repo is the **meta** cookiecutter (`cookiecutter-cookiecutter`). It bakes **language/tool** templates under `{{cookiecutter.project_slug}}/`, which may include a nested **project** cookiecutter under `{{cookiecutter.project_slug}}/{{cookiecutter.project_slug}}/`.
+
+## Three tiers
+
+| Tier | Path in this repo | Typical output | Scope |
+|------|-------------------|----------------|-------|
+| **Meta** | Repo root | `cookiecutter-ruby`, etc. | Cross-language generator; sync docs/skills live in baked child tree |
+| **Language/tool** | `{{cookiecutter.project_slug}}/` | Child cookiecutter repos | {{ cookiecutter.language_or_tool }}-scoped boilerplate |
+| **Project** | `{{cookiecutter.project_slug}}/{{cookiecutter.project_slug}}/` | End-user repos from child cookiecutters | App/library layout, not cookiecutter-family sync |
+
+## Where to put changes
+
+| Kind of change | Meta root | `{{cookiecutter.project_slug}}/` | Nested project dir |
+|----------------|-----------|-----------------------------------|--------------------|
+| `overcommit-signing.mdc` | Yes | Yes | Yes |
+| `template-hierarchy.mdc` | Yes (this file) | Yes (tier-specific) | Yes (tier-specific) |
+| Boilerplate sync skills/docs | No — in baked child path | Yes | No |
+| Language-specific hooks (RuboCop, etc.) | No | Yes | Maybe (framework-only → nested) |
+| Pytest bake-project tips in `DEVELOPMENT.md` | Yes (meta tests) | Yes | No — not every baked project uses Python |
+| `.envrc` `PATH_add` | Only paths that exist at that tier | Same | Same |
+
+**Rule of thumb:** place each file at the **narrowest** tier that still applies to every repo that tier generates. Too specific for this tree → nested or a child cookiecutter; too general to live only here → ancestor.
+
+When editing the inner template, read `{{cookiecutter.project_slug}}/.cursor/rules/template-hierarchy.mdc` and `docs/SYNCING_BOILERPLATE.md`.
