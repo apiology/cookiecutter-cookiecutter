@@ -54,6 +54,20 @@ When the reference is a **Ruby application or gem** (e.g. `apiology/checkoff`) a
 
 Those belong in a **Ruby language** cookiecutter (e.g. `cookiecutter-ruby`), not the meta template. See `.cursor/rules/template-hierarchy.mdc` (meta and language tiers).
 
+### Baked Ruby apps (e.g. `apiology/plate-spinner`)
+
+`plate-spinner` was generated from `cookiecutter-gem`. When using it (or any baked gem/app) as a reference:
+
+1. **Confirm tier** — meta vs language cookiecutter vs nested project template vs “never port.”
+2. **Prefer agnostic wins** — `config/env.local`, `.envrc`, 1Password docs in `DEVELOPMENT.md`, `.dockerignore`, CircleCI `no_output_timeout`.
+3. **Skip by default** (common false positives on sync):
+   - **Overcommit / Yamllint:** RuboCop, Sorbet, Solargraph, Brakeman, Fasterer, BundleAudit, prepush Rake targets; YamlLint `sorbet/**` or `rbs_collection.lock.yaml` ignores; app-only Solargraph paths.
+   - **CircleCI:** `checkout: method: full`, `pwd` in setup, cache keys on `*.gemspec` or app-specific filenames.
+   - **`fix.sh`:** `ensure_rugged_packages_installed` (**Ruby repos only**, e.g. `cookiecutter-gem` — undercover), `ensure_handlebars_engine_packages_installed`, `ensure_mini_racer_packages_installed`, `ensure_chromedriver_correct_platform` — none of these belong in this **generic** language cookiecutter template or meta nested copies.
+   - **App tree:** `Makefile`, `Gemfile`, `lib/`, filled `config/env.1p`, `PATH_add script` when `script/` is absent here.
+
+Record `plate-spinner` `origin/main` SHA in the PR; diff with `git show origin/main:<path>` only.
+
 ### `.envrc` and `PATH_add`
 
 - Only `PATH_add` directories that **exist in this template** (typically `bin/` when `bin/` is present).

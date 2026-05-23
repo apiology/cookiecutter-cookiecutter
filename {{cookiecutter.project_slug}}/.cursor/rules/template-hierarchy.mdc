@@ -54,14 +54,17 @@ When porting config that names directories or tools (`.envrc` `PATH_add`, Makefi
 
 | Config | Ancestor (most general) | This / language tier | Descendant (more specific) |
 |--------|-------------------------|----------------------|----------------------------|
-| `.yamllint.yml` | `.circleci` line-length ignore only | May add language-appropriate ignores | Framework/app YAML paths |
-| `.overcommit.yml` | Generic hooks only | RuboCop, Sorbet, etc. | Rails-only hooks |
-| `Makefile` / `fix.sh` | Cross-language bootstrap | Language toolchain targets | App/deploy targets |
+| `.yamllint.yml` | `.circleci` line-length ignore only | Same unless this repo is Ruby-only | App YAML paths (`partials.yaml`, `rbs_collection.lock.yaml`) |
+| `.overcommit.yml` | Generic hooks only (no RuboCop/Sorbet/Brakeman) | Same in cookiecutter templates; baked apps add hooks in **their** repos | App-only hooks |
+| `Makefile` / `fix.sh` | Cross-language bootstrap | Ruby toolchain only if this template is Ruby (not rugged here by default) | `rugged`, `handlebars`, `mini_racer`, `chromedriver` — **Ruby/app repos** |
 | Paths | None of `lib/`, `app/` | Language test/layout conventions | Framework `config/` |
 | `.envrc` `PATH_add` | `bin` only (if `bin/` exists) | Add paths that exist here (e.g. `script/` when present) | App-only paths |
-| `fix.sh` rbenv / rugged / `set_ruby_local_version` | **Do not port from Ruby app refs** | Ruby toolchain bootstrap | App-only Ruby deps (e.g. rugged for undercover) |
+| `fix.sh` rbenv / `set_ruby_local_version` | **Do not port churn from Ruby app refs** | Ruby toolchain when this is a Ruby template | **`rugged`** (Ruby/undercover), `handlebars`, `mini_racer`, `chromedriver` |
 | `.gitignore` Sorbet / Tapioca / YARD | **Do not port from Ruby app refs** | `tapioca.installed`, `yardoc.installed`, `sorbet/*` | Generated RBI paths |
 | `.git-hooks` `# @sg-ignore` | **Do not port** | Sorbet annotations only in Ruby templates | — |
+| `.circleci` | `no_output_timeout`, shared cache pattern | Same | `method: full`, `pwd`, `*.gemspec` cache keys |
+
+When syncing from a **baked** reference (e.g. `apiology/plate-spinner`), read [SYNCING_BOILERPLATE.md](../docs/SYNCING_BOILERPLATE.md) § baked Ruby apps — do not paste the reference’s full `.overcommit.yml` or Ruby yamllint/Sorbet blocks into cookiecutter templates.
 
 When syncing into the **meta** ancestor from a Ruby reference (e.g. `apiology/checkoff`), see the meta rule `template-hierarchy.mdc` — Ruby-only rows above stay out of meta copies.
 
