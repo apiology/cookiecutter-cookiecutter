@@ -43,7 +43,7 @@ The **meta** tier is cross-language. Do not let a Ruby gem or app reference driv
 
 Language-agnostic ports (e.g. `.yamllint.yml` comments, `bin/overcommit` binstub maintenance) are still fine when they apply at every tier.
 
-## Syncing from baked Ruby apps (e.g. `apiology/plate-spinner`)
+## Syncing from baked Ruby apps (private reference repos)
 
 A **baked** gem or app (created from `cookiecutter-gem`, not the meta template) is a useful reference for **production** patterns, but most of its tree is **more specific** than any cookiecutter tier here. Use `git show origin/main:<path>` on the reference and classify before copying.
 
@@ -58,7 +58,7 @@ A **baked** gem or app (created from `cookiecutter-gem`, not the meta template) 
 
 **`fix.sh` rugged:** `ensure_rugged_packages_installed` is **Ruby-repo-specific** (undercover). Put it in **`cookiecutter-gem`** and baked Ruby apps — **not** in this meta repo’s generic `{{cookiecutter.project_slug}}/` tree (language-agnostic until you bake a Ruby cookiecutter).
 
-**Workflow:** sync plate-spinner → **`cookiecutter-gem`** first; pull **agnostic** pieces up to meta only when they apply to every tier. Record reference `origin/main` SHA in the PR.
+**Workflow:** sync from the baked gem into **`cookiecutter-gem`** first; pull **agnostic** pieces up to meta only when they apply to every tier. Record the reference `origin/main` SHA in the PR (repo name omitted from public text).
 
 ## Propagate across tiers (agent checklist)
 

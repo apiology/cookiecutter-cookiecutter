@@ -19,7 +19,7 @@ alwaysApply: false
 
 - If a reference repo is more specific than this template (e.g. Rails app vs Ruby repo), treat extra config as **out of scope** for this cookiecutter (or a different child template).
 - Do **not** add cookiecutter-family sync skills, `SYNCING_BOILERPLATE.md`, or pytest bake tips unless this project template is Python-specific by design.
-- From baked apps (e.g. `plate-spinner`): do **not** port reference `.overcommit.yml` Ruby hooks, Sorbet yamllint ignores, or `fix.sh` **`rugged`** (Ruby repos only, e.g. `cookiecutter-gem`) / `handlebars` / `mini_racer` / `chromedriver`. Agnostic `env.local` / `.envrc` ports are still fine when this tree has `config/env.1p`.
+- From baked private apps: do **not** port reference `.overcommit.yml` Ruby hooks, Sorbet yamllint ignores, or `fix.sh` **`rugged`** (Ruby repos only, e.g. `cookiecutter-gem`) / `handlebars` / `mini_racer` / `chromedriver`. Agnostic `env.local` / `.envrc` ports are still fine when this tree has `config/env.1p`. Do not name private reference repos in public text.
 
 ## Propagate across tiers (agent checklist)
 
