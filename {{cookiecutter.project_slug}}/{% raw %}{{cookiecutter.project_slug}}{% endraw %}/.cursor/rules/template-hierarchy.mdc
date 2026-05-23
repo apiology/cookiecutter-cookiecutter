@@ -22,7 +22,7 @@ alwaysApply: false
 
 ## Propagate across tiers (agent checklist)
 
-Cross-language boilerplate (`fix.sh`, `.overcommit.yml`, `bin/git-*`, etc.) is mirrored at **meta root**, the language/tool template, and **this** nested project template. When editing one copy, check whether the same file exists upstream or downstream and keep all applicable tiers in sync. If unsure whether a change belongs here only or at every tier, **ask the user**. See ancestor `template-hierarchy.mdc` rules (meta and `{{ cookiecutter.project_slug }}/`).
+Cross-language boilerplate (`fix.sh`, `.overcommit.yml`, `.githooks/post-checkout`, `bin/git-*`, etc.) is mirrored at **meta root**, the language/tool template, and **this** nested project template. When editing one copy, check whether the same file exists upstream or downstream and keep all applicable tiers in sync. If unsure whether a change belongs here only or at every tier, **ask the user**. See ancestor `template-hierarchy.mdc` rules (meta and `{{ cookiecutter.project_slug }}/`).
 
 ## Referenced paths must exist here
 
