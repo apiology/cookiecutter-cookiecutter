@@ -1,0 +1,18 @@
+---
+description: >-
+  When git commit fails with overcommit plugin signature or security messages,
+  run bin/overcommit --sign and bin/overcommit --sign pre-commit, then retry
+alwaysApply: false
+---
+
+# Overcommit signing
+
+Git hooks load Overcommit via **Bundler** (`gemfile: Gemfile` in `.overcommit.yml`), same as `bin/overcommit`. Run `bundle install` if hooks cannot find the gem.
+
+If `git commit` fails with overcommit **plugin signature** or **security** output (plugins added/changed; message asks you to run `overcommit --sign`):
+
+1. `bin/overcommit --sign`
+2. `bin/overcommit --sign pre-commit`
+3. Retry the commit.
+
+Run **both** sign commands every time — not only one. Do not use `--no-verify` unless the user explicitly asks to skip hooks.
