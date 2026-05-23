@@ -71,14 +71,6 @@ PreCommit:
     problem_on_unmodified_line: warn
     quiet: false
 
-PostCheckout:
-  BundleInstall:
-    enabled: true
-  CustomScript:
-    enabled: true
-    requires_files: false
-    required_executable: 'bin/git-post-checkout-fix'
-
 PostCommit:
   BundleInstall:
     enabled: true

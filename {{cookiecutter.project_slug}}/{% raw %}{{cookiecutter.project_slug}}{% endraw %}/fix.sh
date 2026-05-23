@@ -405,6 +405,29 @@ ensure_shellcheck() {
   fi
 }
 
+ensure_hooks_path() {
+  if [ -d .git ]
+  then
+    git config core.hooksPath .githooks
+  fi
+}
+
+install_bootstrap_post_checkout_hook() {
+  if [ ! -d .githooks ]
+  then
+    mkdir -p .githooks
+  fi
+
+  cat > .githooks/post-checkout << 'EOF'
+#!/bin/bash
+
+set -euo pipefail
+
+exec ./bin/git-post-checkout-fix "$@"
+EOF
+  chmod +x .githooks/post-checkout
+}
+
 ensure_overcommit() {
   # don't run if we're in the middle of a cookiecutter child project
   # test, or otherwise don't have a Git repo to install hooks into...
@@ -413,6 +436,7 @@ ensure_overcommit() {
     bundle exec overcommit --install
     bundle exec overcommit --sign
     bundle exec overcommit --sign pre-commit
+    install_bootstrap_post_checkout_hook
   else
     >&2 echo 'Not in a git repo; not installing git hooks'
   fi
@@ -421,6 +445,8 @@ ensure_overcommit() {
 ensure_types_built() {
   make build-typecheck
 }
+
+ensure_hooks_path
 
 ensure_ruby_versions
 
