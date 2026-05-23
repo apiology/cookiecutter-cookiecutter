@@ -59,5 +59,10 @@ When porting config that names directories or tools (`.envrc` `PATH_add`, Makefi
 | `Makefile` / `fix.sh` | Cross-language bootstrap | Language toolchain targets | App/deploy targets |
 | Paths | None of `lib/`, `app/` | Language test/layout conventions | Framework `config/` |
 | `.envrc` `PATH_add` | `bin` only (if `bin/` exists) | Add paths that exist here (e.g. `script/` when present) | App-only paths |
+| `fix.sh` rbenv / rugged / `set_ruby_local_version` | **Do not port from Ruby app refs** | Ruby toolchain bootstrap | App-only Ruby deps (e.g. rugged for undercover) |
+| `.gitignore` Sorbet / Tapioca / YARD | **Do not port from Ruby app refs** | `tapioca.installed`, `yardoc.installed`, `sorbet/*` | Generated RBI paths |
+| `.git-hooks` `# @sg-ignore` | **Do not port** | Sorbet annotations only in Ruby templates | — |
+
+When syncing into the **meta** ancestor from a Ruby reference (e.g. `apiology/checkoff`), see the meta rule `template-hierarchy.mdc` — Ruby-only rows above stay out of meta copies.
 
 When unsure: **too specific for this repo → descendant**; **too general to live only here → ancestor**.

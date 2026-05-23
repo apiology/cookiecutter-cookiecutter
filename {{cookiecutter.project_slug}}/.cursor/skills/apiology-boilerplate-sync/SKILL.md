@@ -64,6 +64,16 @@ Choose reference implementation(s) per task; record `origin/main` SHAs.
 
 Before porting: `git ls-tree origin/main -- <path>`.
 
+## Meta tier: Ruby reference exclusions
+
+If the reference is a **Ruby app or gem** (e.g. `checkoff`) and you are at the **meta** cookiecutter, do **not** port Ruby-only bootstrap or Sorbet artifacts into shared files:
+
+- `fix.sh`: rbenv `--list-all`, `set_ruby_local_version` / rugged / extra `ensure_rbenv`
+- `.gitignore`: `tapioca.installed`, `yardoc.installed`, `sorbet/machine_specific_config`
+- `.git-hooks/**/*.rb`: `# @sg-ignore` and Sorbet-only annotations
+
+Use a Ruby language cookiecutter for those. Details: [template-hierarchy.mdc](../../.cursor/rules/template-hierarchy.mdc), [SYNCING_BOILERPLATE.md](../../docs/SYNCING_BOILERPLATE.md).
+
 ## Quick baseline
 
 From the repo root (this cookiecutter checkout):
