@@ -6,12 +6,6 @@ description: >-
   Ruby the git hook will use — overcommit plugin signatures are not stable
   across Ruby versions.
 alwaysApply: false
-globs:
-  - .overcommit.yml
-  - .git-hooks/**
-  - bin/overcommit
-  - Gemfile
-  - .ruby-version
 ---
 
 # Overcommit signing
