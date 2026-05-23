@@ -1,0 +1,59 @@
+---
+description: >-
+  When a commit is rejected for changed Overcommit hook plugin signatures,
+  re-sign with `bin/overcommit --sign` then `bin/overcommit --sign pre-commit`
+  before retrying. Always use the `bin/overcommit` Bundler binstub so hooks
+  match the repo's Gemfile (`gemfile: Gemfile` in `.overcommit.yml`).
+alwaysApply: false
+globs:
+  - .overcommit.yml
+  - .git-hooks/**
+  - bin/overcommit
+---
+
+# Overcommit signing
+
+This repo runs Overcommit through Bundler. `.overcommit.yml` declares
+`gemfile: Gemfile`, and `bin/overcommit` is a Bundler binstub. Both the CLI
+and the installed git hooks therefore load Overcommit (and plugins like
+`punchlist`) from the project's `Gemfile`, not from a bare `gem` lookup.
+
+## When you see a signature error
+
+If `git commit` fails with a message about Overcommit plugin signatures
+changing (typical after editing files under `.git-hooks/` or bumping the
+`overcommit` / plugin gems), re-sign and retry:
+
+```sh
+bin/overcommit --sign
+bin/overcommit --sign pre-commit
+git commit -m "..."
+```
+
+`--sign` (no hook name) refreshes the top-level Overcommit configuration
+signature; `--sign pre-commit` refreshes per-hook plugin signatures used by
+the installed `pre-commit` hook. Both are usually needed together.
+
+## Always go through Bundler
+
+- Use `bin/overcommit` (the binstub) — never a bare `overcommit` from the
+  global gem set. The binstub does `require 'bundler/setup'` first, so it
+  resolves the same `overcommit` and plugin gems the git hooks will load.
+- Keep `gemfile: Gemfile` at the top of `.overcommit.yml`. The installed
+  `pre-commit` hook reads that key and runs `Bundler.setup` before
+  `require 'overcommit'`; without it, the hook can pick up a different
+  Overcommit (or miss `punchlist`) and disagree with `bin/overcommit --run`.
+- If `bin/overcommit --run pre-commit` passes but `git commit` fails, that
+  mismatch is the first thing to check. Confirm `gemfile: Gemfile` is set
+  and `bundle check` succeeds, then re-sign as above.
+
+## Reinstall hooks if needed
+
+If hook scripts under `.git/hooks/` look stale (e.g. after toggling
+`gemfile:`), reinstall and re-sign:
+
+```sh
+bin/overcommit --install -f
+bin/overcommit --sign
+bin/overcommit --sign pre-commit
+```

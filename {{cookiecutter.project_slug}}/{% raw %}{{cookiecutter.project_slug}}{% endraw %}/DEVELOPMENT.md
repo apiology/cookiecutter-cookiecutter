@@ -9,7 +9,18 @@ dependencies.
 ## Overcommit
 
 This project uses [overcommit](https://github.com/sds/overcommit) for
-quality checks.  `bundle exec overcommit --install` will install it.
+quality checks. Install hooks with `bin/overcommit --install`. The
+`bin/overcommit` binstub loads Overcommit through Bundler, and
+`.overcommit.yml` sets `gemfile: Gemfile` so the installed git hooks pick
+up the same `overcommit` / `punchlist` gems from `Gemfile`.
+
+If a commit is rejected because hook plugin signatures changed (typical
+after editing `.git-hooks/` or bumping the gems), re-sign and retry:
+
+```sh
+bin/overcommit --sign
+bin/overcommit --sign pre-commit
+```
 
 ## direnv
 

@@ -16,6 +16,10 @@
 #
 # Uncomment the following lines to make the configuration take effect.
 
+# Load Overcommit and its plugins through Bundler so the installed git hooks
+# pick up the same `overcommit` / `punchlist` gems as `bin/overcommit`.
+gemfile: Gemfile
+
 PreCommit:
   # Extend default config at
   # https://github.com/sds/overcommit/blob/master/config/default.yml
