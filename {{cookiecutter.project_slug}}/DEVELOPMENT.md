@@ -16,6 +16,10 @@ quality checks.  `bundle exec overcommit --install` will install it.
 This project uses direnv to manage environment variables used during
 development.  See the `.envrc` file for detail.
 
+## Conventions
+
+* Cursor agent rules for this repo live in `.cursor/rules/` (file-scoped via `globs`, never `alwaysApply: true`)
+
 ## Tests
 
 To get full realtime output from tests to debug e.g. slowness issues:

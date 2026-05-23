@@ -1,5 +1,11 @@
 # Development
 
+## Syncing boilerplate from reference repos
+
+Language-agnostic infrastructure is synced from **reference repos** using **only** `origin/main` (never unpushed local trees). See [docs/SYNCING_BOILERPLATE.md](docs/SYNCING_BOILERPLATE.md).
+
+Cursor skills: `apiology-boilerplate-sync` (user) and `sync-cookiecutter-template-layers` (this repo).
+
 ## fix.sh
 
 If you want to use rbenv/pyenv/etc to manage versions of tools,

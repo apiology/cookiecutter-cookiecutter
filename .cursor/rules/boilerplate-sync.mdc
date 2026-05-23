@@ -1,0 +1,14 @@
+---
+description: Sync language-agnostic boilerplate from reference repos (origin/main only)
+globs: docs/SYNCING_BOILERPLATE.md,.cursor/skills/**,DEVELOPMENT.md,{{cookiecutter.project_slug}}/**
+alwaysApply: false
+---
+
+# Boilerplate sync
+
+When syncing language-agnostic infrastructure from **reference repos** into this template:
+
+1. Use skill `apiology-boilerplate-sync` and project skill `sync-cookiecutter-template-layers`.
+2. Read [docs/SYNCING_BOILERPLATE.md](../docs/SYNCING_BOILERPLATE.md).
+3. **Only** `git show origin/main:<path>` — never copy from unpushed local trees.
+4. Language-specific hooks, Makefile, fix.sh → the matching language cookiecutter repo, not this meta template.
