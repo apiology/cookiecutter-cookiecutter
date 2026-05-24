@@ -137,7 +137,12 @@ and `.envrc` will fail its `op://` check.  **Clean reset:** delete all
 variables in the Environment, `op inject` once, import that file, and confirm
 `grep -c op:// config/env.local` is **0**.
 
-## Test performance
+## Conventions
+
+* Cursor authoring policy: `~/.cursor/rules/cursor-rule-authoring.mdc` only (global).
+* Repo rules: clear task `description`, `alwaysApply: false`, optional `globs` only when they cover every auto-attach case.
+
+## Tests
 
 To get full realtime output from tests to debug e.g. slowness issues:
 

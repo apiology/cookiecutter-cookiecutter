@@ -1,5 +1,4 @@
-.PHONY: build build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-build clean-coverage clean-pyc clean-typecheck clean-typecoverage coverage default docs gem_dependencies help overcommit quality repl test typecheck typecoverage update_from_cookiecutter
-
+.PHONY: build build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-coverage clean-typecheck clean-typecoverage coverage default gem_dependencies help overcommit quality repl report-coverage report-coverage-to-codecov test typecheck typecoverage update_from_cookiecutter docs
 .DEFAULT_GOAL := default
 
 define PRINT_HELP_PYSCRIPT
@@ -18,7 +17,7 @@ help:
 
 default: clean-typecoverage build typecheck typecoverage clean-coverage test coverage overcommit_branch quality ## run default typechecking, tests and quality
 
-SOURCE_FILE_GLOBS = ['{tests,hooks}/**/*.py']
+SOURCE_FILE_GLOBS = ['{config,lib,app,script,spec}/**/*.rb', 'ext/**/*.{c,rb}']
 
 SOURCE_FILES := $(shell ruby -e "puts Dir.glob($(SOURCE_FILE_GLOBS))")
 
@@ -36,7 +35,6 @@ build-typecheck: types.installed  ## Fetch information that type checking depend
 docs: ## Generate documentation
 
 clean-typecheck: ## Refresh the easily-regenerated information that type checking depends on
-	rm -fr .mypy_cache
 	rm -f types.installed
 	echo all clear
 
@@ -47,41 +45,15 @@ realclean: clean realclean-typecheck
 	rm -f .make/*
 	rm -f *.installed
 
-# https://app.circleci.com/pipelines/github/apiology/cookiecutter-pypackage/281/workflows/b85985a9-16d0-42c4-93d4-f965a111e090/jobs/366
-typecheck: build-typecheck ## run mypy against project
-	mypy --cobertura-xml-report typecover --html-report typecover hooks tests
+typecheck: build-typecheck ## validate types in code and configuration
 
 citypecheck: typecheck ## Run type check from CircleCI
 
-typecoverage: typecheck ## Run type checking and then ratchet coverage in metrics/mypy_high_water_mark
+typecoverage: typecheck ## Run type checking and then ratchet coverage in metrics/
 
-clean-typecoverage: ## Clean out mypy previous results to avoid flaky results
+clean-typecoverage: ## Clean out type-related coverage previous results to avoid flaky results
 
-ratchet-typecoverage: ## Run type checking, ratchet coverage, and then complain if ratchet needs to be committed
-	@echo "Looking for un-checked-in type coverage metrics..."
-	@git status --porcelain metrics/mypy_high_water_mark
-	@test -z "$$(git status --porcelain metrics/mypy_high_water_mark)"
-
-citypecoverage: citypecheck ratchet-typecoverage ## Run type checking, ratchet coverage, and then complain if ratchet needs to be committed
-
-clean-build: ## remove build artifacts
-	rm -fr build/
-	rm -fr dist/
-	rm -fr .eggs/
-	find . -name '*.egg-info' -exec rm -fr {} +
-	find . -name '*.egg' -exec rm -f {} +
-
-clean-pyc: ## remove Python file artifacts
-	find . -name '*.pyc' -exec rm -f {} +
-	find . -name '*.pyo' -exec rm -f {} +
-	find . -name '*~' -exec rm -f {} +
-	find . -name '__pycache__' -exec rm -fr {} +
-
-clean-test: ## remove test and coverage artifacts
-	rm -fr .tox/
-	rm -f .coverage
-	rm -fr htmlcov/
-	rm -fr .pytest_cache
+citypecoverage: citypecheck ## Run type checking, ratchet coverage, and then complain if ratchet needs to be committed
 
 config/env: config/env.1p  ## Create file suitable for docker-compose usage
 	cat config/env.1p | cut -d= -f1 > config/env
@@ -109,26 +81,18 @@ gem_dependencies: .bundle/config
 Gemfile.lock.installed: Gemfile vendor/.keep
 	touch Gemfile.lock.installed
 
-vendor/.keep: Gemfile.lock .ruby-version
+vendor/.keep: Gemfile.lock
 	make gem_dependencies
 	bundle install
 	touch vendor/.keep
 
 bundle_install: Gemfile.lock.installed ## Install Ruby dependencies
 
-lint: ## check style with flake8
-	flake8 hooks tests
-
-test-all: ## run tests on every Python version with tox
-	tox
-
-clean: clean-build clean-pyc clean-test clean-typecoverage clean-typecheck clean-coverage ## remove all build, test, coverage and Python artifacts
+clean: clean-typecoverage clean-typecheck clean-coverage ## remove all built artifacts
 
 test: ## run tests quickly
-	pytest --maxfail=1 tests/test_bake_project.py --capture=no --keep-baked-projects -v
 
-citest:  ## Run unit tests from CircleCI
-	pytest --keep-baked-projects  --maxfail=1 tests/test_bake_project.py --capture=no -v
+citest: test ## Run unit tests from CircleCI
 
 overcommit: ## run precommit quality checks
 	bin/overcommit --run
@@ -136,24 +100,22 @@ overcommit: ## run precommit quality checks
 overcommit_branch: ## run precommit quality checks only on changed files
 	bin/overcommit --run --diff origin/main
 
-quality: lint overcommit ## run precommit quality checks
-
-bake: ## generate project using defaults
-	cookiecutter $(BAKE_OPTIONS) . --overwrite-if-exists
-
-watch: bake ## generate project using defaults and watch for changes
-	watchmedo shell-command -p '*.*' -c 'make bake -e BAKE_OPTIONS=$(BAKE_OPTIONS)' -W -R -D \{{ cookiecutter.project_slug }}/
-
-replay: BAKE_OPTIONS=--replay ## replay last cookiecutter run and watch for changes
-replay: watch
-	;
+quality: overcommit ## run precommit quality checks
 
 repl: ## Launch an interactive development shell
-	python
+	@echo "Teach me how to make repl"
+	@exit 1
 
 clean-coverage: ## Clean out previous output of test coverage to avoid flaky results from previous runs
 
-coverage: test ## check code coverage
+coverage: test report-coverage ## check code coverage
+
+report-coverage: test ## Report summary of coverage to stdout, and generate HTML, XML coverage report
+
+report-coverage-to-codecov: report-coverage ## use codecov.io for PR-scoped code coverage reports
+	@curl -Os https://uploader.codecov.io/latest/linux/codecov
+	@chmod +x codecov
+	@./codecov --file coverage.xml --nonZero
 
 update_apt: .make/apt_updated
 
@@ -161,10 +123,15 @@ update_apt: .make/apt_updated
 	sudo DEBIAN_FRONTEND=noninteractive apt-get update -y
 	touch .make/apt_updated
 
-cicoverage: citest ## check code coverage
+cicoverage: citest report-coverage-to-codecov ## check code coverage
 
 update_from_cookiecutter: ## Bring in changes from template project used to create this repo
 	bin/overcommit --uninstall
+	# cookiecutter_project_upgrader does its work in
+	# .git/cookiecutter/cookiecutter-cookiecutter, but RuboCop wants to inherit
+	# config from all directories above it - avoid config
+	# mismatches by moving this out of the way
+	mv .rubocop.yml .rubocop-renamed.yml || true
 	cookiecutter_project_upgrader --help >/dev/null
 	@mkdir -p .make
 	@if [ -f docs/cookiecutter_input.json ]; then \
@@ -202,6 +169,7 @@ update_from_cookiecutter: ## Bring in changes from template project used to crea
 	  mv .make/rubocop-main.yml.bak "$$MAIN_REPO_ROOT/.rubocop.yml"; \
 	  rm -f .make/rubocop_main_hidden; \
 	fi
+	mv .rubocop-renamed.yml .rubocop.yml
 	@if ! git diff --quiet -- Makefile 2>/dev/null || ! git diff --cached --quiet -- Makefile 2>/dev/null; then \
 	  git stash push -m 'update_from_cookiecutter Makefile' -- Makefile; \
 	  touch .make/cookiecutter_makefile_stashed; \

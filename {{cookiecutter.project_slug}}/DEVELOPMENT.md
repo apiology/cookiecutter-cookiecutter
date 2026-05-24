@@ -71,93 +71,17 @@ them as a [local `.env`
 file](https://developer.1password.com/docs/environments/local-env-file/) at
 **`config/env.local`** (macOS beta; fifo mount, gitignored).  Do **not**
 mount at `config/env.1p` — that path is the tracked `op://` template and
-conflicts with git.  When vault items change or you add keys to the template,
-refresh the Environment with `op inject` and the 1Password app.
-
-#### Prerequisites (macOS)
-
-* [1Password for Mac](https://1password.com/downloads/mac/) with **Developer**
-  turned on (Settings → Developer).
-* [1Password CLI](https://developer.1password.com/docs/cli/get-started/):
-  `brew install 1password-cli`
-* Signed in: `op signin` (or 1Password app integration enabled).
-* 1Password unlocked when you run `op inject`.
-
-#### One-time: Environment and local mount
-
-1. Open 1Password → **Developer** → **View Environments**.
-2. Open (or create) the environment for this repo.
-3. Under **Destinations**, add **Local .env file** and set the path to this
-   repo’s **`config/env.local`** (use an absolute path, e.g.
-   `$PWD/config/env.local` from the repo root).
-4. Approve access when prompted; keep 1Password running while developing.
-
-| Path | Role |
-|------|------|
-| `config/env.1p` | Git-tracked template (`op://` references); fallback for `.envrc` / `make config/env` |
-| `config/env.local` | 1Password Environment mount (resolved literals); preferred when present |
-
-Do not commit `config/env.local`.
+conflicts with git.
 
 #### Update the Environment from `config/env.1p` (`op inject`)
 
-Use this when you have changed `config/env.1p` in git (new variables or
-updated `op://` paths) or when secrets in 1Password vaults have changed and
-you want the Environment to match current vault values.
-
-1. From the repo root, resolve the template to a **temporary** file (never
-   write injected secrets back onto the tracked `config/env.1p`):
-
-   ```sh
-   op inject -i config/env.1p -o /tmp/repo-env.import -f
-   ```
-
-2. Confirm every reference resolved (no `op://` left):
-
-   ```sh
-   grep 'op://' /tmp/repo-env.import && echo 'ERROR: unresolved references' || echo 'OK'
-   ```
-
-3. Import into 1Password, then `rm /tmp/repo-env.import`.
-
-4. If you use a local mount at `config/env.local`, confirm
-   `grep -c op:// config/env.local` is **0**, then `direnv allow`.
-
-#### Avoid duplicate variables
-
-1Password Environments allow **multiple entries with the same name**.  The
-mounted `config/env.local` will then mix `op://` lines with resolved values,
-and `.envrc` will fail its `op://` check.  **Clean reset:** delete all
-variables in the Environment, `op inject` once, import that file, and confirm
-`grep -c op:// config/env.local` is **0**.
-
-## Syncing boilerplate
-
-See [docs/SYNCING_BOILERPLATE.md](docs/SYNCING_BOILERPLATE.md). Skill: `.cursor/skills/apiology-boilerplate-sync/`. Rules: `boilerplate-sync.mdc`, `template-hierarchy.mdc`, `overcommit-signing.mdc` — interpret hierarchy at **this** tier (`{{ cookiecutter.project_slug }}`, {{ cookiecutter.language_or_tool }}).
-
-## Conventions
-
-* Cursor authoring policy: `~/.cursor/rules/cursor-rule-authoring.mdc` only (global).
-* Repo rules: clear task `description`, `alwaysApply: false`, optional `globs` only when they cover every auto-attach case.
-
-## Tests
-
-To get full realtime output from tests to debug e.g. slowness issues:
-
 ```sh
-pytest tests/test_bake_project.py --capture=no -k test_bake_and_run_build
+op inject -i config/env.1p -o /tmp/repo-env.import -f
+grep 'op://' /tmp/repo-env.import && echo 'ERROR: unresolved references' || echo 'OK'
+# Import /tmp/repo-env.import in 1Password → Environments, then:
+rm /tmp/repo-env.import
 ```
 
-You can debug overall test timings with:
-
-```sh
-time pytest tests/test_bake_project.py --durations=0
-```
-
-It's also useful to replace 'make test' with something that will give
-you real-time stdout/stderr in `test_bake_project.py`.
-
-You can then wrap `time` commands around different things that shell
-out, or do [this type of
-technique](https://stackoverflow.com/a/1557584/2625807) for things
-which aren't a simple shell-out.
+If you use a local mount at `config/env.local`, confirm
+`grep -c op:// config/env.local` is **0**, then `direnv allow`.  Do not
+commit `config/env.local`.

@@ -73,7 +73,7 @@ commands:
           path: /tmp/fix_sh_timing.log
       - save_cache:
           name: 'Save pyenv cache'
-          key: pyenv-v2-{% raw %}{{ checksum "requirements_dev.txt" }}{% endraw %}-{% raw %}{{ checksum ".python-version" }}{% endraw %} # yamllint disable-line rule:line-length
+          key: pyenv-v2-{% raw %}{{ checksum "requirements_dev.txt" }}{% endraw %}-{% raw %}{{ checksum ".python-version" }}{% endraw %}
           paths:
             - "requirements_dev.txt.installed"
             - "/home/circleci/.cache/pip/wheels"
@@ -110,28 +110,6 @@ commands:
 
             # bundle exec overcommit --diff # if full run takes too long in this repo
             bin/overcommit --run
-  tox:
-    description: "Run tox"
-    parameters:
-      tox_arguments:
-        type: string
-        default: ''
-        description: "Which tox arguments to pass"
-    steps:
-      - run_with_languages:
-          label: Test
-          command: |
-            # These will be used in post_gen_project.py while testing
-            # the cookies, as well as by overcommit
-            git config --global user.email "test@test.test"
-            git config --global user.name "Test Test"
-            # Coax overcommit into working
-            bundle exec overcommit --sign
-            bundle exec overcommit --sign pre-commit
-
-            tox <<parameters.tox_arguments>>
-
-            bin/overcommit --run
 jobs:
   quality:
     working_directory: ~/{{cookiecutter.project_slug}}
@@ -148,44 +126,6 @@ jobs:
       - run_with_languages:
           label: Typecheck
           command: make citypecheck citypecoverage
-      - unless:
-          condition:
-            equal: [<< pipeline.git.branch >>, "main"]
-          steps:
-            # skip tox to speed things by not installing another
-            # virtualenv, and only run in default Python version.
-            - run_with_languages:
-                label: Test
-                command: |
-                  # These will be used in post_gen_project.py while testing
-                  # the cookies, as well as by overcommit
-                  git config --global user.email "test@test.test"
-                  git config --global user.name "Test Test"
-                  # Coax overcommit into working
-                  bundle exec overcommit --sign
-                  bundle exec overcommit --sign pre-commit
-
-                  # Set timezone as same on dev box for test consistency
-
-                  # https://stackoverflow.com/questions/44331836/apt-get-install-tzdata-noninteractive
-                  sudo ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
-                  sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
-                  export TZ=America/New_York
-                  date
-
-                  # measuring slows down the script - only enable when you
-                  # want to debug where this is spending time
-
-                  # export FIX_SH_TIMING_LOG=/tmp/child_fix_sh_timing.log
-
-                  make citest cicoverage
-            - store_artifacts:
-                path: /tmp/child_fix_sh_timing.log
-      - when:
-          condition:
-            equal: [<< pipeline.git.branch >>, "main"]
-          steps:
-            - tox
       - run:
           label: Verify deltas
           command: |
@@ -196,6 +136,18 @@ jobs:
               >&2 echo "Please check in all files"
               exit 1
             fi
+      - run_with_languages:
+          label: Test
+          command: |
+            # Set timezone as same on dev box for test consistency
+
+            # https://stackoverflow.com/questions/44331836/apt-get-install-tzdata-noninteractive
+            sudo ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
+            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
+            export TZ=America/New_York
+            date
+
+            make citest cicoverage
     # This seemed to shave 5ish% of the build time off when added
     resource_class: large
 
