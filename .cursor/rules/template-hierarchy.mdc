@@ -22,6 +22,7 @@ This repo is the **meta** cookiecutter (`cookiecutter-cookiecutter`). It bakes *
 | Kind of change | Meta root | `{{cookiecutter.project_slug}}/` | Nested project dir |
 |----------------|-----------|-----------------------------------|--------------------|
 | `overcommit-signing.mdc` | Yes | Yes | Yes |
+| `pr-review-inline-comments.mdc` | Yes | Yes | Yes |
 | `template-hierarchy.mdc` | Yes (this file) | Yes (tier-specific) | No |
 | `fix.sh`, `bin/git-*` hooks, `.githooks/post-checkout`, shared `.overcommit.yml` bootstrap | Yes | Yes | Yes |
 | Boilerplate sync skills/docs | No — in baked child path | Yes | No |
