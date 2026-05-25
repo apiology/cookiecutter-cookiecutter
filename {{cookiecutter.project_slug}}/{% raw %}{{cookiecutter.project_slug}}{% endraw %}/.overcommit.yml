@@ -89,7 +89,7 @@ PrePush:
   CustomScript:
     enabled: true
     requires_files: false
-    required_executable: 'bin/git-commit-validate'
+    required_executable: 'bin/git-push-validate'
 
 #PostCheckout:
 #  ALL: # Special hook name that customizes all hooks of this type
