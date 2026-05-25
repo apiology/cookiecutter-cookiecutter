@@ -60,10 +60,12 @@ development.  See the `.envrc` file for detail.
 `config/env.1p` in git is the **template**: each variable points at a vault
 item with an `op://` [secret
 reference](https://developer.1password.com/docs/cli/secret-reference), not a
-plaintext value.  `.envrc` and `make config/env` prefer **`config/env.local`**
-when that file is readable (1Password Environment mount with resolved
-literals); otherwise they use `op run --env-file=config/env.1p` (always in
-git) to resolve references at load time.
+plaintext value.  `.envrc` uses **`config/env.local`** when that file is
+readable (1Password Environment mount with resolved literals).  An empty
+mount (comments only) means **no secrets** for this repo — `.envrc` does not
+fall back to `config/env.1p`.  When `env.local` is absent and `config/env.1p`
+has variable lines, `.envrc` uses `op run --env-file=config/env.1p` to resolve
+references at load time.
 
 For local development, you can also store **resolved** values in a
 [1Password Environment](https://developer.1password.com/docs/environments/) and mount
