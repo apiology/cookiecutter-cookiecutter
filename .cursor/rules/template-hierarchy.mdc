@@ -22,6 +22,7 @@ This repo is the **meta** cookiecutter (`cookiecutter-cookiecutter`). It bakes *
 | Kind of change | Meta root | `{{cookiecutter.project_slug}}/` | Nested project dir |
 |----------------|-----------|-----------------------------------|--------------------|
 | `overcommit-signing.mdc` | Yes | Yes | Yes |
+| `circleci-logs-before-local-ci.mdc` | Yes | Yes | Yes |
 | `template-hierarchy.mdc` | Yes (this file) | Yes (tier-specific) | No |
 | `fix.sh`, `bin/git-*` hooks, `.githooks/post-checkout`, shared `.overcommit.yml` bootstrap | Yes | Yes | Yes |
 | Boilerplate sync skills/docs | No — in baked child path | Yes | No |
@@ -68,7 +69,7 @@ When adding or changing such a file:
 
 1. **List tiers** — run `find` or search for the basename under the repo (ignore `.git/`).
 2. **Apply at every tier** where the file already exists, unless the change is intentionally tier-specific.
-3. **Keep paths parallel** — same relative path and hook wiring at each tier (e.g. `.githooks/post-checkout` → `bin/git-post-checkout-fix` next to existing `bin/git-push-validate`).
+3. **Keep paths parallel** — same relative path and hook wiring at each tier (e.g. `.githooks/post-checkout` → `bin/git-post-checkout-fix` next to `bin/git-commit-validate`).
 4. **If unsure** whether a change belongs at one tier or all three, **ask the user** before opening a PR.
 
 When editing the inner template, read `{{cookiecutter.project_slug}}/.cursor/rules/template-hierarchy.mdc` and `docs/SYNCING_BOILERPLATE.md`.
