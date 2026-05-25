@@ -1,0 +1,28 @@
+---
+description: >-
+  Running make update_from_cookiecutter from a Cursor linked git worktree
+  (bootstrap, branch locks, DEFAULT_BRANCH).
+alwaysApply: false
+---
+
+# update_from_cookiecutter and linked worktrees
+
+`make update_from_cookiecutter` pulls boilerplate from the cookiecutter that
+generated this repo. It works from a **linked worktree** the same as from the
+primary checkout.
+
+Before running in a new worktree, bootstrap once so Overcommit can sign hooks:
+
+```sh
+direnv exec . ./fix.sh
+```
+
+(Everyone else already uses direnv in this project; see [overcommit-signing.mdc](overcommit-signing.mdc) for worktree Ruby pinning.)
+
+Do not run two updates at once if several worktrees share one repository.
+
+Override the default branch with:
+
+```sh
+DEFAULT_BRANCH=my-default make update_from_cookiecutter
+```

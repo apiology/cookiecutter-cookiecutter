@@ -169,5 +169,4 @@ cicoverage: citest ## check code coverage
 update_from_cookiecutter: ## Bring in changes from template project used to create this repo
 	bin/overcommit --uninstall
 	cookiecutter_project_upgrader --help >/dev/null
-	bin/cookiecutter_project_upgrader_with_worktree_shim.sh
-	bin/update_from_cookiecutter_finish.sh
+	bin/cookiecutter_project_upgrader.sh

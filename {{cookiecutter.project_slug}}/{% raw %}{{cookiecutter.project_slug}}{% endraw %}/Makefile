@@ -136,6 +136,5 @@ update_from_cookiecutter: ## Bring in changes from template project used to crea
 	# out of the way
 	mv .rubocop.yml .rubocop-renamed.yml || true
 	cookiecutter_project_upgrader --help >/dev/null
-	bin/cookiecutter_project_upgrader_with_worktree_shim.sh
+	bin/cookiecutter_project_upgrader.sh
 	mv .rubocop-renamed.yml .rubocop.yml
-	bin/update_from_cookiecutter_finish.sh

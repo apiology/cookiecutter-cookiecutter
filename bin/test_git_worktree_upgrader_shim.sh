@@ -4,7 +4,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-SHIM="${ROOT}/bin/cookiecutter_project_upgrader_with_worktree_shim.sh"
+UPGRADER="${ROOT}/bin/cookiecutter_project_upgrader.sh"
 TMP="$(mktemp -d)"
 trap 'rm -rf "${TMP}"' EXIT
 
@@ -51,9 +51,9 @@ if [ -d "${COOKIECUTTER_DIR}" ]; then
   exit 1
 fi
 
-if [ ! -x "${SHIM}" ]; then
-  echo "fail: shim not executable: ${SHIM}" >&2
+if [ ! -x "${UPGRADER}" ]; then
+  echo "fail: upgrader script not executable: ${UPGRADER}" >&2
   exit 1
 fi
 
-echo "ok: git worktree upgrader shim paths"
+echo "ok: git worktree upgrader paths"

@@ -1,21 +1,17 @@
 #!/bin/bash
-# Run cookiecutter_project_upgrader from the repo root, including linked git worktrees.
-#
-# cookiecutter_project_upgrader writes under $PWD/.git/cookiecutter/. In a linked
-# worktree, .git is a gitdir: pointer file, not a directory — temporarily symlink .git
-# to $(git rev-parse --git-dir) so os.path.join(..., ".git", "cookiecutter") works.
+# Run cookiecutter_project_upgrader and the update_from_cookiecutter finish phase.
+# Handles linked git worktrees (gitdir: .git pointer) and worktree-safe git branch ops.
 
 set -euo pipefail
 
 MAIN_REPO_ROOT="$(dirname "$(git rev-parse --git-common-dir)")"
 GIT_DIR_PATH="$(git rev-parse --git-dir)"
 MAKE_DIR=".make"
-
 RBS_HIDDEN=0
 RUBOCOP_MAIN_HIDDEN=0
 GIT_WORKTREE_SHIM=0
 
-cleanup() {
+cleanup_prepare() {
   if [ "${GIT_WORKTREE_SHIM}" -eq 1 ] && [ -f "${MAKE_DIR}/git-worktree-pointer" ]; then
     rm -f .git
     mv "${MAKE_DIR}/git-worktree-pointer" .git
@@ -36,7 +32,7 @@ cleanup() {
   fi
 }
 
-trap cleanup EXIT
+trap cleanup_prepare EXIT
 
 mkdir -p "${MAKE_DIR}"
 
@@ -72,12 +68,51 @@ elif [ -f .git ] && [ ! -L .git ]; then
 fi
 
 export IN_COOKIECUTTER_PROJECT_UPGRADER=1
-upgrader_status=0
 if [ -f "${MAKE_DIR}/cookiecutter_context.json" ]; then
-  cookiecutter_project_upgrader -c "${MAKE_DIR}/cookiecutter_context.json" -p true || upgrader_status=$?
+  cookiecutter_project_upgrader -c "${MAKE_DIR}/cookiecutter_context.json" -p true
 else
-  cookiecutter_project_upgrader || upgrader_status=$?
+  cookiecutter_project_upgrader
 fi
+
 trap - EXIT
-cleanup
-exit "${upgrader_status}"
+cleanup_prepare
+
+# Finish phase (worktree-safe: no checkout of branches locked in other worktrees)
+DEFAULT_BRANCH="${DEFAULT_BRANCH:-main}"
+if git symbolic-ref -q "refs/remotes/origin/HEAD" >/dev/null 2>&1; then
+  DEFAULT_BRANCH="$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')"
+fi
+
+if ! git diff --quiet -- Makefile 2>/dev/null || ! git diff --cached --quiet -- Makefile 2>/dev/null; then
+  git stash push -m 'update_from_cookiecutter Makefile' -- Makefile
+  touch "${MAKE_DIR}/cookiecutter_makefile_stashed"
+fi
+
+git push --no-verify origin cookiecutter-template || true
+
+git fetch "origin" "${DEFAULT_BRANCH}"
+UPDATE_BRANCH="update-from-cookiecutter-$(date +%Y-%m-%d-%H%M)"
+git switch -c "${UPDATE_BRANCH}" "origin/${DEFAULT_BRANCH}"
+echo "Created branch ${UPDATE_BRANCH} from origin/${DEFAULT_BRANCH}"
+
+bin/overcommit --sign
+bin/overcommit --sign pre-commit
+bin/overcommit --sign pre-push
+
+git merge cookiecutter-template || true
+git checkout --ours Gemfile.lock || true
+
+if [ -f "${MAKE_DIR}/cookiecutter_makefile_stashed" ]; then
+  git stash pop || true
+  rm -f "${MAKE_DIR}/cookiecutter_makefile_stashed"
+fi
+
+bundle update --conservative json rexml || true
+( make build && git add Gemfile.lock ) || true
+bin/overcommit --install || true
+
+echo
+echo "Please resolve any merge conflicts below and push up a PR with:"
+echo
+echo '   gh pr create --title "Update from cookiecutter" --body "Automated PR to update from cookiecutter boilerplate"'
+echo
