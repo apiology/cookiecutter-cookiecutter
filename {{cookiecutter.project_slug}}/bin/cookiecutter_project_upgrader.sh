@@ -9,7 +9,9 @@ GIT_DIR_PATH="$(git rev-parse --git-dir)"
 MAKE_DIR=".make"
 RBS_HIDDEN=0
 RUBOCOP_MAIN_HIDDEN=0
+RUBOCOP_CWD_HIDDEN=0
 GIT_WORKTREE_SHIM=0
+REPO_CWD="$(pwd)"
 
 cleanup_prepare() {
   if [ "${GIT_WORKTREE_SHIM}" -eq 1 ] && [ -f "${MAKE_DIR}/git-worktree-pointer" ]; then
@@ -26,6 +28,11 @@ cleanup_prepare() {
     mv "${MAKE_DIR}/rubocop-main.yml.bak" "${MAIN_REPO_ROOT}/.rubocop.yml"
     rm -f "${MAKE_DIR}/rubocop_main_hidden"
     RUBOCOP_MAIN_HIDDEN=0
+  fi
+  if [ "${RUBOCOP_CWD_HIDDEN}" -eq 1 ] && [ -f "${MAKE_DIR}/rubocop-cwd.yml.bak" ]; then
+    mv "${MAKE_DIR}/rubocop-cwd.yml.bak" "${REPO_CWD}/.rubocop.yml"
+    rm -f "${MAKE_DIR}/rubocop_cwd_hidden"
+    RUBOCOP_CWD_HIDDEN=0
   fi
   if [ -d "${GIT_DIR_PATH}/cookiecutter" ]; then
     rm -rf "${GIT_DIR_PATH}/cookiecutter"
@@ -50,6 +57,13 @@ if [ -f "${MAIN_REPO_ROOT}/.rubocop.yml" ]; then
   mv "${MAIN_REPO_ROOT}/.rubocop.yml" "${MAKE_DIR}/rubocop-main.yml.bak"
   touch "${MAKE_DIR}/rubocop_main_hidden"
   RUBOCOP_MAIN_HIDDEN=1
+fi
+# Nested tiers may have their own .rubocop.yml; hide it so RuboCop does not inherit
+# mismatched config while cookiecutter_project_upgrader runs under .git/cookiecutter/
+if [ -f "${REPO_CWD}/.rubocop.yml" ]; then
+  mv "${REPO_CWD}/.rubocop.yml" "${MAKE_DIR}/rubocop-cwd.yml.bak"
+  touch "${MAKE_DIR}/rubocop_cwd_hidden"
+  RUBOCOP_CWD_HIDDEN=1
 fi
 
 if [ -f .make/git-worktree-pointer ] && [ ! -f .git ] && [ ! -L .git ]; then

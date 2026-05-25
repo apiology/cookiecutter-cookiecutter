@@ -130,11 +130,5 @@ cicoverage: citest report-coverage-to-codecov ## check code coverage
 
 update_from_cookiecutter: ## Bring in changes from template project used to create this repo
 	bin/overcommit --uninstall
-	# cookiecutter_project_upgrader does its work in
-	# .git/cookiecutter/{{cookiecutter.project_slug}}, but RuboCop wants to inherit
-	# config from all directories above it - avoid config mismatches by moving this
-	# out of the way
-	mv .rubocop.yml .rubocop-renamed.yml || true
 	cookiecutter_project_upgrader --help >/dev/null
 	bin/cookiecutter_project_upgrader.sh
-	mv .rubocop-renamed.yml .rubocop.yml
