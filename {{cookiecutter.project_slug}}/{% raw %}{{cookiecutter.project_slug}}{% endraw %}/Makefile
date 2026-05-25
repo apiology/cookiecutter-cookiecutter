@@ -1,4 +1,4 @@
-.PHONY: build build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-coverage clean-typecheck clean-typecoverage coverage default gem_dependencies help overcommit quality repl report-coverage report-coverage-to-codecov test test-worktree-upgrader-shim typecheck typecoverage update_from_cookiecutter docs
+.PHONY: build build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-coverage clean-typecheck clean-typecoverage coverage default gem_dependencies help overcommit quality repl report-coverage report-coverage-to-codecov test typecheck typecoverage update_from_cookiecutter docs
 .DEFAULT_GOAL := default
 
 define PRINT_HELP_PYSCRIPT
@@ -92,10 +92,7 @@ clean: clean-typecoverage clean-typecheck clean-coverage ## remove all built art
 
 test: ## run tests quickly
 
-test-worktree-upgrader-shim: ## Regression test for linked-worktree .git shim (used by citest)
-	bin/test_git_worktree_upgrader_shim.sh
-
-citest: test-worktree-upgrader-shim test ## Run unit tests from CircleCI
+citest: test ## Run unit tests from CircleCI
 
 overcommit: ## run precommit quality checks
 	bin/overcommit --run

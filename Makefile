@@ -1,4 +1,4 @@
-.PHONY: build build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-build clean-coverage clean-pyc clean-typecheck clean-typecoverage coverage default docs gem_dependencies help overcommit quality repl test test-worktree-upgrader-all-tiers test-worktree-upgrader-shim typecheck typecoverage update_from_cookiecutter
+.PHONY: build build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-build clean-coverage clean-pyc clean-typecheck clean-typecoverage coverage default docs gem_dependencies help overcommit quality repl test test-worktree-upgrader typecheck typecoverage update_from_cookiecutter
 
 .DEFAULT_GOAL := default
 
@@ -127,15 +127,10 @@ clean: clean-build clean-pyc clean-test clean-typecoverage clean-typecheck clean
 test: ## run tests quickly
 	pytest --maxfail=1 tests/test_bake_project.py --capture=no -v
 
-test-worktree-upgrader-shim: ## Regression test for linked-worktree .git shim (used by citest)
-	bin/test_git_worktree_upgrader_shim.sh
+test-worktree-upgrader: ## Regression test for linked-worktree .git handling (all template tiers)
+	bin/test_git_worktree_upgrader.sh --all-tiers
 
-test-worktree-upgrader-all-tiers: ## Run .git shim test at meta root and nested template tiers
-	bin/test_git_worktree_upgrader_shim.sh
-	$(MAKE) -C '{{cookiecutter.project_slug}}' test-worktree-upgrader-shim
-	$(MAKE) -C '{{cookiecutter.project_slug}}/{% raw %}{{cookiecutter.project_slug}}{% endraw %}' test-worktree-upgrader-shim
-
-citest: test-worktree-upgrader-all-tiers ## Run unit tests from CircleCI
+citest: test-worktree-upgrader ## Run unit tests from CircleCI
 	pytest --maxfail=1 tests/test_bake_project.py --capture=no -v
 
 overcommit: ## run precommit quality checks

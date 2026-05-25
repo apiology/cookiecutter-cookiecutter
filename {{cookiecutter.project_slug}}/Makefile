@@ -1,4 +1,4 @@
-.PHONY: build build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-build clean-coverage clean-pyc clean-typecheck clean-typecoverage coverage default docs gem_dependencies help overcommit quality repl test test-worktree-upgrader-shim typecheck typecoverage update_from_cookiecutter
+.PHONY: build build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-build clean-coverage clean-pyc clean-typecheck clean-typecoverage coverage default docs gem_dependencies help overcommit quality repl test typecheck typecoverage update_from_cookiecutter
 
 .DEFAULT_GOAL := default
 
@@ -127,10 +127,7 @@ clean: clean-build clean-pyc clean-test clean-typecoverage clean-typecheck clean
 test: ## run tests quickly
 	pytest --maxfail=1 tests/test_bake_project.py --capture=no --keep-baked-projects -v
 
-test-worktree-upgrader-shim: ## Regression test for linked-worktree .git shim (used by citest)
-	bin/test_git_worktree_upgrader_shim.sh
-
-citest: test-worktree-upgrader-shim ## Run unit tests from CircleCI
+citest: ## Run unit tests from CircleCI
 	pytest --keep-baked-projects  --maxfail=1 tests/test_bake_project.py --capture=no -v
 
 overcommit: ## run precommit quality checks
