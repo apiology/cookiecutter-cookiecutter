@@ -129,6 +129,4 @@ update_apt: .make/apt_updated
 cicoverage: citest report-coverage-to-codecov ## check code coverage
 
 update_from_cookiecutter: ## Bring in changes from template project used to create this repo
-	bin/overcommit --uninstall
-	cookiecutter_project_upgrader --help >/dev/null
 	bin/cookiecutter_project_upgrader.sh

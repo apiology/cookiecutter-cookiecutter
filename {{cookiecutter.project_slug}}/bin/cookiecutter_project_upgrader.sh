@@ -4,6 +4,9 @@
 
 set -euo pipefail
 
+bin/overcommit --uninstall
+cookiecutter_project_upgrader --help >/dev/null
+
 MAIN_REPO_ROOT="$(dirname "$(git rev-parse --git-common-dir)")"
 GIT_DIR_PATH="$(git rev-parse --git-dir)"
 MAKE_DIR=".make"
