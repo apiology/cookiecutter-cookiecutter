@@ -66,12 +66,9 @@ development.  See the `.envrc` file for detail.
 `config/env.1p` in git is the **template**: each variable points at a vault
 item with an `op://` [secret
 reference](https://developer.1password.com/docs/cli/secret-reference), not a
-plaintext value.  `.envrc` uses **`config/env.local`** when that file is
-readable (1Password Environment mount with resolved literals).  An empty
-mount (comments only) means **no secrets** for this repo — `.envrc` does not
-fall back to `config/env.1p`.  When `env.local` is absent and `config/env.1p`
-has variable lines, `.envrc` uses `op run --env-file=config/env.1p` to resolve
-references at load time.
+plaintext value.  Load order and fallbacks are in **`.envrc`**.  Mount
+**resolved** values at **`config/env.local`** (below); use **`config/env.1p`**
+in git when adding or syncing `op://` keys.
 
 For local development, you can also store **resolved** values in a
 [1Password Environment](https://developer.1password.com/docs/environments/) and mount
@@ -102,8 +99,8 @@ refresh the Environment with `op inject` and the 1Password app.
 
 | Path | Role |
 |------|------|
-| `config/env.1p` | Git-tracked template (`op://` references); fallback for `.envrc` / `make config/env` |
-| `config/env.local` | 1Password Environment mount (resolved literals); preferred when present |
+| `config/env.1p` | Git-tracked template (`op://` references); `make config/env` |
+| `config/env.local` | 1Password Environment mount (resolved literals); see `.envrc` |
 
 Do not commit `config/env.local`.
 
