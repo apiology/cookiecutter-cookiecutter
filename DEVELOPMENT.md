@@ -38,6 +38,17 @@ bootstrap can cause overcommit signature mismatches even after
 re-signing — see
 [.cursor/rules/overcommit-signing.mdc](.cursor/rules/overcommit-signing.mdc).
 
+## Updating from the parent template
+
+`make update_from_cookiecutter` pulls boilerplate from the cookiecutter that
+generated this repo. It works from a **linked worktree** the same as from the
+primary checkout (for example a Cursor feature worktree): run
+`direnv exec . ./fix.sh` in that worktree first so Overcommit can sign hooks.
+Do not run two updates at once if several worktrees share one repository.
+
+Override the default branch with
+`DEFAULT_BRANCH=my-default make update_from_cookiecutter`.
+
 ## Overcommit
 
 This project uses [overcommit](https://github.com/sds/overcommit) for
