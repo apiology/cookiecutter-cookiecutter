@@ -81,7 +81,7 @@ If this template still contains a nested `{% raw %}{{cookiecutter.project_slug}}
 ## Cursor rules
 
 - **Authoring policy:** `~/.cursor/rules/cursor-rule-authoring.mdc` (global only).
-- **This repo:** `.cursor/rules/boilerplate-sync.mdc`, `template-hierarchy.mdc`, `overcommit-signing.mdc`.
+- **This repo:** `.cursor/rules/template-hierarchy.mdc`, `overcommit-signing.mdc`.
 
 Propagate rule and doc changes to sibling cookiecutter templates with `make update_from_cookiecutter` (or merge from the ancestor template’s `cookiecutter-template` branch).
 
