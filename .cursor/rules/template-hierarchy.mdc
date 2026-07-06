@@ -13,7 +13,7 @@ This repo is the **meta** cookiecutter (`cookiecutter-cookiecutter`). It bakes *
 
 | Tier | Path in this repo | Typical output | Scope |
 |------|-------------------|----------------|-------|
-| **Meta** | Repo root | `cookiecutter-ruby`, etc. | Cross-language generator; sync docs live in baked child tree; skill is user-global |
+| **Meta** | Repo root | `cookiecutter-ruby`, etc. | Cross-language generator; sync docs live in baked child tree |
 | **Language/tool** | `{{cookiecutter.project_slug}}/` | Child cookiecutter repos | {{ cookiecutter.language_or_tool }}-scoped boilerplate |
 | **Project** | `{{cookiecutter.project_slug}}/{{cookiecutter.project_slug}}/` | End-user repos from child cookiecutters | App/library layout, not cookiecutter-family sync |
 
