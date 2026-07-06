@@ -78,12 +78,7 @@ Record the reference repo’s `origin/main` SHA in the PR (omit the private repo
 
 If this template still contains a nested `{% raw %}{{cookiecutter.project_slug}}/{% endraw %}/` tree (generator meta-pattern), propagate shared boilerplate there only when that nested tree is the **same** tier. Do not blindly duplicate `.cursor/` into nested paths when the nested template is a different hierarchy level.
 
-## Cursor rules
-
-- **Authoring policy:** `~/.cursor/rules/cursor-rule-authoring.mdc` (global only).
-- **This repo:** `.cursor/rules/template-hierarchy.mdc`, `overcommit-signing.mdc`.
-
-Propagate rule and doc changes to sibling cookiecutter templates with `make update_from_cookiecutter` (or merge from the ancestor template’s `cookiecutter-template` branch).
+Propagate doc changes to sibling cookiecutter templates with `make update_from_cookiecutter` (or merge from the ancestor template’s `cookiecutter-template` branch).
 
 ## Checklist
 

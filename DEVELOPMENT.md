@@ -2,7 +2,7 @@
 
 ## Syncing boilerplate from reference repos
 
-This **meta** repo (`cookiecutter-cookiecutter`) bakes tool/language cookiecutters under `{{cookiecutter.project_slug}}/`. Sync workflow, Cursor rules, and skills live **there** (not at this repo root) so each child template (`cookiecutter-ruby`, `cookiecutter-rails`, etc.) carries hierarchy-aware guidance after bake.
+This **meta** repo (`cookiecutter-cookiecutter`) bakes tool/language cookiecutters under `{{cookiecutter.project_slug}}/`. Sync workflow and docs live **there** (not at this repo root) so each child template (`cookiecutter-ruby`, `cookiecutter-rails`, etc.) carries hierarchy-aware guidance after bake.
 
 When editing the inner template, see `{{cookiecutter.project_slug}}/docs/SYNCING_BOILERPLATE.md`.
 
