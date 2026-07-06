@@ -38,7 +38,7 @@ Adjust for **this** tier — a reference repo may include more than you should p
 - `.circleci/config.yml`
 - `.envrc`, `.yamllint.yml`, `.gitattributes`, `.dockerignore`
 - `.git-hooks/pre_commit/circle_ci.rb`, `.git-hooks/pre_commit/punchlist.rb` (maintenance only)
-- `.cursor/rules/`, `.cursor/skills/`, this doc
+- `.cursor/rules/`, this doc
 - `DEVELOPMENT.md` (agent/conventions sections)
 - `CODE_OF_CONDUCT.md`, `.mdlrc`, `package.json` (usually unchanged)
 
@@ -82,9 +82,9 @@ If this template still contains a nested `{% raw %}{{cookiecutter.project_slug}}
 
 - **Authoring policy:** `~/.cursor/rules/cursor-rule-authoring.mdc` (global only).
 - **This repo:** `.cursor/rules/boilerplate-sync.mdc`, `template-hierarchy.mdc`, `overcommit-signing.mdc`.
-- **Skill (in repo):** `.cursor/skills/apiology-boilerplate-sync/`.
+- **Skill (user-global):** `~/.cursor/skills/apiology-boilerplate-sync/` — invoke as `/apiology-boilerplate-sync`.
 
-Propagate skill and rule changes to sibling cookiecutter templates with `make update_from_cookiecutter` (or merge from the ancestor template’s `cookiecutter-template` branch).
+Propagate rule and doc changes to sibling cookiecutter templates with `make update_from_cookiecutter` (or merge from the ancestor template’s `cookiecutter-template` branch).
 
 ## Checklist
 
