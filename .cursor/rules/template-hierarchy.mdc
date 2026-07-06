@@ -13,7 +13,7 @@ This repo is the **meta** cookiecutter (`cookiecutter-cookiecutter`). It bakes *
 
 | Tier | Path in this repo | Typical output | Scope |
 |------|-------------------|----------------|-------|
-| **Meta** | Repo root | `cookiecutter-ruby`, etc. | Cross-language generator; sync docs/skills live in baked child tree |
+| **Meta** | Repo root | `cookiecutter-ruby`, etc. | Cross-language generator; sync docs live in baked child tree |
 | **Language/tool** | `{{cookiecutter.project_slug}}/` | Child cookiecutter repos | {{ cookiecutter.language_or_tool }}-scoped boilerplate |
 | **Project** | `{{cookiecutter.project_slug}}/{{cookiecutter.project_slug}}/` | End-user repos from child cookiecutters | App/library layout, not cookiecutter-family sync |
 
@@ -27,7 +27,7 @@ This repo is the **meta** cookiecutter (`cookiecutter-cookiecutter`). It bakes *
 | `pr-review-inline-comments.mdc` | Yes | Yes | Yes |
 | `template-hierarchy.mdc` | Yes (this file) | Yes (tier-specific) | No |
 | `fix.sh`, `bin/git-*` hooks, `.githooks/post-checkout`, shared `.overcommit.yml` bootstrap | Yes | Yes | Yes |
-| Boilerplate sync skills/docs | No — in baked child path | Yes | No |
+| Boilerplate sync docs (`SYNCING_BOILERPLATE.md`) | No — in baked child path | Yes | No |
 | Language-specific hooks (RuboCop, etc.) | No | Yes | Maybe (framework-only → nested) |
 | Pytest bake-project tips in `DEVELOPMENT.md` | Yes (meta tests) | Yes | No — not every baked project uses Python |
 | `.envrc` `PATH_add` | Only paths that exist at that tier | Same | Same |
