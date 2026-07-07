@@ -33,10 +33,7 @@ commands:
   set_up_environment:
     description: "Install source environment"
     steps:
-      # Blobless default checkout lacks objects for tools that diff against origin/main
-      # (e.g. undercover Rugged::OdbError). CircleCI uses method: full.
-      - checkout:
-          method: full
+      - checkout
       - run:
           name: Update timestamps to original commit time
           command: |

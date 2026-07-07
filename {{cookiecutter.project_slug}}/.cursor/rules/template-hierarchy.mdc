@@ -62,7 +62,7 @@ When porting config that names directories or tools (`.envrc` `PATH_add`, Makefi
 | `fix.sh` rbenv / `set_ruby_local_version` | **Do not port churn from Ruby app refs** | Ruby toolchain when this is a Ruby template | **`rugged`** (Ruby/undercover), `handlebars`, `mini_racer`, `chromedriver` |
 | `.gitignore` Sorbet / Tapioca / YARD | **Do not port from Ruby app refs** | `tapioca.installed`, `yardoc.installed`, `sorbet/*` | Generated RBI paths |
 | `.git-hooks` `# @sg-ignore` | **Do not port** | Sorbet annotations only in Ruby templates | — |
-| `.circleci` | `no_output_timeout`, shared cache pattern, `checkout: method: full` | `pwd`, `*.gemspec` cache keys |
+| `.circleci` | `no_output_timeout`, shared cache pattern | Same | `method: full`, `pwd`, `*.gemspec` cache keys |
 
 When syncing from a **baked** private reference, read [SYNCING_BOILERPLATE.md](../docs/SYNCING_BOILERPLATE.md) § baked Ruby apps — do not paste the reference’s full `.overcommit.yml` or Ruby yamllint/Sorbet blocks into cookiecutter templates, and do not name private reference repos in public text.
 

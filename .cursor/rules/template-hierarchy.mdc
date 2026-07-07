@@ -54,10 +54,10 @@ A **baked** gem or app (created from `cookiecutter-gem`, not the meta template) 
 |-------------------------------------------------------------|-----------------------------------------------------|
 | `config/env.local` + `.envrc` prefer-local-over-`op run` | `.overcommit.yml`: RuboCop, Sorbet, Solargraph, Brakeman, Fasterer, BundleAudit, RakeTarget prepush |
 | `DEVELOPMENT.md` 1Password / `env.local` docs (generic names, not app slug) | `.yamllint.yml`: `rbs_collection.lock.yaml`, app YAML paths (e.g. `partials.yaml`) |
-| `.dockerignore` `/config/env.local` | `.circleci`: debug `pwd`, `*.gemspec` cache keys |
-| `.circleci` `checkout: method: full` (undercover / git diff vs `origin/main`) | `Makefile` / `Gemfile` / `requirements_dev.txt` app layout |
-| `.circleci` `no_output_timeout` on long steps | `fix.sh`: `ensure_rugged_packages_installed` (**Ruby repos only**), `ensure_handlebars_engine_packages_installed`, `ensure_mini_racer_packages_installed`, `ensure_chromedriver_correct_platform` |
-| `config/env.local` in `.gitignore` | App `lib/`, `config/annotations*.rb`, `script/`, Heroku app names, plate-specific docs |
+| `.dockerignore` `/config/env.local` | `.circleci`: `checkout: method: full`, debug `pwd`, `*.gemspec` cache keys |
+| `.circleci` `no_output_timeout` on long steps | `Makefile` / `Gemfile` / `requirements_dev.txt` app layout |
+| `config/env.local` in `.gitignore` | `fix.sh`: `ensure_rugged_packages_installed` (**Ruby repos only**), `ensure_handlebars_engine_packages_installed`, `ensure_mini_racer_packages_installed`, `ensure_chromedriver_correct_platform` |
+| | App `lib/`, `config/annotations*.rb`, `script/`, Heroku app names, plate-specific docs |
 
 **`fix.sh` rugged:** `ensure_rugged_packages_installed` is **Ruby-repo-specific** (undercover). Put it in **`cookiecutter-gem`** and baked Ruby apps — **not** in this meta repo’s generic `{{cookiecutter.project_slug}}/` tree (language-agnostic until you bake a Ruby cookiecutter).
 
