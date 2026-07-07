@@ -29,7 +29,7 @@ Some templates include a nested `{% raw %}{{cookiecutter.project_slug}}/{% endra
 ## Jinja / CircleCI
 
 - Cookiecutter vars: `{{ cookiecutter.project_slug }}`, `{{ cookiecutter.language_or_tool }}`
-- Circle `{{ checksum }}` in YAML: wrap in `{% raw %}...{% endraw %}` in template sources
+- Circle checksum in YAML: use `{% raw %}{{ checksum }}{% endraw %}` in template sources (literal for Circle, not cookiecutter vars)
 
 ## After edits
 
