@@ -44,6 +44,30 @@ Adjust for **this** tier — a reference repo may include more than you should p
 
 Defer to **descendant** templates: app `lib/`, framework-only hooks, language stacks narrower than this repo’s scope.
 
+### Meta tier: do not port from Ruby app references
+
+When the reference is a **Ruby application or gem** (e.g. `apiology/checkoff`) and you are editing the **meta** cookiecutter (`cookiecutter-cookiecutter` root or its parallel nested copies of cross-language files), **do not** port:
+
+- **`fix.sh`:** `rbenv install --list-all`, changes to `set_ruby_local_version` (`tail -1`, extra `set_rbenv_env_variables`), `ensure_rugged_packages_installed`, or a standalone `ensure_rbenv` call before the main install flow
+- **`.gitignore`:** `tapioca.installed`, `yardoc.installed`, `sorbet/machine_specific_config`
+- **`.git-hooks/**/*.rb`:** `# @sg-ignore` and other Sorbet-only typing churn from the reference
+
+Those belong in a **Ruby language** cookiecutter (e.g. `cookiecutter-ruby`), not the meta template. See `.cursor/rules/template-hierarchy.mdc` (meta and language tiers).
+
+### Baked Ruby apps (private reference repos)
+
+A typical repo generated from `cookiecutter-gem` is a useful reference. When using any baked gem/app as a reference:
+
+1. **Confirm tier** — meta vs language cookiecutter vs nested project template vs “never port.”
+2. **Prefer agnostic wins** — `config/env.local`, `.envrc`, 1Password docs in `DEVELOPMENT.md`, `.dockerignore`, CircleCI `no_output_timeout`.
+3. **Skip by default** (common false positives on sync):
+   - **Overcommit / Yamllint:** RuboCop, Sorbet, Solargraph, Brakeman, Fasterer, BundleAudit, prepush Rake targets; YamlLint `sorbet/**` or `rbs_collection.lock.yaml` ignores; app-only Solargraph paths.
+   - **CircleCI:** `checkout: method: full`, `pwd` in setup, cache keys on `*.gemspec` or app-specific filenames.
+   - **`fix.sh`:** `ensure_rugged_packages_installed` (**Ruby repos only**, e.g. `cookiecutter-gem` — undercover), `ensure_handlebars_engine_packages_installed`, `ensure_mini_racer_packages_installed`, `ensure_chromedriver_correct_platform` — none of these belong in this **generic** language cookiecutter template or meta nested copies.
+   - **App tree:** `Makefile`, `Gemfile`, `lib/`, filled `config/env.1p`, `PATH_add script` when `script/` is absent here.
+
+Record the reference repo’s `origin/main` SHA in the PR (omit the private repo name from public text); diff with `git show origin/main:<path>` only.
+
 ### `.envrc` and `PATH_add`
 
 - Only `PATH_add` directories that **exist in this template** (typically `bin/` when `bin/` is present).
@@ -54,11 +78,7 @@ Defer to **descendant** templates: app `lib/`, framework-only hooks, language st
 
 If this template still contains a nested `{% raw %}{{cookiecutter.project_slug}}/{% endraw %}/` tree (generator meta-pattern), propagate shared boilerplate there only when that nested tree is the **same** tier. Do not blindly duplicate `.cursor/` into nested paths when the nested template is a different hierarchy level.
 
-## Cursor rules and skills
-
-- **Authoring policy:** `~/.cursor/rules/cursor-rule-authoring.mdc` (global only).
-- **This repo:** `.cursor/rules/boilerplate-sync.mdc`, `template-hierarchy.mdc`.
-- **Skills:** `apiology-boilerplate-sync` (user), `sync-cookiecutter-boilerplate` (project).
+Propagate doc changes to sibling cookiecutter templates with `make update_from_cookiecutter` (or merge from the ancestor template’s `cookiecutter-template` branch).
 
 ## Checklist
 

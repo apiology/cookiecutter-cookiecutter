@@ -1,0 +1,77 @@
+---
+description: >-
+  Which files and config belong at meta vs language vs project cookiecutter tiers
+  in this family; never push specificity up or park descendant-only config too high
+alwaysApply: false
+---
+
+# Template hierarchy (meta)
+
+This repo is the **meta** cookiecutter (`cookiecutter-cookiecutter`). It bakes **language/tool** templates under `{{cookiecutter.project_slug}}/`, which may include a nested **project** cookiecutter under `{{cookiecutter.project_slug}}/{{cookiecutter.project_slug}}/`.
+
+## Three tiers
+
+| Tier | Path in this repo | Typical output | Scope |
+|------|-------------------|----------------|-------|
+| **Meta** | Repo root | `cookiecutter-ruby`, etc. | Cross-language generator; sync docs live in baked child tree |
+| **Language/tool** | `{{cookiecutter.project_slug}}/` | Child cookiecutter repos | {{ cookiecutter.language_or_tool }}-scoped boilerplate |
+| **Project** | `{{cookiecutter.project_slug}}/{{cookiecutter.project_slug}}/` | End-user repos from child cookiecutters | App/library layout, not cookiecutter-family sync |
+
+## Where to put changes
+
+| Kind of change | Meta root | `{{cookiecutter.project_slug}}/` | Nested project dir |
+|----------------|-----------|-----------------------------------|--------------------|
+| `overcommit-signing.mdc` | Yes | Yes | Yes |
+| `circleci-env-in-fix-sh.mdc` | Yes | Yes | Yes |
+| `circleci-logs-before-local-ci.mdc` | Yes | Yes | Yes |
+| `pr-review-inline-comments.mdc` | Yes | Yes | Yes |
+| `template-hierarchy.mdc` | Yes (this file) | Yes (tier-specific) | No |
+| `fix.sh`, `bin/git-*` hooks, `.githooks/post-checkout`, shared `.overcommit.yml` bootstrap | Yes | Yes | Yes |
+| Boilerplate sync docs (`SYNCING_BOILERPLATE.md`) | No — in baked child path | Yes | No |
+| Language-specific hooks (RuboCop, etc.) | No | Yes | Maybe (framework-only → nested) |
+| Pytest bake-project tips in `DEVELOPMENT.md` | Yes (meta tests) | Yes | No — not every baked project uses Python |
+| `.envrc` `PATH_add` | Only paths that exist at that tier | Same | Same |
+
+**Rule of thumb:** place each file at the **narrowest** tier that still applies to every repo that tier generates. Too specific for this tree → nested or a child cookiecutter; too general to live only here → ancestor.
+
+## Syncing from Ruby app references (e.g. checkoff)
+
+The **meta** tier is cross-language. Do not let a Ruby gem or app reference drive Ruby-only bootstrap into meta-root (or parallel nested) copies of shared files.
+
+| Do not port to meta | Belongs in |
+|---------------------|------------|
+| `fix.sh`: `rbenv install --list-all`, `set_ruby_local_version` (`tail -1`, extra `set_rbenv_env_variables`), `ensure_rugged_packages_installed`, standalone `ensure_rbenv` before the main flow | **Ruby repos only** (e.g. `cookiecutter-gem`), not this generic language template |
+| `.gitignore`: `tapioca.installed`, `yardoc.installed`, `sorbet/machine_specific_config` | Ruby / Sorbet templates |
+| `.git-hooks/**/*.rb`: `# @sg-ignore` and other Sorbet-only annotation churn | Ruby cookiecutters |
+
+Language-agnostic ports (e.g. `.yamllint.yml` comments, `bin/overcommit` binstub maintenance) are still fine when they apply at every tier.
+
+## Syncing from baked Ruby apps (private reference repos)
+
+A **baked** gem or app (created from `cookiecutter-gem`, not the meta template) is a useful reference for **production** patterns, but most of its tree is **more specific** than any cookiecutter tier here. Use `git show origin/main:<path>` on the reference and classify before copying.
+
+| Usually safe to port (all tiers that already have the file) | Usually **do not** port into cookiecutter templates |
+|-------------------------------------------------------------|-----------------------------------------------------|
+| `config/env.local` + `.envrc` prefer-local-over-`op run` | `.overcommit.yml`: RuboCop, Sorbet, Solargraph, Brakeman, Fasterer, BundleAudit, RakeTarget prepush |
+| `DEVELOPMENT.md` 1Password / `env.local` docs (generic names, not app slug) | `.yamllint.yml`: `rbs_collection.lock.yaml`, app YAML paths (e.g. `partials.yaml`) |
+| `.dockerignore` `/config/env.local` | `.circleci`: `checkout: method: full`, debug `pwd`, `*.gemspec` cache keys |
+| `.circleci` `no_output_timeout` on long steps | `Makefile` / `Gemfile` / `requirements_dev.txt` app layout |
+| `config/env.local` in `.gitignore` | `fix.sh`: `ensure_rugged_packages_installed` (**Ruby repos only**), `ensure_handlebars_engine_packages_installed`, `ensure_mini_racer_packages_installed`, `ensure_chromedriver_correct_platform` |
+| | App `lib/`, `config/annotations*.rb`, `script/`, Heroku app names, plate-specific docs |
+
+**`fix.sh` rugged:** `ensure_rugged_packages_installed` is **Ruby-repo-specific** (undercover). Put it in **`cookiecutter-gem`** and baked Ruby apps — **not** in this meta repo’s generic `{{cookiecutter.project_slug}}/` tree (language-agnostic until you bake a Ruby cookiecutter).
+
+**Workflow:** sync from the baked gem into **`cookiecutter-gem`** first; pull **agnostic** pieces up to meta only when they apply to every tier. Record the reference `origin/main` SHA in the PR (repo name omitted from public text).
+
+## Propagate across tiers (agent checklist)
+
+This repo nests **three** template trees (meta root → `{{cookiecutter.project_slug}}/` → nested `{{cookiecutter.project_slug}}/{{cookiecutter.project_slug}}/`). Many boilerplate files exist at **more than one** path (`fix.sh`, `.overcommit.yml`, `.githooks/post-checkout`, `bin/git-commit-validate`, `bin/git-post-checkout-fix`, etc.).
+
+When adding or changing such a file:
+
+1. **List tiers** — run `find` or search for the basename under the repo (ignore `.git/`).
+2. **Apply at every tier** where the file already exists, unless the change is intentionally tier-specific.
+3. **Keep paths parallel** — same relative path and hook wiring at each tier (e.g. `.githooks/post-checkout` → `bin/git-post-checkout-fix` next to `bin/git-commit-validate`).
+4. **If unsure** whether a change belongs at one tier or all three, **ask the user** before opening a PR.
+
+When editing the inner template, read `{{cookiecutter.project_slug}}/.cursor/rules/template-hierarchy.mdc` and `docs/SYNCING_BOILERPLATE.md`.

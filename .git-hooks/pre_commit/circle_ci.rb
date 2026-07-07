@@ -10,6 +10,7 @@ module Overcommit
       # CircleCI plugin for Overcommit to validate config file (.circleci/config.yml)
       class CircleCi < Base
         def run
+          # @type [Overcommit::Subprocess::Result]
           result = execute(command)
           return :pass if result.success?
 
