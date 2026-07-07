@@ -102,11 +102,6 @@ PostRewrite:
   BundleInstall:
     enabled: true
 
-PrePush:
-  CustomScript:
-    enabled: true
-    requires_files: false
-    required_executable: 'bin/git-push-validate'
 # Takes too long; might as well look for result in CircleCI
 #
 # PrePush:
