@@ -188,6 +188,12 @@ ensure_bundle() {
       bundler_version=$(bundle --version | cut -d ' ' -f 3)
   fi
   echo "Bundler version: ${bundler_version}"
+  active_bundler_version=$(bundle --version 2>/dev/null | cut -d ' ' -f 3)
+  if [ -n "${bundler_version}" ] && [ "${bundler_version}" != "${active_bundler_version}" ]
+  then
+    gem install "bundler:${bundler_version}"
+    hash -r
+  fi
   bundler_version_major=$(cut -d. -f1 <<< "${bundler_version}")
   bundler_version_minor=$(cut -d. -f2 <<< "${bundler_version}")
   bundler_version_patch=$(cut -d. -f3 <<< "${bundler_version}")
