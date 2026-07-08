@@ -22,6 +22,23 @@ debug_timing
 
 set -o pipefail
 
+ensure_homebrew_path() {
+  if [ "$(uname)" != "Darwin" ]
+  then
+    return 0
+  fi
+
+  local prefix
+  for prefix in /opt/homebrew /usr/local
+  do
+    if [ -x "${prefix}/bin/brew" ]
+    then
+      export PATH="${prefix}/bin:${prefix}/sbin:${PATH}"
+      return 0
+    fi
+  done
+}
+
 install_rbenv() {
   if [ "$(uname)" == "Darwin" ]
   then
@@ -45,6 +62,7 @@ EOF
 }
 
 set_rbenv_env_variables() {
+  ensure_homebrew_path
   export PATH="${HOME}/.rbenv/bin:$PATH"
   eval "$(rbenv init -)"
 }
@@ -67,6 +85,8 @@ ensure_ruby_build() {
 }
 
 ensure_rbenv() {
+  ensure_homebrew_path
+
   if ! type rbenv >/dev/null 2>&1 && ! [ -f "${HOME}/.rbenv/bin/rbenv" ]
   then
     install_rbenv
