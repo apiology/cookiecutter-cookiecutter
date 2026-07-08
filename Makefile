@@ -125,7 +125,7 @@ test-all: ## run tests on every Python version with tox
 clean: clean-build clean-pyc clean-test clean-typecoverage clean-typecheck clean-coverage ## remove all build, test, coverage and Python artifacts
 
 test: ## run tests quickly
-	pytest --maxfail=1 tests/test_bake_project.py --capture=no -v
+	pytest --maxfail=1 tests/test_bake_project.py --capture=no --keep-baked-projects -v
 
 test-worktree-upgrader: ## Regression test for linked-worktree .git handling (all template tiers)
 	bin/test_git_worktree_upgrader.sh --all-tiers

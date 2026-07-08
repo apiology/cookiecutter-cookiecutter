@@ -62,7 +62,8 @@ def bake_in_temp_dir(cookies, *args, **kwargs):
     try:
         yield result
     finally:
-        rmtree(str(result.project_path))
+        if '--keep-baked-projects' not in sys.argv:
+            rmtree(str(result.project_path))
 
 
 def run_inside_dir(command, dirpath):
