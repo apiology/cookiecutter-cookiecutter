@@ -305,23 +305,23 @@ set_pyenv_env_variables() {
   #
   # https://app.circleci.com/pipelines/github/apiology/cookiecutter-pypackage/15/workflows/10506069-7662-46bd-b915-2992db3f795b/jobs/15
   set +u
+  ensure_homebrew_path
   export PYENV_ROOT="${HOME}/.pyenv"
-  export PATH="${PYENV_ROOT}/bin:$PATH"
+  export PATH="${PYENV_ROOT}/bin:${PYENV_ROOT}/shims:${PATH}"
   eval "$(pyenv init --path)"
   eval "$(pyenv virtualenv-init -)"
   set -u
 }
 
 ensure_pyenv() {
+  ensure_homebrew_path
+
   if ! type pyenv >/dev/null 2>&1 && ! [ -f "${HOME}/.pyenv/bin/pyenv" ]
   then
     install_pyenv
   fi
 
-  if ! type pyenv >/dev/null 2>&1
-  then
-    set_pyenv_env_variables
-  fi
+  set_pyenv_env_variables
 }
 
 update_package() {
