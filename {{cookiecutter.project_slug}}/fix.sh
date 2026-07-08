@@ -321,10 +321,7 @@ ensure_pyenv() {
     install_pyenv
   fi
 
-  if ! type pyenv >/dev/null 2>&1
-  then
-    set_pyenv_env_variables
-  fi
+  set_pyenv_env_variables
 }
 
 update_package() {
@@ -409,8 +406,6 @@ ensure_pyenv_virtualenvs() {
 }
 
 ensure_pip_and_wheel() {
-  set_pyenv_env_variables
-
   # https://cve.mitre.org/cgi-bin/cvename.cgi?name=2023-5752
   pip_version=$(python -c "import pip; print(pip.__version__)" | cut -d' ' -f2)
   major_pip_version=$(cut -d '.' -f 1 <<< "${pip_version}")
