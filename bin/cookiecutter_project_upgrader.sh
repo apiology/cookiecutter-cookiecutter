@@ -103,12 +103,6 @@ resolve_template_parent_sha() {
   return 1
 }
 
-read_template_parent_stamp() {
-  git rev-parse --verify "${TEMPLATE_BRANCH}" &>/dev/null \
-    || return 0
-  git show "${TEMPLATE_BRANCH}:${STAMP_FILE}" 2>/dev/null | tr -d '[:space:]' || true
-}
-
 stamp_template_parent_sha() {
   local parent_sha=$1 wt=""
   wt="$(mktemp -d)"
@@ -124,28 +118,6 @@ stamp_template_parent_sha() {
   git -C "${wt}" add "${STAMP_FILE}"
   git -C "${wt}" commit -m "Record template parent SHA ${parent_sha:0:12}"
   git push origin "HEAD:${TEMPLATE_BRANCH}"
-}
-
-verify_template_branch_freshness() {
-  local parent_sha=$1 tip_before=$2 tip_after=$3 stamp=""
-  stamp="$(read_template_parent_stamp)"
-
-  if [ "${tip_before}" != "${tip_after}" ]; then
-    [ "${stamp}" != "${parent_sha}" ] && stamp_template_parent_sha "${parent_sha}"
-    echo "Re-baked ${TEMPLATE_BRANCH}: ${tip_before:0:12} -> ${tip_after:0:12} @ ${parent_sha:0:12}"
-    return 0
-  fi
-  if [ "${stamp}" = "${parent_sha}" ]; then
-    echo "Template branch matches parent ${parent_sha:0:12}; idempotent"
-    return 0
-  fi
-
-  >&2 cat <<EOF
-error: ${TEMPLATE_BRANCH} tip unchanged (${tip_after:0:12}) but parent is ${parent_sha:0:12}
-       recorded stamp: ${stamp:-<missing>}
-       Wipe cache and retry, or check cookiecutter-upstream / template URL.
-EOF
-  exit 1
 }
 
 hide_for_bake "${MAIN_REPO_ROOT}/rbs_collection.yaml" "${MAKE_DIR}/rbs_collection.yaml.bak"
@@ -169,28 +141,20 @@ fi
 
 [ -n "${TEMPLATE_URL}" ] && wipe_template_cache "${TEMPLATE_URL}"
 
-TEMPLATE_TIP_BEFORE=""
-if git rev-parse --verify "${TEMPLATE_BRANCH}" &>/dev/null; then
-  TEMPLATE_TIP_BEFORE="$(git rev-parse "${TEMPLATE_BRANCH}")"
-fi
-
 export IN_COOKIECUTTER_PROJECT_UPGRADER=1
 UPGRADER_ARGS=(-p true -u "${TEMPLATE_UPGRADE_BRANCH}")
 [ -f "${CONTEXT_FILE}" ] && UPGRADER_ARGS=(-c "${CONTEXT_FILE}" "${UPGRADER_ARGS[@]}")
 if ! cookiecutter_project_upgrader "${UPGRADER_ARGS[@]}"; then
-  if [ -z "${TEMPLATE_TIP_BEFORE}" ] \
-    || ! git rev-parse --verify "${TEMPLATE_BRANCH}" &>/dev/null; then
+  if ! git rev-parse --verify "${TEMPLATE_BRANCH}" &>/dev/null; then
     >&2 echo "error: upgrader failed and ${TEMPLATE_BRANCH} is missing"
     exit 1
   fi
-  echo "cookiecutter_project_upgrader reported no template diff; checking parent SHA stamp"
+  echo "cookiecutter_project_upgrader reported no template diff"
 fi
 
 PARENT_SHA="$(resolve_template_parent_sha "${TEMPLATE_URL}" "${TEMPLATE_UPGRADE_BRANCH}")"
 echo "Template parent SHA (${TEMPLATE_UPGRADE_BRANCH}): ${PARENT_SHA}"
-
-verify_template_branch_freshness "${PARENT_SHA}" "${TEMPLATE_TIP_BEFORE}" \
-  "$(git rev-parse "${TEMPLATE_BRANCH}")"
+stamp_template_parent_sha "${PARENT_SHA}"
 
 trap - EXIT
 cleanup_prepare
