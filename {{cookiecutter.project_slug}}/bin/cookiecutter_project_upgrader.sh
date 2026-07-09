@@ -26,6 +26,9 @@ hide_for_bake() {
 
 restore_hidden() {
   local entry bak dest
+  if [ ${#HIDDEN_BACKUPS[@]} -eq 0 ]; then
+    return 0
+  fi
   for entry in "${HIDDEN_BACKUPS[@]}"; do
     bak="${entry%%|*}"
     dest="${entry#*|}"
