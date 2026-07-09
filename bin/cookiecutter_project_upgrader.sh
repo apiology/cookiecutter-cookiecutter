@@ -125,7 +125,7 @@ stamp_template_parent_sha() {
   local parent_sha=$1
   local stamp_worktree=""
 
-  stamp_worktree="$(mktemp -d "${TMPDIR:-/tmp}/cookiecutter-template-stamp.XXXXXX")"
+  stamp_worktree="$(mktemp -d)"
   cleanup_stamp_worktree() {
     git worktree remove --force "${stamp_worktree}" >/dev/null 2>&1 || true
     rm -rf "${stamp_worktree}"
