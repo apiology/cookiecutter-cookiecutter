@@ -69,35 +69,38 @@ cookiecutter_cache_dir() {
   printf '%s\n' "${HOME}/.cookiecutters/${name}"
 }
 
-refresh_template_cache() {
-  local url=$1 branch=$2 cache=""
-  cache="$(cookiecutter_cache_dir "${url}")" || {
-    echo "warning: could not derive cookiecutter cache dir from: ${url}" >&2
-    return 0
-  }
-  if [ ! -d "${cache}/.git" ]; then
-    echo "cookiecutter cache not present at ${cache}; clone on bake" >&2
-    return 0
+wipe_template_cache() {
+  local url=$1 cache=""
+  cache="$(cookiecutter_cache_dir "${url}")" || return 0
+  if [ -e "${cache}" ]; then
+    echo "Removing cookiecutter cache ${cache}"
+    rm -rf "${cache}"
   fi
-  echo "Refreshing cookiecutter cache ${cache} @ ${branch}"
-  git -C "${cache}" fetch origin "${branch}"
-  git -C "${cache}" checkout "${branch}"
-  git -C "${cache}" merge --ff-only "origin/${branch}"
 }
 
 resolve_template_parent_sha() {
-  local url=$1 branch=$2 cache=""
+  local url=$1 branch=$2 cache="" sha=""
   if git remote get-url cookiecutter-upstream &>/dev/null; then
     git fetch cookiecutter-upstream "${branch}"
     git rev-parse "cookiecutter-upstream/${branch}"
     return 0
   fi
   if cache="$(cookiecutter_cache_dir "${url}")" && [ -d "${cache}/.git" ]; then
-    git -C "${cache}" rev-parse "origin/${branch}"
+    git -C "${cache}" rev-parse "${branch}" 2>/dev/null \
+      || git -C "${cache}" rev-parse "origin/${branch}"
     return 0
   fi
-  git fetch origin "${branch}"
-  git rev-parse "origin/${branch}"
+  if [ -n "${url}" ]; then
+    sha="$(git ls-remote "${url}" "refs/heads/${branch}" | awk 'NR==1 { print $1; exit }')"
+    [ -n "${sha}" ] || {
+      echo "error: could not resolve parent SHA for ${url} @ ${branch}" >&2
+      return 1
+    }
+    printf '%s\n' "${sha}"
+    return 0
+  fi
+  echo "error: no template URL or cookiecutter-upstream for parent SHA" >&2
+  return 1
 }
 
 read_template_parent_stamp() {
@@ -140,7 +143,7 @@ verify_template_branch_freshness() {
   >&2 cat <<EOF
 error: ${TEMPLATE_BRANCH} tip unchanged (${tip_after:0:12}) but parent is ${parent_sha:0:12}
        recorded stamp: ${stamp:-<missing>}
-       Refresh failed or bake used stale cache; fix upstream/cache and retry.
+       Wipe cache and retry, or check cookiecutter-upstream / template URL.
 EOF
   exit 1
 }
@@ -164,9 +167,7 @@ elif [ -f .git ] && [ ! -L .git ]; then
   exit 1
 fi
 
-[ -n "${TEMPLATE_URL}" ] && refresh_template_cache "${TEMPLATE_URL}" "${TEMPLATE_UPGRADE_BRANCH}"
-PARENT_SHA="$(resolve_template_parent_sha "${TEMPLATE_URL}" "${TEMPLATE_UPGRADE_BRANCH}")"
-echo "Template parent SHA (${TEMPLATE_UPGRADE_BRANCH}): ${PARENT_SHA}"
+[ -n "${TEMPLATE_URL}" ] && wipe_template_cache "${TEMPLATE_URL}"
 
 TEMPLATE_TIP_BEFORE=""
 if git rev-parse --verify "${TEMPLATE_BRANCH}" &>/dev/null; then
@@ -184,6 +185,9 @@ if ! cookiecutter_project_upgrader "${UPGRADER_ARGS[@]}"; then
   fi
   echo "cookiecutter_project_upgrader reported no template diff; checking parent SHA stamp"
 fi
+
+PARENT_SHA="$(resolve_template_parent_sha "${TEMPLATE_URL}" "${TEMPLATE_UPGRADE_BRANCH}")"
+echo "Template parent SHA (${TEMPLATE_UPGRADE_BRANCH}): ${PARENT_SHA}"
 
 verify_template_branch_freshness "${PARENT_SHA}" "${TEMPLATE_TIP_BEFORE}" \
   "$(git rev-parse "${TEMPLATE_BRANCH}")"
