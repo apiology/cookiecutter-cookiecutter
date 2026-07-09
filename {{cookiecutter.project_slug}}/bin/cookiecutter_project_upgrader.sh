@@ -15,18 +15,20 @@ TEMPLATE_UPGRADE_BRANCH="${COOKIECUTTER_TEMPLATE_UPGRADE_BRANCH:-main}"
 GIT_WORKTREE_SHIM=0
 REPO_CWD="$(pwd)"
 HIDDEN_BACKUPS=()
+HIDDEN_BACKUP_COUNT=0
 
 hide_for_bake() {
   local src=$1 bak=$2
   if [ -f "${src}" ]; then
     mv "${src}" "${bak}"
     HIDDEN_BACKUPS+=("${bak}|${src}")
+    HIDDEN_BACKUP_COUNT=$((HIDDEN_BACKUP_COUNT + 1))
   fi
 }
 
 restore_hidden() {
   local entry bak dest
-  if [ ${#HIDDEN_BACKUPS[@]} -eq 0 ]; then
+  if [ "${HIDDEN_BACKUP_COUNT}" -eq 0 ]; then
     return 0
   fi
   for entry in "${HIDDEN_BACKUPS[@]}"; do
@@ -35,6 +37,7 @@ restore_hidden() {
     [ -f "${bak}" ] && mv "${bak}" "${dest}"
   done
   HIDDEN_BACKUPS=()
+  HIDDEN_BACKUP_COUNT=0
 }
 
 cleanup_prepare() {
