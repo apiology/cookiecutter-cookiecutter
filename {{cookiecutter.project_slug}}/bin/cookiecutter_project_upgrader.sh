@@ -10,7 +10,6 @@ cookiecutter_project_upgrader --help >/dev/null
 MAIN_REPO_ROOT="$(dirname "$(git rev-parse --git-common-dir)")"
 GIT_DIR_PATH="$(git rev-parse --git-dir)"
 MAKE_DIR=".make"
-STAMP_FILE="${MAKE_DIR}/template-parent-sha"
 TEMPLATE_BRANCH="${COOKIECUTTER_TEMPLATE_BRANCH:-cookiecutter-template}"
 TEMPLATE_UPGRADE_BRANCH="${COOKIECUTTER_TEMPLATE_UPGRADE_BRANCH:-main}"
 GIT_WORKTREE_SHIM=0
@@ -78,48 +77,6 @@ wipe_template_cache() {
   fi
 }
 
-resolve_template_parent_sha() {
-  local url=$1 branch=$2 cache="" sha=""
-  if git remote get-url cookiecutter-upstream &>/dev/null; then
-    git fetch cookiecutter-upstream "${branch}"
-    git rev-parse "cookiecutter-upstream/${branch}"
-    return 0
-  fi
-  if cache="$(cookiecutter_cache_dir "${url}")" && [ -d "${cache}/.git" ]; then
-    git -C "${cache}" rev-parse "${branch}" 2>/dev/null \
-      || git -C "${cache}" rev-parse "origin/${branch}"
-    return 0
-  fi
-  if [ -n "${url}" ]; then
-    sha="$(git ls-remote "${url}" "refs/heads/${branch}" | awk 'NR==1 { print $1; exit }')"
-    [ -n "${sha}" ] || {
-      echo "error: could not resolve parent SHA for ${url} @ ${branch}" >&2
-      return 1
-    }
-    printf '%s\n' "${sha}"
-    return 0
-  fi
-  echo "error: no template URL or cookiecutter-upstream for parent SHA" >&2
-  return 1
-}
-
-stamp_template_parent_sha() {
-  local parent_sha=$1 wt=""
-  wt="$(mktemp -d)"
-  trap 'git worktree remove --force "${wt}" &>/dev/null; rm -rf "${wt}"' RETURN
-
-  git worktree add --detach "${wt}" "${TEMPLATE_BRANCH}"
-  mkdir -p "${wt}/${MAKE_DIR}"
-  printf '%s\n' "${parent_sha}" > "${wt}/${STAMP_FILE}"
-  if git -C "${wt}" diff --quiet -- "${STAMP_FILE}"; then
-    echo "template-parent-sha already on ${TEMPLATE_BRANCH}"
-    return 0
-  fi
-  git -C "${wt}" add "${STAMP_FILE}"
-  git -C "${wt}" commit -m "Record template parent SHA ${parent_sha:0:12}"
-  git push origin "HEAD:${TEMPLATE_BRANCH}"
-}
-
 hide_for_bake "${MAIN_REPO_ROOT}/rbs_collection.yaml" "${MAKE_DIR}/rbs_collection.yaml.bak"
 hide_for_bake "${MAIN_REPO_ROOT}/.rubocop.yml" "${MAKE_DIR}/rubocop-main.yml.bak"
 hide_for_bake "${REPO_CWD}/.rubocop.yml" "${MAKE_DIR}/rubocop-cwd.yml.bak"
@@ -151,10 +108,6 @@ if ! cookiecutter_project_upgrader "${UPGRADER_ARGS[@]}"; then
   fi
   echo "cookiecutter_project_upgrader reported no template diff"
 fi
-
-PARENT_SHA="$(resolve_template_parent_sha "${TEMPLATE_URL}" "${TEMPLATE_UPGRADE_BRANCH}")"
-echo "Template parent SHA (${TEMPLATE_UPGRADE_BRANCH}): ${PARENT_SHA}"
-stamp_template_parent_sha "${PARENT_SHA}"
 
 trap - EXIT
 cleanup_prepare
