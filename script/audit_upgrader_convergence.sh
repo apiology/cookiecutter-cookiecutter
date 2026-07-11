@@ -23,10 +23,8 @@ TEMPLATE_REPOS=(
   cookiecutter-gem cookiecutter-rails cookiecutter-terraform
 )
 
-SORBET_REPOS=(
-  cookiecutter-gem cookiecutter-rails cookiecutter-ruby
-  checkoff apiology-tf plate-spinner plate-spinner-rails
-)
+SORBET_NESTED_TEMPLATES=(cookiecutter-gem cookiecutter-rails cookiecutter-ruby)
+SORBET_ROOT_APPS=(checkoff apiology-tf plate-spinner plate-spinner-rails)
 
 NESTED=" {{cookiecutter.project_slug}}/bin/cookiecutter_project_upgrader.sh"
 
@@ -95,13 +93,19 @@ for repo in "${REPOS[@]}"; do
     issues+=("Makefile not delegating to script + post_cookiecutter_sync")
   fi
 
-  is_sorbet=0
-  for s in "${SORBET_REPOS[@]}"; do [ "${s}" = "${repo}" ] && is_sorbet=1; done
-  if [ "${is_sorbet}" -eq 1 ] && [ -f "${mk}" ] && ! makefile_has_sorbet_hook "${mk}"; then
-    issues+=("Sorbet repo missing post_cookiecutter_sync hook")
+  is_sorbet_root=0
+  is_sorbet_nested_template=0
+  for s in "${SORBET_ROOT_APPS[@]}"; do [ "${s}" = "${repo}" ] && is_sorbet_root=1; done
+  for s in "${SORBET_NESTED_TEMPLATES[@]}"; do [ "${s}" = "${repo}" ] && is_sorbet_nested_template=1; done
+
+  if [ "${is_sorbet_root}" -eq 1 ] && [ -f "${mk}" ] && ! makefile_has_sorbet_hook "${mk}"; then
+    issues+=("Sorbet app missing root post_cookiecutter_sync hook")
   fi
-  if [ "${is_sorbet}" -eq 0 ] && [ -f "${mk}" ] && makefile_has_sorbet_hook "${mk}"; then
-    issues+=("non-Sorbet repo has sorbet hook in Makefile")
+  if [ "${is_sorbet_root}" -eq 0 ] && [ "${is_sorbet_nested_template}" -eq 0 ] && [ -f "${mk}" ] && makefile_has_sorbet_hook "${mk}"; then
+    issues+=("non-Sorbet root Makefile has sorbet hook")
+  fi
+  if [ "${is_sorbet_nested_template}" -eq 1 ] && [ -f "${mk}" ] && makefile_has_sorbet_hook "${mk}"; then
+    issues+=("template root Makefile should not have sorbet hook (nested only)")
   fi
 
   is_template=0
@@ -118,6 +122,9 @@ for repo in "${REPOS[@]}"; do
     nmk="${dir}/{{cookiecutter.project_slug}}/Makefile"
     if [ -f "${nmk}" ] && ! makefile_delegates "${nmk}"; then
       issues+=("nested Makefile not delegating")
+    fi
+    if [ "${is_sorbet_nested_template}" -eq 1 ] && [ -f "${nmk}" ] && ! makefile_has_sorbet_hook "${nmk}"; then
+      issues+=("Sorbet template missing nested post_cookiecutter_sync hook")
     fi
   fi
 
