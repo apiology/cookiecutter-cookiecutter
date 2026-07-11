@@ -9,6 +9,11 @@ alwaysApply: false
 
 This repo is the **meta** cookiecutter (`cookiecutter-cookiecutter`). It bakes **language/tool** templates under `{{cookiecutter.project_slug}}/`, which may include a nested **project** cookiecutter under `{{cookiecutter.project_slug}}/{{cookiecutter.project_slug}}/`.
 
+
+## Universal cookiecutter upgrader
+
+Cascade repos converge on a **single** `bin/cookiecutter_project_upgrader.sh` (canonical copy in this repo). `make update_from_cookiecutter` runs that script, then `make post_cookiecutter_sync` for ecosystem-specific steps (Sorbet RBI bumps, bundle updates, etc.). Run `make audit-upgrader` (or `script/audit_upgrader_convergence.sh`) to verify SHA and Makefile wiring across `~/src` repos.
+
 ## Three tiers
 
 | Tier | Path in this repo | Typical output | Scope |

@@ -172,3 +172,6 @@ update_from_cookiecutter: ## Bring in changes from template project used to crea
 
 post_cookiecutter_sync: ## Ecosystem-specific steps after template sync (empty by default)
 	@:
+
+audit-upgrader: ## Verify universal upgrader convergence across cascade repos
+	@script/audit_upgrader_convergence.sh
