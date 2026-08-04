@@ -51,6 +51,14 @@ Language-agnostic ports (e.g. `.yamllint.yml` comments, `bin/overcommit` binstub
 
 A **baked** gem or app (created from `cookiecutter-gem`, not the meta template) is a useful reference for **production** patterns, but most of its tree is **more specific** than any cookiecutter tier here. Use `git show origin/main:<path>` on the reference and classify before copying.
 
+**Before porting, check this repo's own history too — not just its current state.** A line missing from the current tree is not evidence it was never tried:
+
+```bash
+git log --all --oneline -S"<distinctive substring>" -- <path>
+```
+
+If a hit turns up, read the commit that *removed or reworded* it, not just the one that added it — the removal message usually explains why (superseded by inline comments, gone stale after a logic change, explicitly rejected). Re-porting content this repo's own author already tried and deliberately reversed reintroduces a decision that was already made, often with wording that's since gone stale relative to the code around it. Treat that removal as binding unless the user says otherwise.
+
 | Usually safe to port (all tiers that already have the file) | Usually **do not** port into cookiecutter templates |
 |---------------------------------------------------------------|-----------------------------------------------------|
 | `config/env.local` + `.envrc` prefer-local-over-`op run` | `.overcommit.yml`: RuboCop, Sorbet, Solargraph, Brakeman, Fasterer, BundleAudit, RakeTarget prepush |
