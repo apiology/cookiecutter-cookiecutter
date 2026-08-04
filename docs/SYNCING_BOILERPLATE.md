@@ -68,6 +68,14 @@ A typical repo generated from `cookiecutter-gem` is a useful reference. When usi
 
 Record the reference repo’s `origin/main` SHA in the PR (omit the private repo name from public text); diff with `git show origin/main:<path>` only.
 
+**Before porting, check this repo’s own history too — not just its current state.** A line missing from the current tree is not evidence it was never tried:
+
+```bash
+git log --all --oneline -S"<distinctive substring>" -- <path>
+```
+
+If a hit turns up, read the commit that *removed or reworded* it, not just the one that added it — the removal message usually explains why (superseded by inline comments, gone stale after a logic change, explicitly rejected). Treat that removal as binding unless the user says otherwise.
+
 ### `.envrc` and `PATH_add`
 
 - Only `PATH_add` directories that **exist in this template** (typically `bin/` when `bin/` is present).
@@ -85,5 +93,6 @@ Propagate doc changes to sibling cookiecutter templates with `make update_from_c
 1. `git fetch origin main` in every repo involved
 2. List SHAs; diff only `git show origin/main:...`
 3. Classify each change: this tier vs ancestor vs descendant
-4. Run this repo’s tests
-5. Confirm nothing came from unpushed local-only paths
+4. `git log --all -S"<substring>"` this repo’s own history for each candidate port; if it was added and later removed, read the removal commit before re-adding it
+5. Run this repo’s tests
+6. Confirm nothing came from unpushed local-only paths
