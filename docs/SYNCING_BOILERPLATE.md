@@ -25,7 +25,7 @@ Record SHAs in your PR when syncing.
 | **Ancestor** → this template | Pull agnostic fixes down; never push specificity **up**. |
 | **This** → **descendants** | Push tier-appropriate config down; keep narrower bits in children. |
 
-Details: `.cursor/rules/template-hierarchy.mdc`.
+Details: the `template-hierarchy` skill (`.claude/skills/template-hierarchy/SKILL.md`).
 
 ## Reference repos
 
@@ -38,7 +38,7 @@ Adjust for **this** tier — a reference repo may include more than you should p
 - `.circleci/config.yml`
 - `.envrc`, `.yamllint.yml`, `.gitattributes`, `.dockerignore`
 - `.git-hooks/pre_commit/circle_ci.rb`, `.git-hooks/pre_commit/punchlist.rb` (maintenance only)
-- `.cursor/rules/`, this doc
+- `.claude/skills/`, this doc
 - `DEVELOPMENT.md` (agent/conventions sections)
 - `CODE_OF_CONDUCT.md`, `.mdlrc`, `package.json` (usually unchanged)
 
@@ -52,7 +52,7 @@ When the reference is a **Ruby application or gem** (e.g. `apiology/checkoff`) a
 - **`.gitignore`:** `tapioca.installed`, `yardoc.installed`, `sorbet/machine_specific_config`
 - **`.git-hooks/**/*.rb`:** `# @sg-ignore` and other Sorbet-only typing churn from the reference
 
-Those belong in a **Ruby language** cookiecutter (e.g. `cookiecutter-ruby`), not the meta template. See `.cursor/rules/template-hierarchy.mdc` (meta and language tiers).
+Those belong in a **Ruby language** cookiecutter (e.g. `cookiecutter-ruby`), not the meta template. See the `template-hierarchy` skill (meta and language tiers).
 
 ### Baked Ruby apps (private reference repos)
 
@@ -72,11 +72,11 @@ Record the reference repo’s `origin/main` SHA in the PR (omit the private repo
 
 - Only `PATH_add` directories that **exist in this template** (typically `bin/` when `bin/` is present).
 - If a reference `.envrc` uses `PATH_add script` (or similar) and **this repo has no `script/`**, do not copy it here — add it in the descendant cookiecutter that owns `script/`.
-- Missing referenced path → treat as **descendant** material (see `template-hierarchy.mdc`).
+- Missing referenced path → treat as **descendant** material (see the `template-hierarchy` skill).
 
 ## Nested cookiecutter directory (optional)
 
-If this template still contains a nested `{{cookiecutter.project_slug}}//` tree (generator meta-pattern), propagate shared boilerplate there only when that nested tree is the **same** tier. Do not blindly duplicate `.cursor/` into nested paths when the nested template is a different hierarchy level.
+If this template still contains a nested `{{cookiecutter.project_slug}}//` tree (generator meta-pattern), propagate shared boilerplate there only when that nested tree is the **same** tier. Do not blindly duplicate `.claude/skills/` into nested paths when the nested template is a different hierarchy level.
 
 Propagate doc changes to sibling cookiecutter templates with `make update_from_cookiecutter` (or merge from the ancestor template’s `cookiecutter-template` branch).
 
