@@ -1,6 +1,7 @@
 ---
+name: update-from-cookiecutter
 description: >-
-  Running make update_from_cookiecutter from a Cursor linked git worktree
+  Running make update_from_cookiecutter from a linked git worktree
   (bootstrap, branch locks, DEFAULT_BRANCH).
 alwaysApply: false
 ---
@@ -17,7 +18,7 @@ Before running in a new worktree, bootstrap once so Overcommit can sign hooks:
 direnv exec . ./fix.sh
 ```
 
-(Everyone else already uses direnv in this project; see [overcommit-signing.mdc](overcommit-signing.mdc) for worktree Ruby pinning.)
+(Everyone else already uses direnv in this project; see the `overcommit-signing` skill for worktree Ruby pinning.)
 
 Do not run two updates at once if several worktrees share one repository.
 

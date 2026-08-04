@@ -1,4 +1,5 @@
 ---
+name: template-hierarchy
 description: >-
   Which files and config belong at meta vs language vs project cookiecutter tiers
   in this family; never push specificity up or park descendant-only config too high
@@ -21,11 +22,11 @@ This repo is the **meta** cookiecutter (`cookiecutter-cookiecutter`). It bakes *
 
 | Kind of change | Meta root | `{{cookiecutter.project_slug}}/` | Nested project dir |
 |----------------|-----------|-----------------------------------|--------------------|
-| `overcommit-signing.mdc` | Yes | Yes | Yes |
-| `circleci-env-in-fix-sh.mdc` | Yes | Yes | Yes |
-| `circleci-logs-before-local-ci.mdc` | Yes | Yes | Yes |
-| `pr-review-inline-comments.mdc` | Yes | Yes | Yes |
-| `template-hierarchy.mdc` | Yes (this file) | Yes (tier-specific) | No |
+| `overcommit-signing` skill | Yes | Yes | Yes |
+| `circleci-env-in-fix-sh` skill | Yes | Yes | Yes |
+| `circleci-logs-before-local-ci` (global skill, not project-local) | Yes | Yes | Yes |
+| PR review comment handling (global skills `pr-comments-hunk-precision` / `pr-review-thread-resolve`, not project-local) | Yes | Yes | Yes |
+| `template-hierarchy` skill (this file) | Yes (this file) | Yes (tier-specific) | No |
 | `fix.sh`, `bin/git-*` hooks, `.githooks/post-checkout`, shared `.overcommit.yml` bootstrap | Yes | Yes | Yes |
 | Boilerplate sync docs (`SYNCING_BOILERPLATE.md`) | No — in baked child path | Yes | No |
 | Language-specific hooks (RuboCop, etc.) | No | Yes | Maybe (framework-only → nested) |
@@ -50,8 +51,16 @@ Language-agnostic ports (e.g. `.yamllint.yml` comments, `bin/overcommit` binstub
 
 A **baked** gem or app (created from `cookiecutter-gem`, not the meta template) is a useful reference for **production** patterns, but most of its tree is **more specific** than any cookiecutter tier here. Use `git show origin/main:<path>` on the reference and classify before copying.
 
+**Before porting, check this repo's own history too — not just its current state.** A line missing from the current tree is not evidence it was never tried:
+
+```bash
+git log --all --oneline -S"<distinctive substring>" -- <path>
+```
+
+If a hit turns up, read the commit that *removed or reworded* it, not just the one that added it — the removal message usually explains why (superseded by inline comments, gone stale after a logic change, explicitly rejected). Re-porting content this repo's own author already tried and deliberately reversed reintroduces a decision that was already made, often with wording that's since gone stale relative to the code around it. Treat that removal as binding unless the user says otherwise.
+
 | Usually safe to port (all tiers that already have the file) | Usually **do not** port into cookiecutter templates |
-|-------------------------------------------------------------|-----------------------------------------------------|
+|---------------------------------------------------------------|-----------------------------------------------------|
 | `config/env.local` + `.envrc` prefer-local-over-`op run` | `.overcommit.yml`: RuboCop, Sorbet, Solargraph, Brakeman, Fasterer, BundleAudit, RakeTarget prepush |
 | `DEVELOPMENT.md` 1Password / `env.local` docs (generic names, not app slug) | `.yamllint.yml`: `rbs_collection.lock.yaml`, app YAML paths (e.g. `partials.yaml`) |
 | `.dockerignore` `/config/env.local` | `.circleci`: `checkout: method: full`, debug `pwd`, `*.gemspec` cache keys |
@@ -59,7 +68,7 @@ A **baked** gem or app (created from `cookiecutter-gem`, not the meta template) 
 | `config/env.local` in `.gitignore` | `fix.sh`: `ensure_rugged_packages_installed` (**Ruby repos only**), `ensure_handlebars_engine_packages_installed`, `ensure_mini_racer_packages_installed`, `ensure_chromedriver_correct_platform` |
 | | App `lib/`, `config/annotations*.rb`, `script/`, Heroku app names, plate-specific docs |
 
-**`fix.sh` rugged:** `ensure_rugged_packages_installed` is **Ruby-repo-specific** (undercover). Put it in **`cookiecutter-gem`** and baked Ruby apps — **not** in this meta repo’s generic `{{cookiecutter.project_slug}}/` tree (language-agnostic until you bake a Ruby cookiecutter).
+**`fix.sh` rugged:** `ensure_rugged_packages_installed` is **Ruby-repo-specific** (undercover). Put it in **`cookiecutter-gem`** and baked Ruby apps — **not** in this meta repo's generic `{{cookiecutter.project_slug}}/` tree (language-agnostic until you bake a Ruby cookiecutter).
 
 **Workflow:** sync from the baked gem into **`cookiecutter-gem`** first; pull **agnostic** pieces up to meta only when they apply to every tier. Record the reference `origin/main` SHA in the PR (repo name omitted from public text).
 
@@ -74,4 +83,4 @@ When adding or changing such a file:
 3. **Keep paths parallel** — same relative path and hook wiring at each tier (e.g. `.githooks/post-checkout` → `bin/git-post-checkout-fix` next to `bin/git-commit-validate`).
 4. **If unsure** whether a change belongs at one tier or all three, **ask the user** before opening a PR.
 
-When editing the inner template, read `{{cookiecutter.project_slug}}/.cursor/rules/template-hierarchy.mdc` and `docs/SYNCING_BOILERPLATE.md`.
+When editing the inner template, read `docs/SYNCING_BOILERPLATE.md` at `{{cookiecutter.project_slug}}/docs/SYNCING_BOILERPLATE.md`.
