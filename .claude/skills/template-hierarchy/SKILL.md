@@ -74,13 +74,13 @@ If a hit turns up, read the commit that *removed or reworded* it, not just the o
 
 ## Propagate across tiers (agent checklist)
 
-This repo nests **three** template trees (meta root → `{{cookiecutter.project_slug}}/` → nested `{{cookiecutter.project_slug}}/{{cookiecutter.project_slug}}/`). Many boilerplate files exist at **more than one** path (`fix.sh`, `.overcommit.yml`, `.githooks/post-checkout`, `bin/git-commit-validate`, `bin/git-post-checkout-fix`, etc.).
+This repo nests **three** template trees (meta root → `{{cookiecutter.project_slug}}/` → nested `{{cookiecutter.project_slug}}/{{cookiecutter.project_slug}}/`). Many boilerplate files exist at **more than one** path (`fix.sh`, `.overcommit.yml`, `.githooks/post-checkout`, `bin/git-post-checkout-fix`, etc.).
 
 When adding or changing such a file:
 
 1. **List tiers** — run `find` or search for the basename under the repo (ignore `.git/`).
 2. **Apply at every tier** where the file already exists, unless the change is intentionally tier-specific.
-3. **Keep paths parallel** — same relative path and hook wiring at each tier (e.g. `.githooks/post-checkout` → `bin/git-post-checkout-fix` next to `bin/git-commit-validate`).
+3. **Keep paths parallel** — same relative path and hook wiring at each tier (e.g. `.githooks/post-checkout` → `bin/git-post-checkout-fix`).
 4. **If unsure** whether a change belongs at one tier or all three, **ask the user** before opening a PR.
 
 When editing the inner template, read `docs/SYNCING_BOILERPLATE.md` at `{{cookiecutter.project_slug}}/docs/SYNCING_BOILERPLATE.md`.
