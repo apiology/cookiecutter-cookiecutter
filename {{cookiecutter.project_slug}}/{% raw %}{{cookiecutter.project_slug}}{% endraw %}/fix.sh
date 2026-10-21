@@ -328,22 +328,6 @@ ensure_pyenv() {
   set_pyenv_env_variables
 }
 
-update_package() {
-  homebrew_package=${1:?homebrew package}
-  apt_package=${2:-${homebrew_package}}
-  if [ "$(uname)" == "Darwin" ]
-  then
-    brew install "${homebrew_package}"
-  elif type apt-get >/dev/null 2>&1
-  then
-    make update_apt
-    sudo DEBIAN_FRONTEND=noninteractive apt-get install -y "${apt_package}"
-  else
-    >&2 echo "Teach me how to install packages on this plaform"
-    exit 1
-  fi
-}
-
 ensure_python_build_requirements() {
   ensure_dev_library zlib.h zlib zlib1g-dev
   ensure_dev_library bzlib.h bzip2 libbz2-dev
