@@ -18,7 +18,7 @@ then
   if ! dpkg -s "${apt_package}" >/dev/null
   then
     make update_apt
-    sudo DEBIAN_FRONTEND=noninteractive apt-get install -y "${apt_package}"
+    sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends "${apt_package}"
   fi
 else
   >&2 echo "Teach me how to install packages on this plaform"

@@ -58,6 +58,14 @@ commands:
             - pyenv-v2-
             - pyenv-
       - run:
+          name: Remove apt sources CI never installs from
+          command: |
+            # cimg/base adds these; an outage in any of them fails the
+            # apt-get update that bin/install_package runs.
+            sudo rm -f /etc/apt/sources.list.d/git-core-ubuntu-ppa-*.sources \
+              /etc/apt/sources.list.d/github_git-lfs.list \
+              /etc/apt/sources.list.d/docker.list
+      - run:
           name: Initialize packages
           no_output_timeout: 30m
           command: |
