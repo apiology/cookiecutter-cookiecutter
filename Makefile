@@ -92,8 +92,7 @@ config/env: config/env.1p  ## Create file suitable for docker-compose usage
 # Empty outside a virtualenv.
 VIRTUALENV_CREATION_TIME := $(wildcard $(shell python -c "import sys; print(sys.prefix)")/pyvenv.cfg)
 
-# Reinstalls into a new virtualenv, even when CI restores
-# requirements_dev.txt.installed from cache.
+# Install Python libraries once per virtualenv
 requirements_dev.txt.installed: requirements_dev.txt $(VIRTUALENV_CREATION_TIME)
 	pip install -q --disable-pip-version-check -r requirements_dev.txt
 	touch requirements_dev.txt.installed
