@@ -305,6 +305,15 @@ EOF
   fi
 }
 
+update_pyenv() {
+  if [ "$(uname)" == "Darwin" ]
+  then
+    brew upgrade pyenv
+  else
+    pyenv update
+  fi
+}
+
 set_pyenv_env_variables() {
   # looks like pyenv scripts aren't -u clean:
   #
@@ -365,7 +374,7 @@ ensure_python_versions() {
   if [ -z "$(latest_python_version 3.15)" ]
   then
     # pyenv lists only the releases it knew about when it was installed
-    pyenv update
+    update_pyenv
   fi
 
   python_versions=""
