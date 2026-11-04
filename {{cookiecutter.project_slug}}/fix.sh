@@ -278,8 +278,7 @@ set_ruby_local_version() {
 
 latest_python_version() {
   major_minor=${1}
-  # https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
-  pyenv install --list | grep "^  ${major_minor}." | grep -v -- -dev | tail -1 | xargs
+  pyenv latest --known "${major_minor}"
 }
 
 install_pyenv() {
@@ -303,6 +302,15 @@ EOF
     fi
   else
     curl https://pyenv.run | bash
+  fi
+}
+
+update_pyenv() {
+  if [ "$(uname)" == "Darwin" ]
+  then
+    brew upgrade pyenv
+  else
+    pyenv update
   fi
 }
 
@@ -361,7 +369,20 @@ ensure_python_build_requirements() {
 ensure_python_versions() {
   # You can find out which feature versions are still supported / have
   # been release here: https://www.python.org/downloads/
-  python_versions="$(latest_python_version 3.12) $(latest_python_version 3.11) $(latest_python_version 3.10) $(latest_python_version 3.9) $(latest_python_version 3.8)"
+  # newest first: the project virtualenv uses the first one
+  minor_versions="3.15 3.14 3.13 3.12 3.11"
+  if [ -z "$(latest_python_version 3.15)" ]
+  then
+    # pyenv lists only the releases it knew about when it was installed
+    update_pyenv
+  fi
+
+  python_versions=""
+  for minor in ${minor_versions}
+  do
+    python_versions+="$(latest_python_version "${minor}") "
+  done
+  python_versions="${python_versions% }"
 
   echo "Latest Python versions: ${python_versions}"
 

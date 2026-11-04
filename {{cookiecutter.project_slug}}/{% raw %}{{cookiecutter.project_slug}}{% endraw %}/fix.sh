@@ -278,8 +278,7 @@ set_ruby_local_version() {
 
 latest_python_version() {
   major_minor=${1}
-  # https://stackoverflow.com/questions/369758/how-to-trim-whitespace-from-a-bash-variable
-  pyenv install --list | grep "^  ${major_minor}." | grep -v -- -dev | tail -1 | xargs
+  pyenv latest --known "${major_minor}"
 }
 
 install_pyenv() {

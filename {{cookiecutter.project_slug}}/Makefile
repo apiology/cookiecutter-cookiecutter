@@ -86,7 +86,14 @@ clean-test: ## remove test and coverage artifacts
 config/env: config/env.1p  ## Create file suitable for docker-compose usage
 	cat config/env.1p | cut -d= -f1 > config/env
 
-requirements_dev.txt.installed: requirements_dev.txt
+# The active virtualenv's pyvenv.cfg, which venv writes only when creating
+# the virtualenv.
+#
+# Empty outside a virtualenv.
+VIRTUALENV_CREATION_TIME := $(wildcard $(shell python -c "import sys; print(sys.prefix)")/pyvenv.cfg)
+
+# Install Python libraries once per virtualenv
+requirements_dev.txt.installed: requirements_dev.txt $(VIRTUALENV_CREATION_TIME)
 	pip install -q --disable-pip-version-check -r requirements_dev.txt
 	touch requirements_dev.txt.installed
 
