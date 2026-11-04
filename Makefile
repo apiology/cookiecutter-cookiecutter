@@ -86,11 +86,15 @@ clean-test: ## remove test and coverage artifacts
 config/env: config/env.1p  ## Create file suitable for docker-compose usage
 	cat config/env.1p | cut -d= -f1 > config/env
 
-# fix.sh writes a new pyvenv.cfg whenever it creates a virtualenv, e.g. for a
-# new Python version, so a marker restored from a CI cache still reinstalls
-PYVENV_CFG := $(wildcard $(shell python -c "import sys; print(sys.prefix)")/pyvenv.cfg)
+# The active virtualenv's pyvenv.cfg, which venv writes only when creating
+# the virtualenv.
+#
+# Empty outside a virtualenv.
+VIRTUALENV_CREATION_TIME := $(wildcard $(shell python -c "import sys; print(sys.prefix)")/pyvenv.cfg)
 
-requirements_dev.txt.installed: requirements_dev.txt $(PYVENV_CFG)
+# Reinstalls into a new virtualenv, even when CI restores
+# requirements_dev.txt.installed from cache.
+requirements_dev.txt.installed: requirements_dev.txt $(VIRTUALENV_CREATION_TIME)
 	pip install -q --disable-pip-version-check -r requirements_dev.txt
 	touch requirements_dev.txt.installed
 
