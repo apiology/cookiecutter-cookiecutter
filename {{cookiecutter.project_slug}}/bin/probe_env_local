@@ -50,11 +50,6 @@ log_file="${probe_log_dir}/${probe_id}.log"
     resolved="$(./bin/resolve_env_1p 2>/dev/null || echo config/env.1p)"
     echo "  resolve_env_1p=${resolved}"
     echo "  resolved_readable=$([[ -r ${resolved} ]] && echo yes || echo no)"
-    if command -v op >/dev/null 2>&1; then
-      echo "  op_account_list=$(op account list 2>&1 | head -3 | tr '\n' '; ' || true)"
-    else
-      echo "  op_account_list=op not in PATH"
-    fi
   fi
   echo
 } >>"${log_file}"
